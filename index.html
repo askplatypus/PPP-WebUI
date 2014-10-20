@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PPP</title>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+    <script src="bower_components/respond/dest/respond.src.js"></script>
+    <![endif]-->
+</head>
+<body role="document">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">PPP</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Simple search</a></li>
+                <li><a href="#about">Advanced search</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container" role="main">
+    <div class="jumbotron">
+        <h2>Ask me anything</h2>
+        <form id="simplesearch-form" class="form" role="form">
+            <div class="form-group">
+                <label for="simplesearch-input-question" class="sr-only">Question</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" id="simplesearch-button-random" class="btn btn-default btn-lg" title="Random question">
+                            <span class="glyphicon glyphicon-random"></span>
+                        </button>
+                    </span>
+                    <input type="search" id="simplesearch-input-question" class="form-control input-lg" placeholder="Enter your question"
+                            autofocus required aria-required="true" size="100">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary btn-lg" title="Search">
+                            <span class="glyphicon glyphicon-search glyphicon-flipped"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="simplesearch-result"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="js/inputParser.js"></script>
+<script src="js/resultBuilder.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "ppp-webui",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ProjetPP/PPP-WebUI",
+  "authors": [
+    "Projet Pensées Profondes"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ProjetPP/PPP-WebUI.git"
+  },
+  "description": "Web user interface for the PPP",
+  "main": "index.html",
+  "ignore": [
+    "**/.*",
+    "build",
+    "test",
+    "*.md"
+  ],
+  "moduleType": [],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2"
+  },
+  "keywords": [
+    "PPP",
+    "QueryAnswering"
+  ],
+  "license": "MIT",
+  "private": true
+}
