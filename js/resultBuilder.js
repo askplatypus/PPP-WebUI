@@ -43,7 +43,7 @@
 				'Result',
 				$('<div>')
 					.addClass('panel-body')
-					.text('No answers.')
+					.text('After seven and a half million years of calculation I have found that the answer is 42.')
 			);
 		}
 
