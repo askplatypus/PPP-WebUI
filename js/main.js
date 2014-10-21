@@ -35,16 +35,33 @@
 					)
 			);
 
+			var input = inputParser.parse($('#simplesearch-input-question').val());
 			api.sendRequest({
-				'tree': inputParser.parse($('#simplesearch-input-question').val()),
+				'tree': input,
 				'language': $('html').attr('lang'),
 				'id': ''
 			}, function(results) {
 				$('#simplesearch-result').empty().html(resultBuilder.outputResults(results));
+			}, function() {
+				$simpleSerarchResult.empty().append(
+					$('<div>')
+						.addClass('panel panel-danger')
+						.append(
+							$('<div>')
+								.addClass('panel-heading')
+								.text('The request failed')
+							)
+						.append(
+							$('<div>')
+								.addClass('panel-body text-center')
+								.text('Input triples: ')
+								.append(window.resultBuilder.prototype.outputTree(input))
+					)
+				);
 			});
 		});
 
-		$('#simplesearch-button-random').click(function() {
+		$('.simplesearch-button-random').click(function() {
 			$('#simplesearch-input-question').val(getRandomQuestion());
 		});
 	}

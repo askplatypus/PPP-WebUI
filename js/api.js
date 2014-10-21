@@ -21,8 +21,9 @@
 	 *
 	 * @param {Object} parameters parameters to pass to the API
 	 * @param {Function} success callback called on success with as parameter an Object with the result of the request
+	 * @param {Function} failure callback called on failure
 	 */
-	window.pppApi.prototype.sendRequest = function(parameters, success) {
+	window.pppApi.prototype.sendRequest = function(parameters, success, failure) {
 		$.ajax({
 			url: this.url,
 			type: 'POST',
@@ -30,12 +31,8 @@
 			dataType: 'json',
 			data: JSON.stringify(parameters)
 		})
-		.done(function(result) {
-			success(result);
-		})
-		.fail(function() {
-			//TODO
-		});
+		.done(success)
+		.fail(failure);
 	};
 
 } (jQuery, window));
