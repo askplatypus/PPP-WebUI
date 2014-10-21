@@ -1,9 +1,6 @@
 /**
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
- *
- * @todo nice output
- * @todo interpretation of the question
  */
 (function($, window) {
 	'use strict';
@@ -18,49 +15,69 @@
 	};
 
 	/**
-	 * Set the pending element (and clean up any existing one).
+	 * Builds a box for the query.
 	 *
-	 * @param {object} query The query done
-	 * @param {array} results Results
+	 * @param {object} query The query done.
 	 * @return {jQuery}
 	 */
-	window.resultBuilder.prototype.outputResults = function(query, results) {
-		var root = $('<div>')
-			.addClass('panel')
-			.append(
-				$('<div>')
-					.addClass('panel-heading')
-					.text('Result')
-			)
-			.append(
+	window.resultBuilder.prototype.outputQuery = function(query) {
+		return this.outputPanel(
+			'info',
+			'Query',
+			$('<div>')
+				.addClass('panel-body')
+				.append(this.outputTree(query))
+		);
+	};
+
+	/**
+	 * Builds a box for the results.
+	 *
+	 * @param {array} results The results.
+	 * @return {jQuery}
+	 */
+	window.resultBuilder.prototype.outputResults = function(results) {
+		if(results.length === 0) {
+			return this.outputPanel(
+				'warning',
+				'Result',
 				$('<div>')
 					.addClass('panel-body')
-					.text('Query: ')
-					.append(window.resultBuilder.prototype.outputTree(query))
+					.text('No answers.')
 			);
+		}
 
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
-		if(results.length === 0) {
-			root.addClass('panel-warning');
+		for(var i in results) {
 			resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
-					.text('No answers.')
+					.append(this.outputResult(results[i]))
 			);
-		} else {
-			root.addClass('panel-success');
-			$.each(results, function(_, result) {
-				resultsRoot.append(
-					$('<li>')
-						.addClass('list-group-item')
-						.append(window.resultBuilder.prototype.outputResult(result))
-				);
-			});
 		}
-		root.append(resultsRoot);
 
-		return root;
+		return this.outputPanel(
+			'success',
+			'Result',
+			resultsRoot
+		);
+	};
+
+	/**
+	 * Builds a box for an error.
+	 *
+	 * @param {string} error Error message.
+	 * @return {jQuery}
+	 */
+	window.resultBuilder.prototype.outputError = function(error) {
+		return this.outputPanel(
+			'danger',
+			'Error',
+			$('<div>')
+				.addClass('panel-body')
+				.text(error)
+		);
 	};
 
 	/**
@@ -68,19 +85,26 @@
 	 */
 	window.resultBuilder.prototype.outputResult = function(result) {
 		return $('<div>')
-			.text('Result: ')
-			.append(
-				$('<span>')
-					.attr('lang', result.language)
-					.append(window.resultBuilder.prototype.outputTree(result.tree))
-			);
-
+			.attr('lang', result.language)
+			.append(this.outputTree(result.tree));
 	};
 
 	/**
-	 *
-	 * @param {object} tree
-	 * @return {jQuery}
+	 * @private
+	 */
+	window.resultBuilder.prototype.outputPanel = function(type, title, $body) {
+		return $('<div>')
+			.addClass('panel panel-' + type)
+			.append(
+				$('<div>')
+					.addClass('panel-heading')
+					.text(title)
+			)
+			.append($body);
+	};
+
+	/**
+	 * @private
 	 */
 	window.resultBuilder.prototype.outputTree = function(tree) {
 		switch(tree.type) {
@@ -88,11 +112,11 @@
 				return $('<span>')
 					.addClass('label label-default ppp-node ppp-triple')
 					.append('(')
-					.append(window.resultBuilder.prototype.outputTree(tree.subject))
+					.append(this.outputTree(tree.subject))
 					.append(',')
-					.append(window.resultBuilder.prototype.outputTree(tree.predicate))
+					.append(this.outputTree(tree.predicate))
 					.append(',')
-					.append(window.resultBuilder.prototype.outputTree(tree.object))
+					.append(this.outputTree(tree.object))
 					.append(')');
 			case 'resource':
 				return $('<span>')

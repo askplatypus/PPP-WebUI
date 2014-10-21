@@ -35,30 +35,21 @@
 					)
 			);
 
-			//TODO: add a query box an an answser/failure one with hide/show
 			var input = inputParser.parse($('#simplesearch-input-question').val());
 			api.sendRequest({
 				'tree': input,
 				'language': $('html').attr('lang'),
 				'id': ''
 			}, function(results) {
-				$('#simplesearch-result').empty().html(resultBuilder.outputResults(input, results));
+				$('#simplesearch-result')
+					.empty()
+					.append(resultBuilder.outputQuery(input))
+					.append(resultBuilder.outputResults(results));
 			}, function() {
-				$simpleSerarchResult.empty().append(
-					$('<div>')
-						.addClass('panel panel-danger')
-						.append(
-							$('<div>')
-								.addClass('panel-heading')
-								.text('The request failed')
-							)
-						.append(
-							$('<div>')
-								.addClass('panel-body text-center')
-								.text('Input triples: ')
-								.append(window.resultBuilder.prototype.outputTree(input))
-					)
-				);
+				$('#simplesearch-result')
+					.empty()
+					.append(resultBuilder.outputQuery(input))
+					.append(resultBuilder.outputError(''));
 			});
 		});
 
