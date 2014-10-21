@@ -39,22 +39,25 @@
 					.append(window.resultBuilder.prototype.outputTree(query))
 			);
 
-		if(results.length == 0) {
-			root.addClass('panel-danger');
-			return root;
-		}
-
-		root.addClass('panel-success');
-
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
-		$.each(results, function(_, result) {
+		if(results.length === 0) {
+			root.addClass('panel-warning');
 			resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
-					.append(window.resultBuilder.prototype.outputResult(result))
+					.text('No answers.')
 			);
-		});
+		} else {
+			root.addClass('panel-success');
+			$.each(results, function(_, result) {
+				resultsRoot.append(
+					$('<li>')
+						.addClass('list-group-item')
+						.append(window.resultBuilder.prototype.outputResult(result))
+				);
+			});
+		}
 		root.append(resultsRoot);
 
 		return root;
