@@ -35,13 +35,14 @@
 					)
 			);
 
+			//TODO: add a query box an an answser/failure one with hide/show
 			var input = inputParser.parse($('#simplesearch-input-question').val());
 			api.sendRequest({
 				'tree': input,
 				'language': $('html').attr('lang'),
 				'id': ''
 			}, function(results) {
-				$('#simplesearch-result').empty().html(resultBuilder.outputResults(results));
+				$('#simplesearch-result').empty().html(resultBuilder.outputResults(input, results));
 			}, function() {
 				$simpleSerarchResult.empty().append(
 					$('<div>')

@@ -20,10 +20,11 @@
 	/**
 	 * Set the pending element (and clean up any existing one).
 	 *
+	 * @param {object} query The query done
 	 * @param {array} results Results
 	 * @return {jQuery}
 	 */
-	window.resultBuilder.prototype.outputResults = function(results) {
+	window.resultBuilder.prototype.outputResults = function(query, results) {
 		var root = $('<div>')
 			.addClass('panel')
 			.append(
@@ -34,7 +35,8 @@
 			.append(
 				$('<div>')
 					.addClass('panel-body')
-					.text('TODO: the query and its structure')
+					.text('Query: ')
+					.append(window.resultBuilder.prototype.outputTree(query))
 			);
 
 		if(results.length == 0) {
@@ -82,9 +84,13 @@
 			case 'triple':
 				return $('<span>')
 					.addClass('label label-default ppp-node ppp-triple')
+					.append('(')
 					.append(window.resultBuilder.prototype.outputTree(tree.subject))
+					.append(',')
 					.append(window.resultBuilder.prototype.outputTree(tree.predicate))
-					.append(window.resultBuilder.prototype.outputTree(tree.object));
+					.append(',')
+					.append(window.resultBuilder.prototype.outputTree(tree.object))
+					.append(')');
 			case 'resource':
 				return $('<span>')
 					.addClass('label label-info ppp-node ppp-resource')
@@ -92,7 +98,7 @@
 			case 'missing':
 				return $('<span>')
 					.addClass('label label-warning ppp-node ppp-missing')
-					.text(' ');
+					.text('?');
 			default:
 				return $('<span>')
 					.addClass('label label-danger')

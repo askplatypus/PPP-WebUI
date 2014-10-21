@@ -29,6 +29,9 @@ body {
 	to { -webkit-transform: rotate(360deg); }
 }
 
+#simplesearch-result {
+	font-size: 150%;
+}
 
 .ppp-node {
 	font-size: 95%;
