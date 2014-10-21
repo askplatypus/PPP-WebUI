@@ -37,6 +37,9 @@
 	 * @private
 	 */
 	window.inputParser.prototype.internalParse = function(end) {
+		while(this.text[this.position] == ' ') {
+			this.position++;
+		}
 		if(this.text[this.position] === '?') {
 			this.position += 2;
 			return {'type': 'missing'};
