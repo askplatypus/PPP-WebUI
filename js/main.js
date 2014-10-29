@@ -45,11 +45,11 @@
 					.empty()
 					.append(resultBuilder.outputQuery(input))
 					.append(resultBuilder.outputResults(results));
-			}, function() {
+			}, function(jqXHR, textStatus) {
 				$('#simplesearch-result')
 					.empty()
 					.append(resultBuilder.outputQuery(input))
-					.append(resultBuilder.outputError(''));
+					.append(resultBuilder.outputError(textStatus));
 			});
 		});
 
