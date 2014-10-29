@@ -38,7 +38,11 @@
 			var input = inputParser.parse($('#simplesearch-input-question').val());
 			var request = {
 				'language': $('html').attr('lang'),
-				'id': (new Date()).getTime() + '-' + 'webui'
+				'id': (new Date()).getTime() + '-' + 'webui',
+				'measures': {
+					'relevance': 0,
+					'accuracy': 1
+				}
 			};
 			if(typeof input === 'string') {
 				request['sentence'] = input;
