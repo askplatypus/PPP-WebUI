@@ -19,3 +19,5 @@ window.config = {
 	pppCoreUrl: 'FULL URL OF YOUR INSTALL OF THE CORE PPP MODULE'
 }
 ```
+
+Just browse with your favorite browser to the `index.html` file.
