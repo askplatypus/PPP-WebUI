@@ -30,7 +30,7 @@
 			return this.parseTriple(text);
 		}
 
-		return {'type':'resource', 'value': text};
+		return text;
 	};
 
 	/**

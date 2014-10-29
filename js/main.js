@@ -36,21 +36,29 @@
 			);
 
 			var input = inputParser.parse($('#simplesearch-input-question').val());
-			api.sendRequest({
-				'tree': input,
+			var request = {
 				'language': $('html').attr('lang'),
-				'id': ''
-			}, function(results) {
-				$('#simplesearch-result')
-					.empty()
-					.append(resultBuilder.outputQuery(input))
-					.append(resultBuilder.outputResults(results));
-			}, function(jqXHR, textStatus) {
-				$('#simplesearch-result')
-					.empty()
-					.append(resultBuilder.outputQuery(input))
-					.append(resultBuilder.outputError(textStatus));
-			});
+				'id': (new Date()).getTime() + '-' + 'webui'
+			};
+			if(typeof input === 'string') {
+				request['sentence'] = input;
+			} else {
+				request['tree'] = input;
+			}
+			api.sendRequest(
+				request,
+				function(results) {
+					$('#simplesearch-result')
+						.empty()
+						.append(resultBuilder.outputQuery(input))
+						.append(resultBuilder.outputResults(results));
+				}, function(jqXHR, textStatus) {
+					$('#simplesearch-result')
+						.empty()
+						.append(resultBuilder.outputQuery(input))
+						.append(resultBuilder.outputError(textStatus));
+				}
+			);
 		});
 
 		$('.simplesearch-button-random').click(function() {
