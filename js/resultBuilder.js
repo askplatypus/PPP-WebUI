@@ -126,6 +126,10 @@
 				return $('<span>')
 					.addClass('label label-warning ppp-node ppp-missing')
 					.text('?');
+			case 'sentence':
+				return $('<span>')
+					.addClass('label label-primary ppp-node ppp-sentence')
+					.text(tree.value);
 			default:
 				return $('<span>')
 					.addClass('label label-danger')
