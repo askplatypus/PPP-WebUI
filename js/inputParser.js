@@ -30,7 +30,7 @@
 			return this.parseTriple(text);
 		}
 
-		return text;
+		return {'type': 'sentence', 'value': text};
 	};
 
 	/**

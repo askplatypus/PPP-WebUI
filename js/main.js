@@ -36,21 +36,16 @@
 			);
 
 			var input = inputParser.parse($('#simplesearch-input-question').val());
-			var request = {
-				'language': $('html').attr('lang'),
-				'id': (new Date()).getTime() + '-' + 'webui',
-				'measures': {
-					'relevance': 0,
-					'accuracy': 1
-				}
-			};
-			if(typeof input === 'string') {
-				request['sentence'] = input;
-			} else {
-				request['tree'] = input;
-			}
 			api.sendRequest(
-				request,
+				{
+					'language': $('html').attr('lang'),
+					'id': (new Date()).getTime() + '-' + 'webui',
+					'tree': input,
+					'measures': {
+						'relevance': 0,
+						'accuracy': 1
+					}
+				},
 				function(results) {
 					$('#simplesearch-result')
 						.empty()
