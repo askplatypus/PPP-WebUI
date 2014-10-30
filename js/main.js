@@ -44,7 +44,8 @@
 					'measures': {
 						'relevance': 0,
 						'accuracy': 1
-					}
+					},
+					'trace': []
 				},
 				function(results) {
 					$('#simplesearch-result')
