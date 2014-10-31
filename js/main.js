@@ -36,16 +36,23 @@
 			);
 
 			var input = inputParser.parse($('#simplesearch-input-question').val());
+			var measures = {
+				'relevance': 0,
+				'accuracy': 1
+			};
 			api.sendRequest(
 				{
 					'language': $('html').attr('lang'),
 					'id': (new Date()).getTime() + '-' + 'webui',
 					'tree': input,
-					'measures': {
-						'relevance': 0,
-						'accuracy': 1
-					},
-					'trace': []
+					'measures': measures,
+					'trace': [
+						{
+							'module': 'input',
+							'tree': tree,
+							'measures': measures
+						}
+					]
 				},
 				function(results) {
 					$('#simplesearch-result')
