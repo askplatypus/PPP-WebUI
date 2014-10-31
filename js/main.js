@@ -49,7 +49,7 @@
 					'trace': [
 						{
 							'module': 'input',
-							'tree': tree,
+							'tree': input,
 							'measures': measures
 						}
 					]
