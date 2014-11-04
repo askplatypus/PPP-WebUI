@@ -21,7 +21,8 @@
   "dependencies": {
     "bootstrap": "~3.2.0",
     "html5shiv": "~3.7.2",
-    "respond": "~1.4.2"
+    "respond": "~1.4.2",
+	"purl": "~2.3.1"
   },
   "keywords": [
     "PPP",
