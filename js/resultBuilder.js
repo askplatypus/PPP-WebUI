@@ -36,7 +36,7 @@
 						)
 				)
 				.append($('<div>').text('Query')),
-			this.outputResult(query)
+			this.outputResultList([query])
 		);
 	};
 
@@ -55,8 +55,19 @@
 					.addClass('panel-body')
 					.text('After seven and a half million years of calculation I have found that the answer is 42.')
 			);
+		} else {
+			return this.outputPanel(
+				'success',
+				$('<div>').text('Result'),
+				this.outputResultList(results)
+			);
 		}
+	};
 
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.outputResultList = function(results) {
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
 		for(var i in results) {
@@ -67,11 +78,7 @@
 			);
 		}
 
-		return this.outputPanel(
-			'success',
-			$('<div>').text('Result'),
-			resultsRoot
-		);
+		return resultsRoot;
 	};
 
 	/**
