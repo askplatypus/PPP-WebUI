@@ -14,7 +14,7 @@
 
 
 	function getRandomQuestion() {
-		return 'Random question';
+		return 'What is the birth date of George Washington?';
 	}
 
 	function setupSimpleForm() {
