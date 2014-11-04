@@ -21,7 +21,7 @@
 	 * @return {jQuery}
 	 */
 	window.resultBuilder.prototype.outputQuery = function(query, queryString) {
-		var url = window.location.href.split('#')[0].split('?')[0]  + '?lang=' + query.language + '&q=' + queryString;
+		var url = window.location.href.split('#')[0].split('?')[0]  + '?lang=' + query.language + '&q=' + encodeURIComponent(queryString);
 		return this.outputPanel(
 			'info',
 			$('<div>')
