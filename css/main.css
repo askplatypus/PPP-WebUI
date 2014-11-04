@@ -38,3 +38,8 @@ body {
 	margin-left: 0.1em;
 	margin-right: 0.1em;
 }
+
+.url-link {
+	float: right;
+	margin-right: 1em;
+}

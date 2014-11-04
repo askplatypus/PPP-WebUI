@@ -54,12 +54,12 @@
 			function(results) {
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery(input))
+					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
 					.append(resultBuilder.outputResults(results));
 			}, function(jqXHR, textStatus) {
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery(input))
+					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
