@@ -18,21 +18,24 @@
 	}
 
 	function doQuery(question) {
-		$simpleSerarchResult.empty().append(
-			$('<div>')
-				.addClass('panel panel-default')
-				.append(
-				$('<div>')
-					.addClass('panel-body text-center')
-					.append(
-					$('<span>')
-						.addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate')
-				)
-					.append(' Loading...')
-			)
-		);
-
 		var input = inputParser.parse(question);
+
+		$simpleSerarchResult.empty()
+			.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
+			.append(
+				$('<div>')
+					.addClass('panel panel-default')
+					.append(
+						$('<div>')
+							.addClass('panel-body text-center')
+							.append(
+								$('<span>')
+									.addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate')
+							)
+							.append(' Loading...')
+					)
+		);
+		
 		var measures = {
 			'relevance': 0,
 			'accuracy': 1
