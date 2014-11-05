@@ -36,7 +36,7 @@
 	 * @private
 	 */
 	window.resultSpeaker.prototype.isSpeakSupported = function() {
-		return 'speechSynthesis' in window && window.speechSynthesis.getVoices().length > 0;
+		return 'speechSynthesis' in window;
 	};
 
 	/**

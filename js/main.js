@@ -12,6 +12,7 @@
 	var resultBuilder = new window.resultBuilder();
 	var resultSpeaker = new window.resultSpeaker(languageCode);
 	var $simpleSerarchResult = $('#simplesearch-result');
+	var $questionInput = $('#simplesearch-input-question');
 
 
 	function buildUrlForQuestion(question) {
@@ -81,19 +82,21 @@
 	}
 
 	function setupSimpleForm() {
+		$questionInput.attr('lang', languageCode);
+
 		var queryQuestion = url.param('q');
 		if(queryQuestion) {
-			$('#simplesearch-input-question').val(queryQuestion);
+			$questionInput.val(queryQuestion);
 			doQuery(queryQuestion);
 		}
 
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();
-			doQuery($('#simplesearch-input-question').val());
+			doQuery($questionInput.val());
 		});
 
 		$('.simplesearch-button-random').click(function() {
-			$('#simplesearch-input-question').val(getRandomQuestion());
+			$questionInput.val(getRandomQuestion());
 		});
 	}
 
