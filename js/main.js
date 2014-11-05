@@ -30,7 +30,7 @@
 							.addClass('panel-body text-center')
 							.append(
 								$('<span>')
-									.addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate')
+									.addClass('fa fa-spinner fa-spin')
 							)
 							.append(' Loading...')
 					)
