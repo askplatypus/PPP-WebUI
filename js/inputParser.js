@@ -63,7 +63,7 @@
 			'value': ''
 		};
 
-		for(; this.text[this.position] !== end; this.position++) {
+		for(; this.position < this.text.length && this.text[this.position] !== end; this.position++) {
 			node.value += this.text[this.position];
 		}
 		this.position++;
