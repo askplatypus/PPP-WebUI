@@ -18,10 +18,10 @@
 	 * Builds a box for the query.
 	 *
 	 * @param {object} query The query done.
+	 * @param {string} queryUrl URL to this query.
 	 * @return {jQuery}
 	 */
-	window.resultBuilder.prototype.outputQuery = function(query, queryString) {
-		var url = window.location.href.split('#')[0].split('?')[0]  + '?lang=' + query.language + '&q=' + encodeURIComponent(queryString);
+	window.resultBuilder.prototype.outputQuery = function(query, queryUrl) {
 		return this.outputPanel(
 			'info',
 			$('<div>')
@@ -31,7 +31,7 @@
 						.append(
 							$('<a>')
 								.addClass('btn btn-default')
-								.attr('href', url)
+								.attr('href', queryUrl)
 								.text('Link to this request')
 						)
 				)

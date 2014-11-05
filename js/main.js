@@ -13,6 +13,14 @@
 	var languageCode = url.param('lang') ? url.param('lang') : 'en';
 
 
+	function buildUrlForQuestion(question) {
+		var query = {
+			'lang': languageCode,
+			'q': question
+		};
+		return window.location.href.split('#')[0].split('?')[0]  + '?' + $.param(query);
+	}
+
 	function getRandomQuestion() {
 		return 'What is the birth date of George Washington?';
 	}
@@ -21,7 +29,7 @@
 		var input = inputParser.parse(question);
 
 		$simpleSerarchResult.empty()
-			.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
+			.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 			.append(
 				$('<div>')
 					.addClass('panel panel-default')
