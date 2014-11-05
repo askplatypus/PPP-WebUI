@@ -5,12 +5,13 @@
 (function($, window) {
 	'use strict';
 
-	var api = new window.pppApi(window.config.pppCoreUrl);
-	var resultBuilder = new window.resultBuilder();
-	var inputParser = new window.inputParser();
-	var $simpleSerarchResult = $('#simplesearch-result');
 	var url = $.url();
 	var languageCode = url.param('lang') ? url.param('lang') : 'en';
+	var api = new window.pppApi(window.config.pppCoreUrl);
+	var inputParser = new window.inputParser();
+	var resultBuilder = new window.resultBuilder();
+	var resultSpeaker = new window.resultSpeaker(languageCode);
+	var $simpleSerarchResult = $('#simplesearch-result');
 
 
 	function buildUrlForQuestion(question) {
@@ -67,6 +68,9 @@
 					.empty()
 					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
 					.append(resultBuilder.outputResults(results));
+				if(config.speaking) {
+					resultSpeaker.speakResults(results);
+				}
 			}, function(jqXHR, textStatus) {
 				$('#simplesearch-result')
 					.empty()
