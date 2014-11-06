@@ -67,7 +67,7 @@
 			function(results) {
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
+					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputResults(results));
 				if(config.speaking) {
 					resultSpeaker.speakResults(results);
@@ -75,7 +75,7 @@
 			}, function(jqXHR, textStatus) {
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, question))
+					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
