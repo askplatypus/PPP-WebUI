@@ -44,7 +44,7 @@
 							)
 							.append(' Loading...')
 					)
-		);
+			);
 
 		var measures = {
 			'relevance': 0,
