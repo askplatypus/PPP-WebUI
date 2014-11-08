@@ -138,7 +138,7 @@
 			case 'resource':
 				return $('<span>')
 					.addClass('label label-info ppp-node ppp-resource')
-					.text(tree.value);
+					.append(this.outputResource(tree));
 			case 'missing':
 				return $('<span>')
 					.addClass('label label-warning ppp-node ppp-missing')
@@ -151,6 +151,34 @@
 				return $('<span>')
 					.addClass('label label-danger')
 					.text(JSON.stringify(tree));
+		}
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.outputResource = function(resource) {
+		if(!('value-type' in resource)) {
+			resource['value-type'] = 'string';
+		}
+		switch(resource['value-type']) {
+			case 'string':
+				var $node = $('<span>');
+				if('language' in resource && resource.language !== '') {
+					$node.attr('lang', resource.language);
+				}
+				return $node.text(resource.value);
+			case 'time':
+				var formattedDate = (new Date(resource.value)).toLocaleString();
+				if(formattedDate === 'Invalid Date') {
+					formattedDate = resource.value;
+				}
+				return $('<time>')
+					.attr('datetime', resource.value)
+					.text(formattedDate);
+			default:
+				return $('<span>')
+					.text(resource.value);
 		}
 	};
 
