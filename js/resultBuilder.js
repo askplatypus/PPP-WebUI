@@ -2,7 +2,7 @@
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
  */
-(function($, window) {
+(function($, window, MathJax) {
 	'use strict';
 
 	/**
@@ -182,10 +182,14 @@
 				return $('<time>')
 					.attr('datetime', resource.value)
 					.text(formattedDate);
+			case 'math-latex':
+				return $('<script>')
+					.attr('type', 'math/tex')
+					.text(resource.value);
 			default:
 				return $('<span>')
 					.text(resource.value);
 		}
 	};
 
-} (jQuery, window));
+} (jQuery, window, MathJax));
