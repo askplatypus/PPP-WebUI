@@ -169,7 +169,13 @@
 				}
 				return $node.text(resource.value);
 			case 'time':
-				var formattedDate = (new Date(resource.value)).toLocaleString();
+				var formattedDate = '';
+				var dateObject = new Date(resource.value);
+				if(resource.value.indexOf('T') === -1) {
+					formattedDate = dateObject.toLocaleDateString();
+				} else {
+					formattedDate = dateObject.toLocaleString();
+				}
 				if(formattedDate === 'Invalid Date') {
 					formattedDate = resource.value;
 				}
