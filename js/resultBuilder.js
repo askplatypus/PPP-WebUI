@@ -14,6 +14,39 @@
 	window.resultBuilder = function() {
 	};
 
+	window.resultBuilder.resourceFormatters = {
+
+		'string': function(resource) {
+			var $node = $('<span>');
+			if ('language' in resource && resource.language !== '') {
+				$node.attr('lang', resource.language);
+			}
+			return $node.text(resource.value);
+		},
+
+		'time': function(resource) {
+			var formattedDate = '';
+			var dateObject = new Date(resource.value);
+			if (resource.value.indexOf('T') === -1) {
+				formattedDate = dateObject.toLocaleDateString();
+			} else {
+				formattedDate = dateObject.toLocaleString();
+			}
+			if (formattedDate === 'Invalid Date') {
+				formattedDate = resource.value;
+			}
+			return $('<time>')
+				.attr('datetime', resource.value)
+				.text(formattedDate);
+		},
+
+		'math-latex': function(resource) {
+			return $('<script>')
+				.attr('type', 'math/tex')
+				.text(resource.value);
+		}
+	};
+
 	/**
 	 * Builds a box for the query.
 	 *
@@ -161,34 +194,12 @@
 		if(!('value-type' in resource)) {
 			resource['value-type'] = 'string';
 		}
-		switch(resource['value-type']) {
-			case 'string':
-				var $node = $('<span>');
-				if('language' in resource && resource.language !== '') {
-					$node.attr('lang', resource.language);
-				}
-				return $node.text(resource.value);
-			case 'time':
-				var formattedDate = '';
-				var dateObject = new Date(resource.value);
-				if(resource.value.indexOf('T') === -1) {
-					formattedDate = dateObject.toLocaleDateString();
-				} else {
-					formattedDate = dateObject.toLocaleString();
-				}
-				if(formattedDate === 'Invalid Date') {
-					formattedDate = resource.value;
-				}
-				return $('<time>')
-					.attr('datetime', resource.value)
-					.text(formattedDate);
-			case 'math-latex':
-				return $('<script>')
-					.attr('type', 'math/tex')
-					.text(resource.value);
-			default:
-				return $('<span>')
-					.text(resource.value);
+
+		if(resource['value-type'] in window.resultBuilder.resourceFormatters) {
+			return window.resultBuilder.resourceFormatters[resource['value-type']](resource);
+		} else {
+			return $('<span>')
+				.text(resource.value);
 		}
 	};
 
