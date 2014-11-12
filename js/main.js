@@ -104,7 +104,9 @@
 		});
 
 		$('.simplesearch-button-random').click(function() {
-			$questionInput.val(getRandomQuestion());
+			$questionInput
+				.val(getRandomQuestion())
+				.submit();
 		});
 	}
 
