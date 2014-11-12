@@ -36,7 +36,12 @@
 		return questions[Math.floor(Math.random()*questions.length)];
     }
 
-	function doQuery(question) {
+	function submitQuery(question, shouldSpeak) {
+		$questionInput.val(question);
+		doQuery(question, shouldSpeak);
+	}
+
+	function doQuery(question, shouldSpeak) {
 		var input = inputParser.parse(question);
 
 		$simpleSerarchResult.empty()
@@ -78,7 +83,7 @@
 					.empty()
 					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputResults(results));
-				if(config.speaking) {
+				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
 			}, function(jqXHR, textStatus) {
@@ -95,25 +100,20 @@
 
 		var queryQuestion = url.param('q');
 		if(queryQuestion) {
-			$questionInput.val(queryQuestion);
-			doQuery(queryQuestion);
+			submitQuery(queryQuestion, false);
 		}
 
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();
-			doQuery($questionInput.val());
+			doQuery($questionInput.val(), false);
 		});
 
 		$('.simplesearch-button-random').click(function() {
-			$questionInput
-				.val(getRandomQuestion())
-				.submit();
+			submitQuery(getRandomQuestion(), false);
 		});
 
 		speechInput.setupSpeechInput(function(result) {
-			$questionInput
-				.val(result)
-				.submit();
+			submitQuery(result, true);
 		});
 	}
 
