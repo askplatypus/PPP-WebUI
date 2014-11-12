@@ -11,6 +11,7 @@
 	var inputParser = new window.inputParser();
 	var resultBuilder = new window.resultBuilder();
 	var resultSpeaker = new window.resultSpeaker(languageCode);
+	var speechInput = new window.speechInput(languageCode);
 	var $simpleSerarchResult = $('#simplesearch-result');
 	var $questionInput = $('#simplesearch-input-question');
 
@@ -106,6 +107,12 @@
 		$('.simplesearch-button-random').click(function() {
 			$questionInput
 				.val(getRandomQuestion())
+				.submit();
+		});
+
+		speechInput.setupSpeechInput(function(result) {
+			$questionInput
+				.val(result)
 				.submit();
 		});
 	}
