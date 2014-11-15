@@ -51,6 +51,17 @@
 			return $('<script>')
 				.attr('type', 'math/tex')
 				.text(resource.value);
+		},
+
+		'wikibase-entity': function(resource) {
+			var $node = $('<a>')
+				.attr('href', 'http://www.wikidata.org/entity/' + resource['entity-id'])
+				.text(resource.value);
+
+			if ('description' in resource && resource.description !== '') {
+				$node.attr('title', resource.description);
+			}
+			return $node;
 		}
 	};
 
