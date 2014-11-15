@@ -44,14 +44,14 @@
 	 */
 	window.resultSpeaker.prototype.buildSpokenMessage = function(results) {
 		if(results.length === 0) {
-			return 'No results.'
+			return 'After seven and a half million years of calculation I have found that the answer is 42.';
 		}
 
 		var text = '';
 		if(results.length === 1) {
-			text = 'The result is: ';
+			text = 'The answer is: ';
 		} else {
-			text = 'The results are: ';
+			text = 'The answers are: ';
 		}
 
 		for(var i in results) {
