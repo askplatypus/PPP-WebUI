@@ -26,11 +26,11 @@
 		this.text = text.trim();
 		this.position = 0;
 
-		if((text[0] == '(' && text[text.length - 1] == ')')) {
-			return this.parseTriple(text);
+		if((this.text[0] == '(' && this.text[this.text.length - 1] == ')')) {
+			return this.parseTriple(this.text);
 		}
 
-		return {'type': 'sentence', 'value': text};
+		return {'type': 'sentence', 'value': this.text};
 	};
 
 	/**
