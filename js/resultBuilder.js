@@ -24,13 +24,20 @@
 			return $node.text(resource.value);
 		},
 
-		'time': function(resource) {
+		'time': function(resource, language) {
 			var formattedDate = '';
 			var dateObject = new Date(resource.value);
+			var formattingOptions = {
+				weekday: "long",
+				year: "numeric",
+				month: "long",
+				day: "numeric"
+			};
+
 			if (resource.value.indexOf('T') === -1) {
-				formattedDate = dateObject.toLocaleDateString();
+				formattedDate = dateObject.toLocaleDateString(language, formattingOptions);
 			} else {
-				formattedDate = dateObject.toLocaleString();
+				formattedDate = dateObject.toLocaleString(language, formattingOptions);
 			}
 			if (formattedDate === 'Invalid Date') {
 				formattedDate = resource.value;
@@ -136,7 +143,7 @@
 	window.resultBuilder.prototype.outputResult = function(result) {
 		return $('<div>')
 			.attr('lang', result.language)
-			.append(this.outputTree(result.tree));
+			.append(this.outputTree(result.tree, result.language));
 	};
 
 	/**
@@ -156,22 +163,22 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputTree = function(tree) {
+	window.resultBuilder.prototype.outputTree = function(tree, language) {
 		switch(tree.type) {
 			case 'triple':
 				return $('<span>')
 					.addClass('label label-default ppp-node ppp-triple')
 					.append('(')
-					.append(this.outputTree(tree.subject))
+					.append(this.outputTree(tree.subject, language))
 					.append(',')
-					.append(this.outputTree(tree.predicate))
+					.append(this.outputTree(tree.predicate, language))
 					.append(',')
-					.append(this.outputTree(tree.object))
+					.append(this.outputTree(tree.object, language))
 					.append(')');
 			case 'resource':
 				return $('<span>')
 					.addClass('label label-info ppp-node ppp-resource')
-					.append(this.outputResource(tree));
+					.append(this.outputResource(tree, language));
 			case 'missing':
 				return $('<span>')
 					.addClass('label label-warning ppp-node ppp-missing')
@@ -190,13 +197,13 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputResource = function(resource) {
+	window.resultBuilder.prototype.outputResource = function(resource, language) {
 		if(!('value-type' in resource)) {
 			resource['value-type'] = 'string';
 		}
 
 		if(resource['value-type'] in window.resultBuilder.resourceFormatters) {
-			return window.resultBuilder.resourceFormatters[resource['value-type']](resource);
+			return window.resultBuilder.resourceFormatters[resource['value-type']](resource, language);
 		} else {
 			return $('<span>')
 				.text(resource.value);
