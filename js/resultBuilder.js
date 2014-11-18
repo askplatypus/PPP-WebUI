@@ -54,14 +54,20 @@
 		},
 
 		'wikibase-entity': function(resource) {
-			var $node = $('<a>')
-				.attr('href', 'http://www.wikidata.org/entity/' + resource['entity-id'])
+			var $label = $('<span>')
 				.text(resource.value);
-
 			if ('description' in resource && resource.description !== '') {
-				$node.attr('title', resource.description);
+				$label.attr('title', resource.description);
 			}
-			return $node;
+
+			return $('<span>')
+				.append($label)
+				.append(
+					$('<a>')
+						.attr('href', 'http://www.wikidata.org/entity/' + resource['entity-id'])
+						.attr('title', 'Wikidata')
+						.addClass('icon-wikidata')
+				);
 		}
 	};
 
