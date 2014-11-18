@@ -8,6 +8,7 @@ body {
 }
 
 .ppp-node {
+	display: inline-block;
 	font-size: 95%;
 	margin-left: 0.1em;
 	margin-right: 0.1em;
