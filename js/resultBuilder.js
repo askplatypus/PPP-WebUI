@@ -2,7 +2,7 @@
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
  */
-(function($, window, MathJax) {
+(function($, window) {
 	'use strict';
 
 	/**
@@ -227,4 +227,4 @@
 		}
 	};
 
-} (jQuery, window, MathJax));
+} (jQuery, window));

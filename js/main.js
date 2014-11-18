@@ -83,6 +83,8 @@
 					.empty()
 					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputResults(results));
+
+				MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //reload MathJax
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
