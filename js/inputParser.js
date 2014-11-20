@@ -2,7 +2,7 @@
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
  */
-(function($, window) {
+(function(window) {
 	'use strict';
 
 	/**
@@ -27,9 +27,12 @@
 		this.position = 0;
 
 		try {
-			return this.parseTriple(this.text);
+			return this.parseTriple(null);
 		} catch(e) {
-			return {'type': 'sentence', 'value': this.text};
+			return {
+				'type': 'sentence',
+				'value': this.text
+			};
 		}
 	};
 
@@ -61,12 +64,7 @@
 		}
 		this.position++;
 
-		this.ignoreSpaces();
-
-		if(this.text[this.position] !== end) {
-			throw new SyntaxError("Invalid end after missing node");
-		}
-		this.position++;
+		this.checkEnd(end);
 
 		return {'type': 'missing'};
 	};
@@ -101,12 +99,30 @@
 		}
 		this.position++;
 
-		return {
+		var result = {
 			'type': 'triple',
 			'subject': this.parseNode(','),
 			'predicate': this.parseNode(','),
 			'object': this.parseNode(')')
 		};
+
+		if(end !== null) {
+			this.checkEnd(end);
+		}
+
+		return result;
+	};
+
+	/**
+	 * @private
+	 */
+	window.inputParser.prototype.checkEnd = function(end) {
+		this.ignoreSpaces();
+
+		if(this.text[this.position] !== end) {
+			throw new SyntaxError("Invalid end " + end);
+		}
+		this.position++;
 	};
 
 	/**
@@ -118,4 +134,4 @@
 		}
 	};
 
-} (jQuery, window));
+} (window));
