@@ -26,29 +26,25 @@
 		this.text = text.trim();
 		this.position = 0;
 
-		if((this.text[0] == '(' && this.text[this.text.length - 1] == ')')) {
+		try {
 			return this.parseTriple(this.text);
+		} catch(e) {
+			return {'type': 'sentence', 'value': this.text};
 		}
-
-		return {'type': 'sentence', 'value': this.text};
 	};
 
 	/**
 	 * @private
 	 */
-	window.inputParser.prototype.internalParse = function(end) {
-		while(this.text[this.position] == ' ') {
-			this.position++;
-		}
+	window.inputParser.prototype.parseNode = function(end) {
+		this.ignoreSpaces();
+
 		if(this.text[this.position] === '?') {
-			this.position += 2;
-			return {'type': 'missing'};
+			return this.parseMissing(end);
 		}
 
 		if(this.text[this.position] == '(') {
-			var triple = this.parseTriple(end);
-			this.position++;
-			return triple;
+			return this.parseTriple(end);
 		}
 
 		return this.parseResource(end);
@@ -57,32 +53,69 @@
 	/**
 	 * @private
 	 */
-	window.inputParser.prototype.parseResource = function(end) {
-		var node = {
-			'type': 'resource',
-			'value': ''
-		};
+	window.inputParser.prototype.parseMissing = function(end) {
+		this.ignoreSpaces();
 
-		for(; this.position < this.text.length && this.text[this.position] !== end; this.position++) {
-			node.value += this.text[this.position];
+		if(this.text[this.position] !== '?') {
+			throw new SyntaxError("Invalid missing node");
 		}
 		this.position++;
 
-		return node;
+		this.ignoreSpaces();
+
+		if(this.text[this.position] !== end) {
+			throw new SyntaxError("Invalid end after missing node");
+		}
+		this.position++;
+
+		return {'type': 'missing'};
+	};
+
+	/**
+	 * @private
+	 */
+	window.inputParser.prototype.parseResource = function(end) {
+		var value = '';
+		for(; this.position < this.text.length && this.text[this.position] !== end; this.position++) {
+			value += this.text[this.position];
+		}
+		if(this.position === this.text.length) {
+			throw new SyntaxError("Invalid end after resource node");
+		}
+		this.position++;
+
+		return {
+			'type': 'resource',
+			'value': value.trim()
+		};
 	};
 
 	/**
 	 * @private
 	 */
 	window.inputParser.prototype.parseTriple = function(end) {
+		this.ignoreSpaces();
+
+		if(this.text[this.position] !== '(') {
+			throw new SyntaxError("Invalid triple");
+		}
 		this.position++;
 
 		return {
 			'type': 'triple',
-			'subject': this.internalParse(','),
-			'predicate': this.internalParse(','),
-			'object': this.internalParse(')')
+			'subject': this.parseNode(','),
+			'predicate': this.parseNode(','),
+			'object': this.parseNode(')')
 		};
+	};
+
+	/**
+	 * @private
+	 */
+	window.inputParser.prototype.ignoreSpaces = function() {
+		while(this.text[this.position] === ' ' || this.text[this.position] === '\t') {
+			this.position++;
+		}
 	};
 
 } (jQuery, window));
