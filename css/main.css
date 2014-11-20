@@ -34,7 +34,16 @@ body {
 	background: url(//upload.wikimedia.org/wikipedia/commons/f/ff/Wikidata-logo.svg) 100% no-repeat;
 	background-size: 100%;
 	width: 26px;
-	height: 12px;
+	height: 16px;
+	margin-left: 0.5em;
+	display: inline-block;
+}
+
+.icon-wikipedia {
+	background: url(//upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/16px-Wikipedia-logo-v2.svg.png) 100% no-repeat;
+	background-size: 100%;
+	width: 16px;
+	height: 16px;
 	margin-left: 0.5em;
 	display: inline-block;
 }

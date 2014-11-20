@@ -53,18 +53,39 @@
 				.text(resource.value);
 		},
 
-		'wikibase-entity': function(resource) {
+		'wikibase-entity': function(resource, language) {
+			var entityId = resource['entity-id'];
 			var $label = $('<span>')
 				.text(resource.value);
 			if ('description' in resource && resource.description !== '') {
 				$label.attr('title', resource.description);
 			}
 
+			$.ajax({
+				'url': '//www.wikidata.org/w/api.php',
+				'data': {
+					'format': 'json',
+					'action': 'wbgetentities',
+					'ids': entityId,
+					'languages': language
+				},
+				'dataType': 'jsonp'
+			}).done(function(data) {
+				if(data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
+					$('<a>')
+						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + data.entities[entityId].sitelinks[language + 'wiki'].title)
+						.attr('title', 'Wikipedia')
+						.addClass('icon-wikipedia')
+						.appendTo('#wikibase-entity-' + entityId)
+				}
+			} );
+
 			return $('<span>')
+				.attr('id', 'wikibase-entity-' + entityId)
 				.append($label)
 				.append(
 					$('<a>')
-						.attr('href', 'http://www.wikidata.org/entity/' + resource['entity-id'])
+						.attr('href', '//www.wikidata.org/entity/' + entityId)
 						.attr('title', 'Wikidata')
 						.addClass('icon-wikidata')
 				);
