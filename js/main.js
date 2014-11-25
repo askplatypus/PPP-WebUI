@@ -66,10 +66,12 @@
 			'relevance': 0,
 			'accuracy': 1
 		};
+		var requestId = buildId();
+
 		api.sendRequest(
 			{
 				'language': languageCode,
-				'id': (new Date()).getTime() + '-' + 'webui',
+				'id': requestId,
 				'tree': input,
 				'measures': measures,
 				'trace': [
@@ -94,6 +96,7 @@
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
+				logResponse(requestId, question, results);
 			},
 			function(jqXHR, textStatus) {
 				if(input != currentInput) {
@@ -106,6 +109,33 @@
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
+	}
+
+	function logResponse(id, question, responses) {
+		if(!('pppLoggerUrl' in window.config)) {
+			console.log('Logger is not configured');
+		}
+
+		$.ajax({
+			url: window.config.pppLoggerUrl,
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({
+				'id': id,
+				'question': question,
+				'responses': responses
+			})
+		})
+		.fail(function(jqXHR, textStatus) {
+			console.log('Logging request failed ' + textStatus);
+		});
+	}
+
+	function buildId() {
+		var date = new Date();
+		var random = Math.floor(Math.random() * 100);
+		return date.getTime() +  '-' + date.getMilliseconds() + '-' + random + '-webui';
 	}
 
 	function setupSimpleForm() {
