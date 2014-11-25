@@ -14,6 +14,7 @@
 	var speechInput = new window.speechInput(languageCode);
 	var $simpleSerarchResult = $('#simplesearch-result');
 	var $questionInput = $('#simplesearch-input-question');
+	var currentInput = '';
 
 
 	function buildUrlForQuestion(question) {
@@ -43,6 +44,7 @@
 
 	function doQuery(question, shouldSpeak) {
 		var input = inputParser.parse(question);
+		currentInput = input;
 
 		$simpleSerarchResult.empty()
 			.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
@@ -79,6 +81,10 @@
 				]
 			},
 			function(results) {
+				if(input != currentInput) {
+					return; //old result
+				}
+
 				$('#simplesearch-result')
 					.empty()
 					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
@@ -88,7 +94,12 @@
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
-			}, function(jqXHR, textStatus) {
+			},
+			function(jqXHR, textStatus) {
+				if(input != currentInput) {
+					return; //old result
+				}
+
 				$('#simplesearch-result')
 					.empty()
 					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
