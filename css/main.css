@@ -7,7 +7,7 @@ body {
 	font-size: 150%;
 }
 
-.list-group-item{
+.list-group-item {
 	overflow-x: auto;
 }
 
@@ -46,4 +46,8 @@ body {
 	height: 16px;
 	margin-left: 0.5em;
 	display: inline-block;
+}
+
+.ppp-result-item-hidden {
+	display: none;
 }

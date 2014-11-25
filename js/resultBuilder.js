@@ -125,34 +125,63 @@
 	 * @return {jQuery}
 	 */
 	window.resultBuilder.prototype.outputResults = function(results) {
-		if(results.length === 0) {
-			return this.outputPanel(
-				'warning',
-				$('<div>').text('Result'),
-				$('<div>')
-					.addClass('panel-body')
-					.text('After seven and a half million years of calculation I have found that the answer is 42.')
-			);
-		} else {
-			return this.outputPanel(
-				'success',
-				$('<div>').text('Result'),
-				this.outputResultList(results)
-			);
+		var displayedResults = [];
+		var hiddenResults = [];
+
+		for(var i in results) {
+			if(results[i].tree.type === 'resource') {
+				displayedResults.push(results[i]);
+			} else {
+				hiddenResults.push(results[i]);
+			}
 		}
+
+		var panelType = 'success';
+		if(displayedResults.length === 0) {
+			panelType = 'warning';
+		}
+
+		var title = $('<div>');
+		if(hiddenResults.length > 0) {
+			title.append(this.outputShowHiddenResultsButton());
+		}
+		title.append($('<div>').text('Result'));
+
+		return this.outputPanel(
+			panelType,
+			title,
+			this.outputResultList(displayedResults, hiddenResults)
+		);
 	};
 
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputResultList = function(results) {
+	window.resultBuilder.prototype.outputResultList = function(displayedResults, hiddenResults) {
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
-		for(var i in results) {
+
+		if(displayedResults.length === 0) {
 			resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
-					.append(this.outputResult(results[i]))
+					.text('After seven and a half million years of calculation I have found that the answer is 42.')
+			);
+		} else {
+			for(var i in displayedResults) {
+				resultsRoot.append(
+					$('<li>')
+						.addClass('list-group-item')
+						.append(this.outputResult(displayedResults[i]))
+				);
+			}
+		}
+
+		for(var i in hiddenResults) {
+			resultsRoot.append(
+				$('<li>')
+					.addClass('list-group-item ppp-result-item-hidden')
+					.append(this.outputResult(hiddenResults[i]))
 			);
 		}
 
@@ -246,6 +275,35 @@
 			return $('<span>')
 				.text(resource.value);
 		}
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.outputShowHiddenResultsButton = function() {
+		var inHidePosition = false;
+
+		return $('<div>')
+			.addClass('url-link')
+			.append(
+				$('<a>')
+					.attr('id', 'ppp-button-internalresults')
+					.addClass('btn btn-default')
+					.text('Show internal results')
+					.click(function() {
+						if(inHidePosition) {
+							$('.ppp-result-item-hidden').hide();
+							$('#ppp-button-internalresults').text('Show internal results');
+							inHidePosition = false;
+						} else {
+							$('.ppp-result-item-hidden').show();
+							$('#ppp-button-internalresults').text('Hide internal results');
+							inHidePosition = true;
+						}
+					}
+
+				)
+			);
 	};
 
 } (jQuery, window));
