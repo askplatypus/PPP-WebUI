@@ -46,8 +46,11 @@
 		if(results.length === 0) {
 			return 'After seven and a half million years of calculation I have found that the answer is 42.';
 		}
+		
+		results = results.filter(function(result) {
+			return result.tree.type === 'resource';
+		});
 
-		results = results.filter(function (x) { return x["type"] == "resource"; });
 		var text = '';
 		if(results.length === 1) {
 			text = 'The answer is: ';
