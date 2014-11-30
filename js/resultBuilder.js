@@ -61,6 +61,7 @@
 				$label.attr('title', resource.description);
 			}
 
+			var nodeId = 'wikibase-entity-' + entityId + '-' + Math.floor(Math.random() * 1000);
 			$.ajax({
 				'url': '//www.wikidata.org/w/api.php',
 				'data': {
@@ -76,12 +77,12 @@
 						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + data.entities[entityId].sitelinks[language + 'wiki'].title)
 						.attr('title', 'Wikipedia')
 						.addClass('icon-wikipedia')
-						.appendTo('#wikibase-entity-' + entityId)
+						.appendTo('#' + nodeId)
 				}
 			} );
 
 			return $('<span>')
-				.attr('id', 'wikibase-entity-' + entityId)
+				.attr('id', nodeId)
 				.append($label)
 				.append(
 					$('<a>')
