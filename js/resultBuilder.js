@@ -234,15 +234,33 @@
 	window.resultBuilder.prototype.outputTree = function(tree, language) {
 		switch(tree.type) {
 			case 'triple':
-				return $('<span>')
-					.addClass('label label-default ppp-node ppp-triple')
-					.append('(')
-					.append(this.outputTree(tree.subject, language))
-					.append(',')
-					.append(this.outputTree(tree.predicate, language))
-					.append(',')
-					.append(this.outputTree(tree.object, language))
-					.append(')');
+				return this.outputSequence(
+					[tree.subject, tree.predicate, tree.object],
+					'(', ',', ')',
+					'label label-default ppp-node ppp-triple',
+					language
+				);
+			case 'list':
+				return this.outputSequence(
+					tree.list,
+					'[', ',', ']',
+					'ppp-node ppp-list',
+					language
+				);
+			case 'union':
+				return this.outputSequence(
+					tree.list,
+					'', '∪', '',
+					'ppp-node ppp-union',
+					language
+				);
+			case 'intersection':
+				return this.outputSequence(
+					tree.list,
+					'', '∩', '',
+					'ppp-node ppp-intersection',
+					language
+				);
 			case 'resource':
 				return $('<span>')
 					.addClass('label label-info ppp-node ppp-resource')
@@ -276,6 +294,29 @@
 			return $('<span>')
 				.text(resource.value);
 		}
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.outputSequence = function(elements, prefix, middle, suffix, style, language) {
+		var $node = $('<span>')
+			.addClass(style)
+			.append(prefix);
+		var elementsLength = elements.length;
+
+		if(elementsLength === 0) {
+			return $node.append(suffix);
+		}
+
+		$node.append(this.outputTree(elements[0], language));
+		for(var i = 1; i < elementsLength; i++) {
+			$node
+				.append(middle)
+				.append(this.outputTree(elements[i], language));
+		}
+
+		return $node.append(suffix);
 	};
 
 	/**
