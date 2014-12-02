@@ -86,6 +86,8 @@
 				if(input != currentInput) {
 					return; //old result
 				}
+				logResponse(requestId, question, results);
+
 				results = explodeList(results);
 
 				$('#simplesearch-result')
@@ -97,7 +99,6 @@
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
-				logResponse(requestId, question, results);
 			},
 			function(jqXHR, textStatus) {
 				if(input != currentInput) {
