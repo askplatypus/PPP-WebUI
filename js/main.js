@@ -86,6 +86,7 @@
 				if(input != currentInput) {
 					return; //old result
 				}
+				results = explodeList(results);
 
 				$('#simplesearch-result')
 					.empty()
@@ -109,6 +110,24 @@
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
+	}
+
+	function explodeList(responses) {
+		var exploded = [];
+		for(var i in responses) {
+			if(responses[i].tree.type === 'list') {
+				for(var j in responses[i].tree.list) {
+					exploded.push($.extend(
+						{},
+						responses[i],
+						{tree: responses[i].tree.list[j]}
+					));
+				}
+			} else {
+				exploded.push(responses[i]);
+			}
+		}
+		return exploded;
 	}
 
 	function logResponse(id, question, responses) {
