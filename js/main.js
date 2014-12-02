@@ -88,7 +88,7 @@
 				}
 				logResponse(requestId, question, results);
 
-				results = explodeList(results);
+				results = removeDuplicates(explodeList(results));
 
 				$('#simplesearch-result')
 					.empty()
@@ -129,6 +129,22 @@
 			}
 		}
 		return exploded;
+	}
+
+	function removeDuplicates(responses) {
+		var filtered = [];
+		var presentHashs = {};
+
+		for(var i in responses) {
+			var hash = JSON.stringify(responses[i].tree);
+
+			if(!(hash in presentHashs)) {
+				filtered.push(responses[i]);
+				presentHashs[hash] = true;
+			}
+		}
+
+		return filtered;
 	}
 
 	function logResponse(id, question, responses) {
