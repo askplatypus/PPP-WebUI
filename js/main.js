@@ -88,6 +88,7 @@
 					.append(resultBuilder.outputResults(results));
 
 				MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //reload MathJax
+				loadMaps();
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
@@ -137,6 +138,27 @@
 		}
 
 		return filtered;
+	}
+
+	function loadMaps() {
+		$('.map').each(function() {
+			var $this = $(this);
+			$this.css('height', '300px');
+
+			var map = L.map(this);
+
+			var geoJson = L.geoJson();
+			var data = JSON.parse($this.attr('data-geojson'));
+			for(var i in data) {
+				geoJson.addData(data[i]);
+			}
+			geoJson.addTo(map);
+			map.fitBounds(geoJson.getBounds());
+
+			L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+			}).addTo(map);
+		});
 	}
 
 	function logResponse(id, question, responses) {

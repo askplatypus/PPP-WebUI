@@ -55,3 +55,7 @@ body {
 .ppp-result-item-hidden {
 	display: none;
 }
+
+#map-container {
+	display: none;
+}

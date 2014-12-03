@@ -196,12 +196,15 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.displayResourceResults = function(results, resultsRoot) {
+	window.resultBuilder.prototype.displayResourceResults = function(results, $resultsRoot) {
 		var displayedResultsPerType = this.splitResourceResultsPerType(results);
 		for(var type in displayedResultsPerType) {
 			switch(type) {
+				case 'geo-json':
+					this.displayGeoJsonResourceResults(displayedResultsPerType[type], $resultsRoot);
+					break;
 				default:
-					this.displayOtherResourceResults(displayedResultsPerType[type], resultsRoot);
+					this.displayOtherResourceResults(displayedResultsPerType[type], $resultsRoot);
 					break;
 			}
 		}
@@ -210,9 +213,29 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.displayOtherResourceResults = function(results, resultsRoot) {
+	window.resultBuilder.prototype.displayGeoJsonResourceResults = function(results, $resultsRoot) {
+		var geoJsonData = [];
 		for(var i in results) {
-			resultsRoot.append(
+			geoJsonData.push(results[i].tree.geojson);
+		}
+
+		$resultsRoot.append(
+			$('<li>')
+				.addClass('list-group-item')
+				.append(
+					$('<div>')
+						.attr('class', 'map')
+						.attr('data-geojson', JSON.stringify(geoJsonData))
+				)
+		);
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.displayOtherResourceResults = function(results, $resultsRoot) {
+		for(var i in results) {
+			$resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
 					.append(this.outputResult(results[i]))
