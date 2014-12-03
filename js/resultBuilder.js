@@ -54,7 +54,7 @@
 		},
 
 		'geo-json': function(resource) {
-			return $node.text(resource.value);
+			return $('<span>').text(resource.value);
 		},
 
 		'wikibase-entity': function(resource, language) {
@@ -119,7 +119,13 @@
 						)
 				)
 				.append($('<div>').text('Query')),
-			this.outputResultList([query])
+			$('<ul>')
+				.addClass('list-group')
+				.append(
+					$('<li>')
+						.addClass('list-group-item')
+						.append(this.outputResult(query))
+				)
 		);
 	};
 
@@ -173,13 +179,7 @@
 					.text('After seven and a half million years of calculation I have found that the answer is 42.')
 			);
 		} else {
-			for(var i in displayedResults) {
-				resultsRoot.append(
-					$('<li>')
-						.addClass('list-group-item')
-						.append(this.outputResult(displayedResults[i]))
-				);
-			}
+			this.displayResourceResults(displayedResults, resultsRoot);
 		}
 
 		for(var i in hiddenResults) {
@@ -191,6 +191,51 @@
 		}
 
 		return resultsRoot;
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.displayResourceResults = function(results, resultsRoot) {
+		var displayedResultsPerType = this.splitResourceResultsPerType(results);
+		for(var type in displayedResultsPerType) {
+			switch(type) {
+				default:
+					this.displayOtherResourceResults(displayedResultsPerType[type], resultsRoot);
+					break;
+			}
+		}
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.displayOtherResourceResults = function(results, resultsRoot) {
+		for(var i in results) {
+			resultsRoot.append(
+				$('<li>')
+					.addClass('list-group-item')
+					.append(this.outputResult(results[i]))
+			);
+		}
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.splitResourceResultsPerType = function(results) {
+		var resultsPerType = {};
+
+		for(var i in results) {
+			var type = results[i].tree['value-type'];
+			if(type in resultsPerType) {
+				resultsPerType[type].push(results[i]);
+			} else {
+				resultsPerType[type] = [results[i]];
+			}
+		}
+
+		return resultsPerType;
 	};
 
 	/**
