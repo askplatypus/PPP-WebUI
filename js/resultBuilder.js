@@ -48,9 +48,13 @@
 		},
 
 		'math-latex': function(resource) {
-			return $('<script>')
-				.attr('type', 'math/tex')
-				.text(resource.value);
+			return $('<span>')
+				.attr('title', resource.value)
+				.append(
+					$('<script>')
+						.attr('type', 'math/tex')
+						.text(resource.latex)
+				);
 		},
 
 		'geo-json': function(resource) {
