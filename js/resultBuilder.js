@@ -53,6 +53,10 @@
 				.text(resource.value);
 		},
 
+		'geo-json': function(resource) {
+			return $node.text(resource.value);
+		},
+
 		'wikibase-entity': function(resource, language) {
 			var entityId = resource['entity-id'];
 			var $label = $('<span>')
