@@ -26,15 +26,7 @@
 	}
 
 	function getRandomQuestion() {
-		var questions = [
-			'What is the birth date of George Washington?',
-			'Who is the president of France?',
-			'What is the capital of Australia?',
-			'What is the birth date of the president of the United States?',
-			'Who is the author of "Foundation"?',
-			'Who is the director of "Pulp Fiction"?'
-		];
-		return questions[Math.floor(Math.random()*questions.length)];
+		return window.pppQuestions[Math.floor(Math.random() * window.pppQuestions.length)];
     }
 
 	function submitQuery(question, shouldSpeak) {
