@@ -143,9 +143,11 @@
 	function loadMaps() {
 		$('.map').each(function() {
 			var $this = $(this);
-			$this.css('height', '300px');
+			$this.css('height', '400px');
 
-			var map = L.map(this);
+			var map = L.map(this, {
+				maxZoom: 14
+			});
 
 			var geoJson = L.geoJson();
 			var data = JSON.parse($this.attr('data-geojson'));
