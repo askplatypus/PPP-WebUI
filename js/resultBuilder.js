@@ -337,6 +337,24 @@
 					'ppp-node ppp-intersection',
 					language
 				);
+			case 'sort':
+				return this.outputSequence(
+					[tree.list, tree.predicate],
+					'sort(', ',', ')',
+					'ppp-node ppp-sort'
+				);
+			case 'first':
+				return this.outputSequence(
+					[tree.list],
+					'first(', ',', ')',
+					'ppp-node ppp-first'
+				);
+			case 'last':
+				return this.outputSequence(
+					[tree.list],
+					'last(', ',', ')',
+					'ppp-node ppp-last'
+				);
 			case 'resource':
 				return $('<span>')
 					.addClass('label label-info ppp-node ppp-resource')
