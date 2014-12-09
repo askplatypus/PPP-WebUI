@@ -145,7 +145,8 @@
 			$this.css('height', '400px');
 
 			var map = L.map(this, {
-				maxZoom: 14
+				maxZoom: 14,
+				minZoom: 2
 			});
 
 			var geoJson = L.geoJson();
