@@ -8,7 +8,6 @@
 	var url = $.url();
 	var languageCode = url.param('lang') ? url.param('lang') : 'en';
 	var api = new window.pppApi(window.config.pppCoreUrl);
-	var inputParser = new window.inputParser();
 	var resultBuilder = new window.resultBuilder();
 	var resultSpeaker = new window.resultSpeaker(languageCode);
 	var speechInput = new window.speechInput(languageCode);
@@ -34,8 +33,7 @@
 		doQuery(question, shouldSpeak);
 	}
 
-	function doQuery(question, shouldSpeak) {
-		var input = inputParser.parse(question);
+	function doQuery(input, shouldSpeak) {
 		currentInput = input;
 
 		$simpleSerarchResult.empty()
