@@ -33,7 +33,8 @@
 		doQuery(question, shouldSpeak);
 	}
 
-	function doQuery(input, shouldSpeak) {
+	function doQuery(question, shouldSpeak) {
+		var input = {"type": "sentence", "value": question};
 		currentInput = input;
 
 		$simpleSerarchResult.empty()
