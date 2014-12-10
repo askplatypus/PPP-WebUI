@@ -213,6 +213,16 @@
 	}
 
 	$(function() {
+		//Setup MathJax config
+		MathJax.Hub.Config({
+			MMLorHTML: {
+				prefer: {
+					Firefox: "MML",
+					Safari: "MML"
+				}
+			}
+		});
+
 		setupSimpleForm();
 	});
 } (jQuery, window));
