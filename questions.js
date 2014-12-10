@@ -13,7 +13,7 @@ window.pppQuestions = [
 	"What is the capital of India?",
 	"Who is the prime minister of France?",
 	"What is the birth date of the president of the United States?",
-	"Who are the Beatles’ members?",
+	"Who are the Beatles' members?",
 	"sqrt(180)",
 	"N[Pi, 42]",
 	"Limit[Sum[1/i, {i,1,n}]-Log[n], n->Infinity]",
