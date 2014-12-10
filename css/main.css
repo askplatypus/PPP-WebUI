@@ -67,3 +67,7 @@ body {
 .badge-alpha {
 	vertical-align: super;
 }
+
+.card-image {
+	float: right;
+}

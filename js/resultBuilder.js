@@ -284,6 +284,10 @@
 				}
 			}
 
+			if(titles.length === 0) {
+				return;
+			}
+
 			//Get Wikipedia first lines
 			$.ajax({
 				'url': '//' + language + '.wikipedia.org/w/api.php',
@@ -291,8 +295,8 @@
 					'format': 'json',
 					'action': 'query',
 					'titles': titles.join('|'),
-					'prop': 'extracts',
 					'redirects': true,
+					'prop': 'extracts',
 					'exintro': true,
 					'exsectionformat': 'plain',
 					'explaintext': true,
@@ -316,6 +320,45 @@
 									.text('Wikipedia')
 							)
 							.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
+					}
+				}
+			});
+
+			//Get an image from Wikipedia
+			//TODO use Wikidata image?
+			$.ajax({
+				'url': '//' + language + '.wikipedia.org/w/api.php',
+				'data': {
+					'format': 'json',
+					'action': 'query',
+					'titles': titles.join('|'),
+					'redirects': true,
+					'prop': 'pageimages',
+					'piprop': 'thumbnail|name',
+					'pithumbsize': 150,
+					'pilimit': titles.length
+				},
+				'dataType': 'jsonp'
+			}).done(function(data) {
+				for(var i in data.query.pages) {
+					if('thumbnail' in data.query.pages[i]) {
+						var imageInfo = data.query.pages[i];
+
+						$('<a>')
+							.attr({
+								'href': '//commons.wikimedia.org/wiki/Image:' + imageInfo.pageimage
+							})
+							.addClass('card-image')
+							.append(
+								$('<img>')
+									.attr({
+										'src': imageInfo.thumbnail.source,
+										'width': imageInfo.thumbnail.width,
+										'height': imageInfo.thumbnail.height,
+										'alt': imageInfo.title
+									})
+							)
+							.prependTo('#wikibase-entity-' + entityForTitle[imageInfo.title] + ' article');
 					}
 				}
 			});
