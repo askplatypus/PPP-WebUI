@@ -226,6 +226,11 @@
 			var resource = results[i].tree;
 			var language = results[i].language;
 
+			//We ignore entities without label: no hope to get a fair enough display
+			if(resource.value === '') {
+				continue;
+			}
+
 			var entityId = resource['entity-id'];
 			entityIds.push(entityId);
 			var $label = $('<span>')
