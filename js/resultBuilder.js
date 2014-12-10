@@ -328,7 +328,7 @@
 			$resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
-					.append(this.outputResult(results[i]))
+					.append(this.outputResource(results[i].tree, results[i].language))
 			);
 		}
 	};
