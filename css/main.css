@@ -59,3 +59,7 @@ body {
 #map-container {
 	display: none;
 }
+
+.wikibase-entity-text {
+	font-size: 75%;
+}

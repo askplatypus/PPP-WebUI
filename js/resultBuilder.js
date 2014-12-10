@@ -65,32 +65,11 @@
 			var entityId = resource['entity-id'];
 			var $label = $('<span>')
 				.text(resource.value);
-			if ('description' in resource && resource.description !== '') {
+			if('description' in resource && resource.description !== '') {
 				$label.attr('title', resource.description);
 			}
 
-			var nodeId = 'wikibase-entity-' + entityId + '-' + Math.floor(Math.random() * 1000);
-			$.ajax({
-				'url': '//www.wikidata.org/w/api.php',
-				'data': {
-					'format': 'json',
-					'action': 'wbgetentities',
-					'ids': entityId,
-					'languages': language
-				},
-				'dataType': 'jsonp'
-			}).done(function(data) {
-				if(data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
-					$('<a>')
-						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + data.entities[entityId].sitelinks[language + 'wiki'].title)
-						.attr('title', 'Wikipedia')
-						.addClass('icon-wikipedia')
-						.appendTo('#' + nodeId)
-				}
-			} );
-
 			return $('<span>')
-				.attr('id', nodeId)
 				.append($label)
 				.append(
 					$('<a>')
@@ -207,6 +186,9 @@
 				case 'geo-json':
 					this.displayGeoJsonResourceResults(displayedResultsPerType[type], $resultsRoot);
 					break;
+				case 'wikibase-entity':
+					this.displayWikibaseEntityResourceResults(displayedResultsPerType[type], $resultsRoot);
+					break;
 				default:
 					this.displayOtherResourceResults(displayedResultsPerType[type], $resultsRoot);
 					break;
@@ -232,6 +214,110 @@
 						.attr('data-geojson', JSON.stringify(geoJsonData))
 				)
 		);
+	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.displayWikibaseEntityResourceResults = function(results, $resultsRoot) {
+		var entityIds = [];
+		for(var i in results) {
+			var resource = results[i].tree;
+			var language = results[i].language;
+
+			var entityId = resource['entity-id'];
+			entityIds.push(entityId);
+			var $label = $('<span>')
+				.text(resource.value);
+			if('description' in resource && resource.description !== '') {
+				$label.attr('title', resource.description);
+			}
+
+			$resultsRoot.append(
+				$('<li>')
+					.addClass('list-group-item')
+					.attr('id', 'wikibase-entity-' + entityId)
+					.append(
+						$('<article>')
+							.append(
+								$('<h4>')
+									.append($label)
+									.append(
+										$('<a>')
+											.attr('href', '//www.wikidata.org/entity/' + entityId)
+											.attr('title', 'Wikidata')
+											.addClass('icon-wikidata')
+									)
+							)
+					)
+			);
+		}
+
+		//Get wikidata informations
+		$.ajax({
+			'url': '//www.wikidata.org/w/api.php',
+			'data': {
+				'format': 'json',
+				'action': 'wbgetentities',
+				'ids': entityIds.join('|'), //TODO: limit of the 50 first results. It's, I think, not an issue
+				'languages': language,
+				'languagefallback': true,
+				'props': 'info|sitelinks|aliases|labels|descriptions|datatype' //if you need more data, see https://www.wikidata.org/w/api.php?action=help&modules=wbgetentities
+			},
+			'dataType': 'jsonp'
+		}).done(function(data) {
+			var entityForTitle = {};
+			var titles = [];
+
+			for(var entityId in data.entities) {
+				if(data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
+					var title = data.entities[entityId].sitelinks[language + 'wiki'].title;
+					titles.push(title);
+					entityForTitle[title] = entityId;
+
+					$('<a>')
+						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
+						.attr('title', 'Wikipedia')
+						.addClass('icon-wikipedia')
+						.appendTo('#wikibase-entity-' + entityId + ' h4')
+				}
+			}
+
+			//Get Wikipedia first lines
+			$.ajax({
+				'url': '//' + language + '.wikipedia.org/w/api.php',
+				'data': {
+					'format': 'json',
+					'action': 'query',
+					'titles': titles.join('|'),
+					'prop': 'extracts',
+					'redirects': true,
+					'exintro': true,
+					'exsectionformat': 'plain',
+					'explaintext': true,
+					'exsentences': 3,
+					'exlimit': titles.length
+				},
+				'dataType': 'jsonp'
+			}).done(function(data) {
+				for(var i in data.query.pages) {
+					if('extract' in data.query.pages[i]) {
+						var title = data.query.pages[i].title;
+
+						$('<p>')
+							.addClass('wikibase-entity-text')
+							.text(data.query.pages[i].extract)
+							.append(' ')
+							.append(
+								$('<a>')
+									.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
+									.text('Wikipedia')
+							)
+							.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
+					}
+				}
+			});
+		});
 	};
 
 	/**
