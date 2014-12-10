@@ -106,8 +106,9 @@
 				.addClass('list-group')
 				.append(
 					$('<li>')
+						.attr('lang', query.language)
 						.addClass('list-group-item')
-						.append(this.outputResult(query))
+						.text(query.tree.value)
 				)
 		);
 	};
@@ -240,7 +241,7 @@
 					.append(
 						$('<article>')
 							.append(
-								$('<h4>')
+								$('<h3>')
 									.append($label)
 									.append(
 										$('<a>')
@@ -279,7 +280,7 @@
 						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
 						.attr('title', 'Wikipedia')
 						.addClass('icon-wikipedia')
-						.appendTo('#wikibase-entity-' + entityId + ' h4')
+						.appendTo('#wikibase-entity-' + entityId + ' h3')
 				}
 			}
 
@@ -311,6 +312,7 @@
 							.append(
 								$('<a>')
 									.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
+									.addClass('small')
 									.text('Wikipedia')
 							)
 							.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');

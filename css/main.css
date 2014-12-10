@@ -7,6 +7,10 @@ body {
 	font-size: 150%;
 }
 
+#simplesearch-result article {
+	font-size: 75%;
+}
+
 .list-group-item {
 	overflow-x: auto;
 }
@@ -60,6 +64,6 @@ body {
 	display: none;
 }
 
-.wikibase-entity-text {
-	font-size: 75%;
+.badge-alpha {
+	vertical-align: super;
 }
