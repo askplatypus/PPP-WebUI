@@ -221,7 +221,9 @@
 	 * @private
 	 */
 	window.resultBuilder.prototype.displayWikibaseEntityResourceResults = function(results, $resultsRoot) {
+		var resultBuilder = this;
 		var entityIds = [];
+
 		for(var i in results) {
 			var resource = results[i].tree;
 			var language = results[i].language;
@@ -260,9 +262,9 @@
 		}
 
 		//Get wikidata informations
-		$.ajax({
-			'url': '//www.wikidata.org/w/api.php',
-			'data': {
+		this.doApiQuery(
+			'//www.wikidata.org/w/api.php',
+			{
 				'format': 'json',
 				'action': 'wbgetentities',
 				'ids': entityIds.join('|'), //TODO: limit of the 50 first results. It's, I think, not an issue
@@ -270,103 +272,128 @@
 				'languagefallback': true,
 				'props': 'info|sitelinks|aliases|labels|descriptions|datatype' //if you need more data, see https://www.wikidata.org/w/api.php?action=help&modules=wbgetentities
 			},
-			'dataType': 'jsonp'
-		}).done(function(data) {
-			var entityForTitle = {};
-			var titles = [];
+			function(data) {
+				var entityForTitle = {};
+				var titles = [];
 
-			for(var entityId in data.entities) {
-				if(data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
-					var title = data.entities[entityId].sitelinks[language + 'wiki'].title;
-					titles.push(title);
-					entityForTitle[title] = entityId;
-
-					$('<a>')
-						.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
-						.attr('title', 'Wikipedia')
-						.addClass('icon-wikipedia')
-						.appendTo('#wikibase-entity-' + entityId + ' h3')
-				}
-			}
-
-			if(titles.length === 0) {
-				return;
-			}
-
-			//Get Wikipedia first lines
-			$.ajax({
-				'url': '//' + language + '.wikipedia.org/w/api.php',
-				'data': {
-					'format': 'json',
-					'action': 'query',
-					'titles': titles.join('|'),
-					'redirects': true,
-					'prop': 'extracts',
-					'exintro': true,
-					'exsectionformat': 'plain',
-					'explaintext': true,
-					'exsentences': 3,
-					'exlimit': titles.length
-				},
-				'dataType': 'jsonp'
-			}).done(function(data) {
-				for(var i in data.query.pages) {
-					if('extract' in data.query.pages[i]) {
-						var title = data.query.pages[i].title;
-
-						$('<p>')
-							.addClass('wikibase-entity-text')
-							.text(data.query.pages[i].extract)
-							.append(' ')
-							.append(
-								$('<a>')
-									.attr('href', '//' +  language + '.wikipedia.org/wiki/' + title)
-									.addClass('small')
-									.text('Wikipedia')
-							)
-							.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
-					}
-				}
-			});
-
-			//Get an image from Wikipedia
-			//TODO use Wikidata image?
-			$.ajax({
-				'url': '//' + language + '.wikipedia.org/w/api.php',
-				'data': {
-					'format': 'json',
-					'action': 'query',
-					'titles': titles.join('|'),
-					'redirects': true,
-					'prop': 'pageimages',
-					'piprop': 'thumbnail|name',
-					'pithumbsize': 150,
-					'pilimit': titles.length
-				},
-				'dataType': 'jsonp'
-			}).done(function(data) {
-				for(var i in data.query.pages) {
-					if('thumbnail' in data.query.pages[i]) {
-						var imageInfo = data.query.pages[i];
+				for (var entityId in data.entities) {
+					if (data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
+						var title = data.entities[entityId].sitelinks[language + 'wiki'].title;
+						titles.push(title);
+						entityForTitle[title] = entityId;
 
 						$('<a>')
-							.attr({
-								'href': '//commons.wikimedia.org/wiki/Image:' + imageInfo.pageimage
-							})
-							.addClass('card-image')
-							.append(
-								$('<img>')
-									.attr({
-										'src': imageInfo.thumbnail.source,
-										'width': imageInfo.thumbnail.width,
-										'height': imageInfo.thumbnail.height,
-										'alt': imageInfo.title
-									})
-							)
-							.prependTo('#wikibase-entity-' + entityForTitle[imageInfo.title] + ' article');
+							.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
+							.attr('title', 'Wikipedia')
+							.addClass('icon-wikipedia')
+							.appendTo('#wikibase-entity-' + entityId + ' h3')
 					}
 				}
-			});
+
+				if (titles.length === 0) {
+					return;
+				}
+
+				//Get Wikipedia first lines
+				resultBuilder.doApiQuery(
+					'//' + language + '.wikipedia.org/w/api.php',
+					{
+						'format': 'json',
+						'action': 'query',
+						'titles': titles.join('|'),
+						'redirects': true,
+						'prop': 'extracts',
+						'exintro': true,
+						'exsectionformat': 'plain',
+						'explaintext': true,
+						'exsentences': 3,
+						'exlimit': 20
+					},
+					function (data) {
+						for (var i in data.query.pages) {
+							if ('extract' in data.query.pages[i]) {
+								var title = data.query.pages[i].title;
+
+								$('<p>')
+									.addClass('wikibase-entity-text')
+									.text(data.query.pages[i].extract)
+									.append(' ')
+									.append(
+									$('<a>')
+										.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
+										.addClass('small')
+										.text('Wikipedia')
+								)
+									.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
+							}
+						}
+					}
+				);
+
+				//Get an image from Wikipedia
+				//TODO use Wikidata image?
+				resultBuilder.doApiQuery(
+					'//' + language + '.wikipedia.org/w/api.php',
+					{
+						'format': 'json',
+						'action': 'query',
+						'titles': titles.join('|'),
+						'redirects': true,
+						'prop': 'pageimages',
+						'piprop': 'thumbnail|name',
+						'pithumbsize': 150,
+						'pilimit': 50
+					},
+					function (data) {
+						for (var i in data.query.pages) {
+							if ('thumbnail' in data.query.pages[i]) {
+								var imageInfo = data.query.pages[i];
+
+								$('<a>')
+									.attr({
+										'href': '//commons.wikimedia.org/wiki/Image:' + imageInfo.pageimage
+									})
+									.addClass('card-image')
+									.append(
+									$('<img>')
+										.attr({
+											'src': imageInfo.thumbnail.source,
+											'width': imageInfo.thumbnail.width,
+											'height': imageInfo.thumbnail.height,
+											'alt': imageInfo.title
+										})
+								)
+									.prependTo('#wikibase-entity-' + entityForTitle[imageInfo.title] + ' article');
+							}
+						}
+					}
+				);
+			}
+		);
+	};
+
+	/**
+	 * @private
+	 * Calls success each time the API returns a set of results
+	 */
+	window.resultBuilder.prototype.doApiQuery = function(apiUrl, parameters, success) {
+		var resultBuilder = this;
+
+		parameters['format'] = 'json';
+		if(!('continue' in parameters)) {
+			parameters['continue'] = ''
+		}
+
+		$.ajax({
+			'url': apiUrl,
+			'data': parameters,
+			'dataType': 'jsonp'
+		}).done(function(data) {
+			if('continue' in data) {
+				resultBuilder.doApiQuery(apiUrl, $.extend(parameters, data['continue']), success);
+			}
+
+			success(data);
 		});
 	};
 
