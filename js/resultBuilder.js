@@ -267,7 +267,7 @@
 			{
 				'format': 'json',
 				'action': 'wbgetentities',
-				'ids': entityIds.join('|'), //TODO: limit of the 50 first results. It's, I think, not an issue
+				'ids': entityIds.join('|'),
 				'languages': language,
 				'languagefallback': true,
 				'props': 'info|sitelinks|aliases|labels|descriptions|datatype' //if you need more data, see https://www.wikidata.org/w/api.php?action=help&modules=wbgetentities
@@ -319,11 +319,11 @@
 									.text(data.query.pages[i].extract)
 									.append(' ')
 									.append(
-									$('<a>')
-										.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
-										.addClass('small')
-										.text('Wikipedia')
-								)
+										$('<a>')
+											.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
+											.addClass('small')
+											.text('Wikipedia')
+									)
 									.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
 							}
 						}
