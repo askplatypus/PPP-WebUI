@@ -71,3 +71,8 @@ body {
 .card-image {
 	float: right;
 }
+
+#navbar-logo {
+	height: 3.2em;
+	margin-top: -1.1em;
+}
