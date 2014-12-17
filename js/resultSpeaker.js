@@ -43,13 +43,13 @@
 	 * @private
 	 */
 	window.resultSpeaker.prototype.buildSpokenMessage = function(results) {
-		if(results.length === 0) {
-			return 'After seven and a half million years of calculation I have found that the answer is 42.';
-		}
-		
 		results = results.filter(function(result) {
 			return result.tree.type === 'resource';
 		});
+
+		if(results.length === 0) {
+			return 'After seven and a half million years of calculation I have found that the answer is 42.';
+		}
 
 		var text = '';
 		if(results.length === 1) {
@@ -75,7 +75,11 @@
 
 		switch(resource['value-type']) {
 			case 'wikibase-entity':
-				return resource.value + ' (' + resource.description + ')';
+				var str = resource.value;
+				if('description' in resource) {
+					str += ' (' + resource.description + ')';
+				}
+				return str;
 			default:
 				return resource.value;
 		}
