@@ -54,6 +54,10 @@
 					)
 			);
 
+		if('history' in window && typeof window.history.pushState === 'function') {
+			window.history.pushState({}, question, buildUrlForQuestion(question));
+		}
+
 		var measures = {
 			'relevance': 0,
 			'accuracy': 1
