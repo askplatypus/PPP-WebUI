@@ -81,39 +81,6 @@
 	};
 
 	/**
-	 * Builds a box for the query.
-	 *
-	 * @param {object} query The query done.
-	 * @param {string} queryUrl URL to this query.
-	 * @return {jQuery}
-	 */
-	window.resultBuilder.prototype.outputQuery = function(query, queryUrl) {
-		return this.outputPanel(
-			'info',
-			$('<div>')
-				.append(
-					$('<div>')
-						.addClass('url-link')
-						.append(
-							$('<a>')
-								.addClass('btn btn-default')
-								.attr('href', queryUrl)
-								.text('Link to this request')
-						)
-				)
-				.append($('<div>').text('Query')),
-			$('<ul>')
-				.addClass('list-group')
-				.append(
-					$('<li>')
-						.attr('lang', query.language)
-						.addClass('list-group-item')
-						.text(query.tree.value)
-				)
-		);
-	};
-
-	/**
 	 * Builds a box for the results.
 	 *
 	 * @param {array} results The results.

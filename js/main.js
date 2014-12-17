@@ -39,7 +39,6 @@
 		currentInput = input;
 
 		$simpleSerarchResult.empty()
-			.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 			.append(
 				$('<div>')
 					.addClass('panel panel-default')
@@ -88,7 +87,6 @@
 
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputResults(results));
 
 				MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //reload MathJax
@@ -112,7 +110,6 @@
 
 				$('#simplesearch-result')
 					.empty()
-					.append(resultBuilder.outputQuery({'language':languageCode, 'tree':input}, buildUrlForQuestion(question)))
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
