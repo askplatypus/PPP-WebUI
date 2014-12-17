@@ -59,7 +59,7 @@ window.pppQuestions = [
 	"What is the time zone of France?",
 	"What is the time zone of San Francisco?",
 	"Where is the Bay Area?",
-	"What is the music genre of the Beattles?",
+	"What is the music genre of the Beatles?",
 	"What is the music genre of Bob Marley?",
 	"What is the film genre of Full Metal Jacket?"
 ];
