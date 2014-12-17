@@ -59,7 +59,7 @@
 		}
 
 		for(var i in results) {
-			text += this.buildSpokenMessageForTree(results[i].tree) + ' ';
+			text += this.buildSpokenMessageForResource(results[i].tree) + ' ';
 		}
 
 		return text;
@@ -68,19 +68,16 @@
 	/**
 	 * @private
 	 */
-	window.resultSpeaker.prototype.buildSpokenMessageForTree = function(tree) {
-		switch(tree.type) {
-			case 'triple':
-				return this.buildSpokenMessageForTree(tree.subject) + ' ' +
-					this.buildSpokenMessageForTree(tree.predicate) + ' is ' +
-					this.buildSpokenMessageForTree(tree.object);
-			case 'resource':
-			case 'sentence':
-				return tree.value;
-			case 'missing':
-				return 'missing';
+	window.resultSpeaker.prototype.buildSpokenMessageForResource = function(resource) {
+		if(!('value-type' in resource)) {
+			resource['value-type'] = 'string';
+		}
+
+		switch(resource['value-type']) {
+			case 'wikibase-entity':
+				return resource.value + ' (' + resource.description + ')';
 			default:
-				return '';
+				return resource.value;
 		}
 	};
 
