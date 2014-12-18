@@ -14,7 +14,6 @@
 	var $simpleSerarchResult = $('#simplesearch-result');
 	var $questionInput = $('#simplesearch-input-question');
 	var currentInput = '';
-	var answerCount = 0;
 
 
 	function buildUrlForQuestion(question) {
@@ -93,14 +92,6 @@
 				loadMaps();
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
-				}
-
-				answerCount++;
-				if(answerCount === 5) {
-					$('<div>')
-						.addClass('alert alert-danger')
-						.text('You really should listen to the presentation')
-						.insertAfter('#simplesearch-input-area');
 				}
 			},
 			function(jqXHR, textStatus) {
