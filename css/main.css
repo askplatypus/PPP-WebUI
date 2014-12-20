@@ -56,6 +56,10 @@ body {
 	display: inline-block;
 }
 
+.wikibase-entity-text {
+	text-align: justify;
+}
+
 .ppp-result-item-hidden {
 	display: none;
 }
@@ -70,6 +74,7 @@ body {
 
 .card-image {
 	float: right;
+	margin-left: 1em;
 }
 
 #navbar-logo {
