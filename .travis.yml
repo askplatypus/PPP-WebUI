@@ -1,0 +1,10 @@
+language: node_js
+
+cache:
+  apt: true
+
+install:
+  - sudo apt-get install imagemagick librsvg2-bin
+
+script:
+  - sh bootstrap_icons.sh
