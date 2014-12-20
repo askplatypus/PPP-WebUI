@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>Platypus</ShortName>
+    <Description>Platypus</Description>
+    <Url type="text/html" method="get" template="http://askplatyp.us/?lang={language}&amp;q={searchTerms}"/>
+    <LongName>Ask Platypus</LongName>
+    <Image height="64" width="64" type="image/png">http://askplatyp.us/img/icon-64.png</Image>
+    <Image height="16" width="16" type="image/vnd.microsoft.icon">http://askplatyp.us/flavicon.ico</Image>
+    <Query role="example" searchTerms="Who is Douglas Adams?" language="en" />
+    <SyndicationRight>open</SyndicationRight>
+    <AdultContent>false</AdultContent>
+    <Language>en</Language>
+    <InputEncoding>UTF-8</InputEncoding>
+    <OutputEncoding>UTF-8</OutputEncoding>
+</OpenSearchDescription>
