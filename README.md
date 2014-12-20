@@ -29,6 +29,4 @@ window.config = {
 }
 ```
 
-Add a `flavicon.ico` and an `img/icon-152.png` file of the icon.
-
 Just browse with your favorite browser to the `index.html` file.
