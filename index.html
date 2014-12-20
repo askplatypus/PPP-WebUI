@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 </head>
-<body role="document">
+<body role="document" itemscope itemtype="http://schema.org/WebSite">
+<meta itemprop="url" content="http://askplatyp.us" />
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -43,7 +44,7 @@
 <div class="container" role="main">
     <div class="jumbotron">
         <h2>Ask me anything <span class="badge badge-alpha">alpha version</span></h2>
-        <form id="simplesearch-form" class="form" role="form">
+        <form id="simplesearch-form" class="form" role="form" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
             <div class="form-group">
                 <label for="simplesearch-input-question" class="sr-only">Question</label>
                 <div class="input-group">
@@ -52,8 +53,9 @@
                             <span class="fa fa-random"></span>
                         </button>
                     </span>
-                    <input type="search" id="simplesearch-input-question" class="form-control input-lg" placeholder="Enter your question"
-                            autofocus required aria-required="true" size="100" />
+                    <meta itemprop="target" content="http://askplatyp.us/?q={searchTerms}"/>
+                    <input type="search" name="searchTerms" id="simplesearch-input-question" class="form-control input-lg" placeholder="Enter your question"
+                            autofocus required aria-required="true" size="100" itemprop="query-input"/>
                     <span class="input-group-btn">
                         <button type="submit" id="simplesearch-button-submit" class="btn btn-primary btn-lg hidden-xs" title="Search">
                             <span class="fa fa-search fa-flip-horizontal"></span>
