@@ -55,6 +55,7 @@
 		if('history' in window && typeof window.history.pushState === 'function') {
 			window.history.pushState({}, question, buildUrlForQuestion(question));
 		}
+		$('title').text(question + ' — Platypus');
 
 		var measures = {
 			'relevance': 0,
