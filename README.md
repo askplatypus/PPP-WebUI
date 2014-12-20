@@ -15,6 +15,12 @@ To install bower just use `npm` with:
 npm install -g bower
 ```
 
+Build icons:
+```
+sh bootstrap_icons.sh
+```
+This script depends on ImageMagick and librsvg
+
 Create a `config.js` file in the root folder of the repository with as content:
 ```
 window.config = {
