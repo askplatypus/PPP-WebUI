@@ -6,7 +6,7 @@
 	'use strict';
 
 	var url = $.url();
-	var languageCode = url.param('lang') ? url.param('lang') : 'en';
+	var languageCode = url.param('lang') ? simplifyLanguageCode(url.param('lang')) : 'en';
 	var api = new window.pppApi(window.config.pppCoreUrl);
 	var resultBuilder = new window.resultBuilder();
 	var resultSpeaker = new window.resultSpeaker(languageCode);
@@ -138,6 +138,10 @@
 		}
 
 		return filtered;
+	}
+
+	function simplifyLanguageCode(languageCode) {
+		return languageCode.split("-")[0];
 	}
 
 	function loadMaps() {
