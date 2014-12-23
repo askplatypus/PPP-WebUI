@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
     <ShortName>Platypus</ShortName>
-    <Description>Platypus</Description>
+    <Description>Platypus goes beyond a search engine by directly answering your questions about anything in general knowledge.</Description>
     <Url type="text/html" method="get" template="http://askplatyp.us/?lang={language}&amp;q={searchTerms}"/>
     <LongName>Ask Platypus</LongName>
     <Image height="64" width="64" type="image/png">http://askplatyp.us/img/icon-64.png</Image>
