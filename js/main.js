@@ -52,10 +52,7 @@
 					)
 			);
 
-		if('history' in window && typeof window.history.pushState === 'function') {
-			window.history.pushState({}, question, buildUrlForQuestion(question));
-		}
-		$('title').text(question + ' — Platypus');
+		updateEnvironmentForQuestion(question);
 
 		var measures = {
 			'relevance': 0,
@@ -105,6 +102,19 @@
 					.append(resultBuilder.outputError(textStatus));
 			}
 		);
+	}
+
+	function updateEnvironmentForQuestion(question) {
+		var url = buildUrlForQuestion(question);
+		var title = question + ' — Platypus';
+
+		if('history' in window && typeof window.history.pushState === 'function') {
+			window.history.pushState({}, title, url);
+		}
+
+		$('link[rel=canonical]').attr('href', url);
+
+		$('title').text(title);
 	}
 
 	function explodeList(responses) {
