@@ -72,9 +72,18 @@ body {
 	vertical-align: super;
 }
 
+.card-link-icon {
+	margin-left: 0.5em;
+	height: 0.7em;
+}
+
 .card-image {
 	float: right;
 	margin-left: 1em;
+}
+
+.card-image img {
+	height: 10em;
 }
 
 #navbar-logo {
