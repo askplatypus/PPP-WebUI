@@ -201,6 +201,43 @@
 						}
 					}
 
+					//Article about the subject
+					var $text = null;
+					var abouts = mainResource.getResourcesForReverseProperty('http://schema.org/about');
+					if(abouts.length > 0) {
+						var about = abouts[0];
+						var headlines = about.getResourcesForProperty('http://schema.org/headline');
+						if(headlines.length > 0 && headlines[0].hasValue()) {
+							$text = $('<div>')
+								.addClass('card-text')
+								.text(headlines[0].getValue());
+
+							var authors = about.getResourcesForProperty('http://schema.org/author');
+							if(authors.length > 0) {
+								var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name', [language, null]);
+								if(authorName === '') {
+									authorName = 'Source';
+								}
+
+								$text.append(' ');
+								if(about.hasId()) {
+									$text.append(
+										$('<a>')
+											.addClass('small')
+											.attr('href', about.getId())
+											.text(authorName)
+									);
+								} else {
+									$text.append(
+										$('<span>')
+											.addClass('small')
+											.text(authorName)
+									);
+								}
+							}
+						}
+					}
+
 					//Final build
 					$this.append(
 						$('<article>')
@@ -209,7 +246,8 @@
 								$('<h3>')
 									.append($label)
 									.append($links)
-						)
+							)
+							.append($text)
 					);
 				});
 			});
@@ -421,7 +459,7 @@
 								var title = data.query.pages[i].title;
 
 								$('<p>')
-									.addClass('wikibase-entity-text')
+									.addClass('card-text')
 									.text(data.query.pages[i].extract)
 									.append(' ')
 									.append(
