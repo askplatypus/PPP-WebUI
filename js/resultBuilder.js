@@ -81,6 +81,38 @@
 	};
 
 	/**
+	 * @private
+	 */
+	window.resultBuilder.onRendered = [
+		function() { //reload MathJax
+			MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+		},
+		function loadMaps() {
+			$('.map').each(function() {
+				var $this = $(this);
+				$this.css('height', '400px');
+
+				var map = L.map(this, {
+					maxZoom: 14,
+					minZoom: 2
+				});
+
+				var geoJson = L.geoJson();
+				var data = JSON.parse($this.attr('data-geojson'));
+				for(var i in data) {
+					geoJson.addData(data[i]);
+				}
+				geoJson.addTo(map);
+				map.fitBounds(geoJson.getBounds());
+
+				L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+				}).addTo(map);
+			});
+		}
+	];
+
+	/**
 	 * Builds a box for the results.
 	 *
 	 * @param {array} results The results.
@@ -570,6 +602,15 @@
 
 				)
 			);
+	};
+
+	/**
+	 * Event to execute when results are rendered
+	 */
+	window.resultBuilder.prototype.onRendered = function() {
+		for(var i in window.resultBuilder.onRendered) {
+			window.resultBuilder.onRendered[i]();
+		}
 	};
 
 } (jQuery, window));
