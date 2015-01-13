@@ -176,7 +176,6 @@
 					}
 
 					//Image
-					//TODO: width/height
 					var $image = null;
 					var images = mainResource.getResourcesForProperty('http://schema.org/image');
 					if(images.length > 0) {
@@ -188,16 +187,23 @@
 							var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name', [language, null]);
 							var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description', [language, null]);
 
-							$image = $('<span>')
+							if(image.hasId()) {
+								$image = $('<a>')
+									.attr('href', image.getId());
+							} else {
+								$image = $('<span>');
+							}
+
+							$image
 								.addClass('card-image')
 								.append(
-								$('<img>')
-									.attr({
-										'src': imageUrl,
-										'title': imageName,
-										'alt': imageDescription
-									})
-							)
+									$('<img>')
+										.attr({
+											'src': imageUrl,
+											'title': imageName,
+											'alt': imageDescription
+										})
+								);
 						}
 					}
 
