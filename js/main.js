@@ -85,9 +85,8 @@
 				$('#simplesearch-result')
 					.empty()
 					.append(resultBuilder.outputResults(results));
+				resultBuilder.onRendered();
 
-				MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //reload MathJax
-				loadMaps();
 				if(shouldSpeak || config.speaking) {
 					resultSpeaker.speakResults(results);
 				}
@@ -153,30 +152,6 @@
 
 	function simplifyLanguageCode(languageCode) {
 		return languageCode.split("-")[0];
-	}
-
-	function loadMaps() {
-		$('.map').each(function() {
-			var $this = $(this);
-			$this.css('height', '400px');
-
-			var map = L.map(this, {
-				maxZoom: 14,
-				minZoom: 2
-			});
-
-			var geoJson = L.geoJson();
-			var data = JSON.parse($this.attr('data-geojson'));
-			for(var i in data) {
-				geoJson.addData(data[i]);
-			}
-			geoJson.addTo(map);
-			map.fitBounds(geoJson.getBounds());
-
-			L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-			}).addTo(map);
-		});
 	}
 
 	function logResponse(id, question, responses) {

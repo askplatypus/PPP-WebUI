@@ -77,8 +77,188 @@
 						.attr('title', 'Wikidata')
 						.addClass('icon-wikidata')
 				);
+		},
+
+		'resource-jsonld': function(resource, language) {
+			return $('<span>').text(resource.value);
 		}
 	};
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.onRendered = [
+		function() { //reload MathJax
+			MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+		},
+
+		function() { //maps
+			$('.map').each(function() {
+				var $this = $(this);
+				$this.css('height', '400px');
+
+				var map = L.map(this, {
+					maxZoom: 14,
+					minZoom: 2
+				});
+
+				var geoJson = L.geoJson();
+				var data = JSON.parse($this.attr('data-geojson'));
+				for(var i in data) {
+					geoJson.addData(data[i]);
+				}
+				geoJson.addTo(map);
+				map.fitBounds(geoJson.getBounds());
+
+				L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+				}).addTo(map);
+			});
+		},
+
+		function() { //Basic JSON-LD
+			$('.resource-jsonld').each(function() {
+				var $this = $(this);
+				var graph = JSON.parse($this.attr('data-jsonld'));
+				var language = $this.attr('lang');
+
+				window.jsonld.expand(graph, function(error, graph) {
+					if(error !== null) {
+						return; //TODO
+					}
+
+					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
+
+					//Title
+					var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
+					var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description', [language, null]);
+					var $label = $('<span>').text(name);
+					if(description !== '') {
+						$label.attr('title', description);
+					}
+
+					//Links
+					var $links = [];
+					var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
+					for(var i in actions) {
+						var action = actions[i];
+						if(action.isInstanceOf('http://schema.org/ViewAction')) {
+							var targets = action.getResourcesForProperty('http://schema.org/target');
+							if(targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
+								var target = targets[0].getValue();
+								var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name', [language, null]);
+								var actionIconUrl = '';
+								var actionIcons = action.getResourcesForProperty('http://schema.org/image');
+								if(actionIcons.length > 0) {
+									actionIconUrl = window.resultBuilder.getUrlForImage(actionIcons[0]);
+								}
+
+								if(actionIconUrl === '') {
+									$links.push(
+										$('<a>')
+											.attr('href', target)
+											.text(actionName)
+									);
+								} else {
+									$links.push(
+										$('<a>')
+											.attr('href', target)
+											.attr('title', actionName)
+											.append(
+												$('<img>')
+													.addClass('card-link-icon')
+													.attr('src', actionIconUrl)
+											)
+									);
+								}
+							}
+						}
+					}
+
+					//Image
+					var $image = null;
+					var images = mainResource.getResourcesForProperty('http://schema.org/image');
+					if(images.length > 0) {
+						var image = images[0];
+
+						//retrieve image urls
+						var imageUrl = window.resultBuilder.getUrlForImage(image);
+						if(imageUrl != '') {
+							var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name', [language, null]);
+							var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description', [language, null]);
+
+							if(image.hasId()) {
+								$image = $('<a>')
+									.attr('href', image.getId());
+							} else {
+								$image = $('<span>');
+							}
+
+							$image
+								.addClass('card-image')
+								.append(
+									$('<img>')
+										.attr({
+											'src': imageUrl,
+											'title': imageName,
+											'alt': imageDescription
+										})
+								);
+						}
+					}
+
+					//Article about the subject
+					var $text = null;
+					var abouts = mainResource.getResourcesForReverseProperty('http://schema.org/about');
+					if(abouts.length > 0) {
+						var about = abouts[0];
+						var headlines = about.getResourcesForProperty('http://schema.org/headline');
+						if(headlines.length > 0 && headlines[0].hasValue()) {
+							$text = $('<div>')
+								.addClass('card-text')
+								.text(headlines[0].getValue());
+
+							var authors = about.getResourcesForProperty('http://schema.org/author');
+							if(authors.length > 0) {
+								var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name', [language, null]);
+								if(authorName === '') {
+									authorName = 'Source';
+								}
+
+								$text.append(' ');
+								if(about.hasId()) {
+									$text.append(
+										$('<a>')
+											.addClass('small')
+											.attr('href', about.getId())
+											.text(authorName)
+									);
+								} else {
+									$text.append(
+										$('<span>')
+											.addClass('small')
+											.text(authorName)
+									);
+								}
+							}
+						}
+					}
+
+					//Final build
+					$this.append(
+						$('<article>')
+							.append($image)
+							.append(
+								$('<h3>')
+									.append($label)
+									.append($links)
+							)
+							.append($text)
+					);
+				});
+			});
+		}
+	];
 
 	/**
 	 * Builds a box for the results.
@@ -156,6 +336,9 @@
 					break;
 				case 'wikibase-entity':
 					this.displayWikibaseEntityResourceResults(displayedResultsPerType[type], $resultsRoot);
+					break;
+				case 'resource-jsonld':
+					this.displayJsonLdResourceResults(displayedResultsPerType[type], $resultsRoot);
 					break;
 				default:
 					this.displayOtherResourceResults(displayedResultsPerType[type], $resultsRoot);
@@ -282,7 +465,7 @@
 								var title = data.query.pages[i].title;
 
 								$('<p>')
-									.addClass('wikibase-entity-text')
+									.addClass('card-text')
 									.text(data.query.pages[i].extract)
 									.append(' ')
 									.append(
@@ -322,14 +505,14 @@
 									})
 									.addClass('card-image')
 									.append(
-									$('<img>')
-										.attr({
-											'src': imageInfo.thumbnail.source,
-											'width': imageInfo.thumbnail.width,
-											'height': imageInfo.thumbnail.height,
-											'alt': imageInfo.title
-										})
-								)
+										$('<img>')
+											.attr({
+												'src': imageInfo.thumbnail.source,
+												'width': imageInfo.thumbnail.width,
+												'height': imageInfo.thumbnail.height,
+												'alt': imageInfo.title
+											})
+									)
 									.prependTo('#wikibase-entity-' + entityForTitle[imageInfo.title] + ' article');
 							}
 						}
@@ -337,6 +520,24 @@
 				);
 			}
 		);
+	};
+
+
+	/**
+	 * @private
+	 */
+	window.resultBuilder.prototype.displayJsonLdResourceResults = function(results, $resultsRoot) {
+		for(var i in results) {
+			var resource = results[i].tree;
+			var language = results[i].language;
+
+			$resultsRoot.append(
+				$('<li>')
+					.addClass('list-group-item resource-jsonld')
+					.attr('data-jsonld', JSON.stringify(resource.graph))
+					.attr('lang', language)
+			);
+		}
 	};
 
 	/**
@@ -570,6 +771,63 @@
 
 				)
 			);
+	};
+
+	/**
+	 * Event to execute when results are rendered
+	 */
+	window.resultBuilder.prototype.onRendered = function() {
+		for(var i in window.resultBuilder.onRendered) {
+			window.resultBuilder.onRendered[i]();
+		}
+	};
+
+	/**
+	 * Returns as string the first resource or returns ''
+	 * @param {JsonLdResource} resource
+	 * @param {string} property
+	 * @param {string[]) languages
+	 * @return string
+	 */
+	window.resultBuilder.getPropertyAsString = function(resource, property, languages) {
+		return window.resultBuilder.getAsString(
+			window.JsonLdResource.filterBestResourcesForLanguage(
+				resource.getResourcesForProperty(property),
+				languages
+			)
+		)
+	};
+
+	/**
+	 * Returns as string the first resource or returns ''
+	 * @param {JsonLdResource[]} resources
+	 * @return string
+	 */
+	window.resultBuilder.getAsString = function(resources) {
+		for(var i in resources) {
+			if(resources[i].hasValue()) {
+				return resources[i].getValue();
+			}
+		}
+
+		return '';
+	};
+
+	/**
+	 * Returns the url of the image or ''
+	 * @param {JsonLdResource} imageResource
+	 * @return string
+	 */
+	window.resultBuilder.getUrlForImage = function(imageResource) {
+		var contentUrls = imageResource.getResourcesForProperty('http://schema.org/contentUrl');
+
+		if((contentUrls.length > 0 && contentUrls[0].hasId())) {
+			return contentUrls[0].getId();
+		} else if(imageResource.hasId()){
+			return imageResource.getId();
+		} else {
+			return ';'
+		}
 	};
 
 } (jQuery, window));
