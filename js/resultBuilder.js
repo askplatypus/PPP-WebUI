@@ -137,7 +137,7 @@
 						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
 						if(latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
 							if(map === null) {
-								$this.css('height', '400px');
+								$this.css('height', '50em');
 								map = L.map($this[0], {
 									maxZoom: 14,
 									minZoom: 2
