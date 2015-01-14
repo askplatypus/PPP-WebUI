@@ -117,6 +117,9 @@
 		},
 
 		function() { //Basic JSON-LD
+			var map = null;
+			var mapElements = [];
+
 			$('.resource-jsonld').each(function() {
 				var $this = $(this);
 				var graph = JSON.parse($this.attr('data-jsonld'));
@@ -129,6 +132,35 @@
 
 					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
 
+					//GeoCoordinates case
+					if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
+						var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
+						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
+						if(latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
+							if(map === null) {
+								$this.css('height', '400px');
+								map = L.map($this[0], {
+									maxZoom: 14,
+									minZoom: 2
+								});
+
+								L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
+									attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+								}).addTo(map);
+							} else {
+								$this.remove();
+							}
+
+							var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
+							marker.addTo(map);
+							mapElements.push(marker);
+							map.fitBounds(L.featureGroup(mapElements).getBounds());
+						}
+
+						return;
+					}
+
+					//Default case
 					//Title
 					var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
 					var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description', [language, null]);
