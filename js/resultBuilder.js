@@ -132,7 +132,6 @@
 
 					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
 
-					//GeoCoordinates case
 					if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 						var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
 						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
@@ -152,141 +151,19 @@
 							}
 
 							var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
+
+							var topicResource = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
+							if(topicResource.length > 0) {
+								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResource[0], language).html());
+							}
+
 							marker.addTo(map);
 							mapElements.push(marker);
 							map.fitBounds(L.featureGroup(mapElements).getBounds());
 						}
-
-						return;
+					} else { //Card case
+						$this.append(window.resultBuilder.buildCardForJsonLd(mainResource, language));
 					}
-
-					//Default case
-					//Title
-					var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
-					var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description', [language, null]);
-					var $label = $('<span>').text(name);
-					if(description !== '') {
-						$label.attr('title', description);
-					}
-
-					//Links
-					var $links = [];
-					var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
-					for(var i in actions) {
-						var action = actions[i];
-						if(action.isInstanceOf('http://schema.org/ViewAction')) {
-							var targets = action.getResourcesForProperty('http://schema.org/target');
-							if(targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
-								var target = targets[0].getValue();
-								var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name', [language, null]);
-								var actionIconUrl = '';
-								var actionIcons = action.getResourcesForProperty('http://schema.org/image');
-								if(actionIcons.length > 0) {
-									actionIconUrl = window.resultBuilder.getUrlForImage(actionIcons[0]);
-								}
-
-								if(actionIconUrl === '') {
-									$links.push(
-										$('<a>')
-											.attr('href', target)
-											.text(actionName)
-									);
-								} else {
-									$links.push(
-										$('<a>')
-											.attr('href', target)
-											.attr('title', actionName)
-											.append(
-												$('<img>')
-													.addClass('card-link-icon')
-													.attr('src', actionIconUrl)
-											)
-									);
-								}
-							}
-						}
-					}
-
-					//Image
-					var $image = null;
-					var images = mainResource.getResourcesForProperty('http://schema.org/image');
-					if(images.length > 0) {
-						var image = images[0];
-
-						//retrieve image urls
-						var imageUrl = window.resultBuilder.getUrlForImage(image);
-						if(imageUrl != '') {
-							var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name', [language, null]);
-							var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description', [language, null]);
-
-							if(image.hasId()) {
-								$image = $('<a>')
-									.attr('href', image.getId());
-							} else {
-								$image = $('<span>');
-							}
-
-							$image
-								.addClass('card-image')
-								.append(
-									$('<img>')
-										.attr({
-											'src': imageUrl,
-											'title': imageName,
-											'alt': imageDescription
-										})
-								);
-						}
-					}
-
-					//Article about the subject
-					var $text = null;
-					var abouts = mainResource.getResourcesForReverseProperty('http://schema.org/about');
-					if(abouts.length > 0) {
-						var about = abouts[0];
-						var headlines = about.getResourcesForProperty('http://schema.org/headline');
-						if(headlines.length > 0 && headlines[0].hasValue()) {
-							$text = $('<div>')
-								.addClass('card-text')
-								.text(headlines[0].getValue());
-
-							var authors = about.getResourcesForProperty('http://schema.org/author');
-							if(authors.length > 0) {
-								var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name', [language, null]);
-								if(authorName === '') {
-									authorName = 'Source';
-								}
-
-								$text.append(' ');
-								if(about.hasId()) {
-									$text.append(
-										$('<a>')
-											.addClass('small')
-											.attr('href', about.getId())
-											.text(authorName)
-									);
-								} else {
-									$text.append(
-										$('<span>')
-											.addClass('small')
-											.text(authorName)
-									);
-								}
-							}
-						}
-					}
-
-					//Final build
-					$this.append(
-						$('<article>')
-							.append($image)
-							.append(
-								$('<h3>')
-									.append($label)
-									.append($links)
-							)
-							.append($text)
-					);
 				});
 			});
 		}
@@ -815,10 +692,143 @@
 	};
 
 	/**
+	 * Builds a card for a JsonLd resource
+	 * @param {JsonLdResource} mainResource
+	 * @param string language
+	 * @return {jQuery}
+	 */
+	window.resultBuilder.buildCardForJsonLd = function(mainResource, language) {
+		//Default case
+		//Title
+		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
+		var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description', [language, null]);
+		var $label = $('<span>').text(name);
+		if(description !== '') {
+			$label.attr('title', description);
+		}
+
+		//Links
+		var $links = [];
+		var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
+		for(var i in actions) {
+			var action = actions[i];
+			if(action.isInstanceOf('http://schema.org/ViewAction')) {
+				var targets = action.getResourcesForProperty('http://schema.org/target');
+				if(targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
+					var target = targets[0].getValue();
+					var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name', [language, null]);
+					var actionIconUrl = '';
+					var actionIcons = action.getResourcesForProperty('http://schema.org/image');
+					if(actionIcons.length > 0) {
+						actionIconUrl = window.resultBuilder.getUrlForImage(actionIcons[0]);
+					}
+
+					if(actionIconUrl === '') {
+						$links.push(
+							$('<a>')
+								.attr('href', target)
+								.text(actionName)
+						);
+					} else {
+						$links.push(
+							$('<a>')
+								.attr('href', target)
+								.attr('title', actionName)
+								.append(
+									$('<img>')
+										.addClass('card-link-icon')
+										.attr('src', actionIconUrl)
+							)
+						);
+					}
+				}
+			}
+		}
+
+		//Image
+		var $image = null;
+		var images = mainResource.getResourcesForProperty('http://schema.org/image');
+		if(images.length > 0) {
+			var image = images[0];
+
+			//retrieve image urls
+			var imageUrl = window.resultBuilder.getUrlForImage(image);
+			if(imageUrl != '') {
+				var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name', [language, null]);
+				var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description', [language, null]);
+
+				if(image.hasId()) {
+					$image = $('<a>')
+						.attr('href', image.getId());
+				} else {
+					$image = $('<span>');
+				}
+
+				$image
+					.addClass('card-image')
+					.append(
+						$('<img>')
+							.attr({
+								'src': imageUrl,
+								'title': imageName,
+								'alt': imageDescription
+							})
+				);
+			}
+		}
+
+		//Article about the subject
+		var $text = null;
+		var abouts = mainResource.getResourcesForReverseProperty('http://schema.org/about');
+		if(abouts.length > 0) {
+			var about = abouts[0];
+			var headlines = about.getResourcesForProperty('http://schema.org/headline');
+			if(headlines.length > 0 && headlines[0].hasValue()) {
+				$text = $('<div>')
+					.addClass('card-text')
+					.text(headlines[0].getValue());
+
+				var authors = about.getResourcesForProperty('http://schema.org/author');
+				if(authors.length > 0) {
+					var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name', [language, null]);
+					if(authorName === '') {
+						authorName = 'Source';
+					}
+
+					$text.append(' ');
+					if(about.hasId()) {
+						$text.append(
+							$('<a>')
+								.addClass('small')
+								.attr('href', about.getId())
+								.text(authorName)
+						);
+					} else {
+						$text.append(
+							$('<span>')
+								.addClass('small')
+								.text(authorName)
+						);
+					}
+				}
+			}
+		}
+
+		return $('<article>')
+			.append($image)
+			.append(
+				$('<h3>')
+					.append($label)
+					.append($links)
+			)
+			.append($text);
+	};
+
+	/**
 	 * Returns as string the first resource or returns ''
 	 * @param {JsonLdResource} resource
 	 * @param {string} property
-	 * @param {string[]) languages
+	 * @param {string[]} languages
 	 * @return string
 	 */
 	window.resultBuilder.getPropertyAsString = function(resource, property, languages) {
