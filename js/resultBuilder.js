@@ -813,6 +813,8 @@
 				}
 			}
 		}
+		if (!$text)
+			$text = description;
 
 		return $('<article>')
 			.append($image)
