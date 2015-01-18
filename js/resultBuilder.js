@@ -813,6 +813,11 @@
 				}
 			}
 		}
+		if($text === null) {
+			$text = $('<div>')
+					.addClass('card-text')
+					.text(description)
+		}
 
 		return $('<article>')
 			.append($image)
