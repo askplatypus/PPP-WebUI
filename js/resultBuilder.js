@@ -57,28 +57,6 @@
 				);
 		},
 
-		'geo-json': function(resource) {
-			return $('<span>').text(resource.value);
-		},
-
-		'wikibase-entity': function(resource, language) {
-			var entityId = resource['entity-id'];
-			var $label = $('<span>')
-				.text(resource.value);
-			if('description' in resource && resource.description !== '') {
-				$label.attr('title', resource.description);
-			}
-
-			return $('<span>')
-				.append($label)
-				.append(
-					$('<a>')
-						.attr('href', '//www.wikidata.org/entity/' + entityId)
-						.attr('title', 'Wikidata')
-						.addClass('icon-wikidata')
-				);
-		},
-
 		'resource-jsonld': function(resource, language) {
 			return $('<span>').text(resource.value);
 		}
@@ -240,12 +218,6 @@
 		var displayedResultsPerType = this.splitResourceResultsPerType(results);
 		for(var type in displayedResultsPerType) {
 			switch(type) {
-				case 'geo-json':
-					this.displayGeoJsonResourceResults(displayedResultsPerType[type], $resultsRoot);
-					break;
-				case 'wikibase-entity':
-					this.displayWikibaseEntityResourceResults(displayedResultsPerType[type], $resultsRoot);
-					break;
 				case 'resource-jsonld':
 					this.displayJsonLdResourceResults(displayedResultsPerType[type], $resultsRoot);
 					break;
@@ -255,182 +227,6 @@
 			}
 		}
 	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.displayGeoJsonResourceResults = function(results, $resultsRoot) {
-		var geoJsonData = [];
-		for(var i in results) {
-			geoJsonData.push(results[i].tree.geojson);
-		}
-
-		$resultsRoot.append(
-			$('<li>')
-				.addClass('list-group-item')
-				.append(
-					$('<div>')
-						.attr('class', 'map')
-						.attr('data-geojson', JSON.stringify(geoJsonData))
-				)
-		);
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.displayWikibaseEntityResourceResults = function(results, $resultsRoot) {
-		var resultBuilder = this;
-		var entityIds = [];
-
-		for(var i in results) {
-			var resource = results[i].tree;
-			var language = results[i].language;
-
-			//We ignore entities without label: no hope to get a fair enough display
-			if(resource.value === '') {
-				continue;
-			}
-
-			var entityId = resource['entity-id'];
-			entityIds.push(entityId);
-			var $label = $('<span>')
-				.text(resource.value);
-			if('description' in resource && resource.description !== '') {
-				$label.attr('title', resource.description);
-			}
-
-			$resultsRoot.append(
-				$('<li>')
-					.addClass('list-group-item')
-					.attr('id', 'wikibase-entity-' + entityId)
-					.append(
-						$('<article>')
-							.append(
-								$('<h3>')
-									.append($label)
-									.append(
-										$('<a>')
-											.attr('href', '//www.wikidata.org/entity/' + entityId)
-											.attr('title', 'Wikidata')
-											.addClass('icon-wikidata')
-									)
-							)
-					)
-			);
-		}
-
-		//Get wikidata informations
-		this.doApiQuery(
-			'//www.wikidata.org/w/api.php',
-			{
-				'format': 'json',
-				'action': 'wbgetentities',
-				'ids': entityIds.join('|'),
-				'languages': language,
-				'languagefallback': true,
-				'props': 'info|sitelinks|aliases|labels|descriptions|datatype' //if you need more data, see https://www.wikidata.org/w/api.php?action=help&modules=wbgetentities
-			},
-			function(data) {
-				var entityForTitle = {};
-				var titles = [];
-
-				for (var entityId in data.entities) {
-					if (data.entities[entityId].sitelinks && (language + 'wiki') in data.entities[entityId].sitelinks) {
-						var title = data.entities[entityId].sitelinks[language + 'wiki'].title;
-						titles.push(title);
-						entityForTitle[title] = entityId;
-
-						$('<a>')
-							.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
-							.attr('title', 'Wikipedia')
-							.addClass('icon-wikipedia')
-							.appendTo('#wikibase-entity-' + entityId + ' h3')
-					}
-				}
-
-				if (titles.length === 0) {
-					return;
-				}
-
-				//Get Wikipedia first lines
-				resultBuilder.doApiQuery(
-					'//' + language + '.wikipedia.org/w/api.php',
-					{
-						'format': 'json',
-						'action': 'query',
-						'titles': titles.join('|'),
-						'redirects': true,
-						'prop': 'extracts',
-						'exintro': true,
-						'exsectionformat': 'plain',
-						'explaintext': true,
-						'exsentences': 3,
-						'exlimit': 20
-					},
-					function (data) {
-						for (var i in data.query.pages) {
-							if ('extract' in data.query.pages[i]) {
-								var title = data.query.pages[i].title;
-
-								$('<p>')
-									.addClass('card-text')
-									.text(data.query.pages[i].extract)
-									.append(' ')
-									.append(
-										$('<a>')
-											.attr('href', '//' + language + '.wikipedia.org/wiki/' + title)
-											.addClass('small')
-											.text('Wikipedia')
-									)
-									.appendTo('#wikibase-entity-' + entityForTitle[title] + ' article');
-							}
-						}
-					}
-				);
-
-				//Get an image from Wikipedia
-				//TODO use Wikidata image?
-				resultBuilder.doApiQuery(
-					'//' + language + '.wikipedia.org/w/api.php',
-					{
-						'format': 'json',
-						'action': 'query',
-						'titles': titles.join('|'),
-						'redirects': true,
-						'prop': 'pageimages',
-						'piprop': 'thumbnail|name',
-						'pithumbsize': 150,
-						'pilimit': 50
-					},
-					function (data) {
-						for (var i in data.query.pages) {
-							if ('thumbnail' in data.query.pages[i]) {
-								var imageInfo = data.query.pages[i];
-
-								$('<a>')
-									.attr({
-										'href': '//commons.wikimedia.org/wiki/Image:' + imageInfo.pageimage
-									})
-									.addClass('card-image')
-									.append(
-										$('<img>')
-											.attr({
-												'src': imageInfo.thumbnail.source,
-												'width': imageInfo.thumbnail.width,
-												'height': imageInfo.thumbnail.height,
-												'alt': imageInfo.title
-											})
-									)
-									.prependTo('#wikibase-entity-' + entityForTitle[imageInfo.title] + ' article');
-							}
-						}
-					}
-				);
-			}
-		);
-	};
-
 
 	/**
 	 * @private
@@ -447,31 +243,6 @@
 					.attr('lang', language)
 			);
 		}
-	};
-
-	/**
-	 * @private
-	 * Calls success each time the API returns a set of results
-	 */
-	window.resultBuilder.prototype.doApiQuery = function(apiUrl, parameters, success) {
-		var resultBuilder = this;
-
-		parameters['format'] = 'json';
-		if(!('continue' in parameters)) {
-			parameters['continue'] = ''
-		}
-
-		$.ajax({
-			'url': apiUrl,
-			'data': parameters,
-			'dataType': 'jsonp'
-		}).done(function(data) {
-			if('continue' in data) {
-				resultBuilder.doApiQuery(apiUrl, $.extend(parameters, data['continue']), success);
-			}
-
-			success(data);
-		});
 	};
 
 	/**
