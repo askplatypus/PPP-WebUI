@@ -813,8 +813,9 @@
 				}
 			}
 		}
-		if($text === null)
+		if($text === null) {
 			$text = description;
+        }
 
 		return $('<article>')
 			.append($image)
