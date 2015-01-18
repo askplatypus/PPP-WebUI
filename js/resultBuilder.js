@@ -813,7 +813,7 @@
 				}
 			}
 		}
-		if (!$text)
+		if($text === null)
 			$text = description;
 
 		return $('<article>')
