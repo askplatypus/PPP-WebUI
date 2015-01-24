@@ -1,4 +1,8 @@
 {
+  "languages": {
+    "en": "English",
+    "fr": "French"
+  },
   "navbar": {
     "projectwebsite": "Project website",
     "togglenavigation": "Toggle navigation"

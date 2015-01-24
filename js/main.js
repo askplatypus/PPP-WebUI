@@ -12,9 +12,9 @@
 	var currentInput = '';
 
 
-	function buildUrlForQuestion(question) {
+	function buildUrlForQuestion(languageCode, question) {
 		var query = {
-			'lang': $.i18n.lng(),
+			'lang': languageCode,
 			'q': question
 		};
 		return window.location.href.split('#')[0].split('?')[0]  + '?' + $.param(query);
@@ -101,7 +101,7 @@
 	}
 
 	function updateEnvironmentForQuestion(question) {
-		var url = buildUrlForQuestion(question);
+		var url = buildUrlForQuestion($.i18n.lng(), question);
 		var title = question + ' — Platypus';
 
 		if('history' in window && typeof window.history.pushState === 'function') {
@@ -174,6 +174,27 @@
 		return date.getTime() +  '-' + date.getMilliseconds() + '-' + random + '-webui';
 	}
 
+	function setupLanguageSwitch() {
+		var languageCode = $.i18n.lng();
+
+		$('#navbar-language-switch-label').text($.t('languages.' + languageCode));
+
+		var $selector = $('#navbar-language-list');
+		$.each(window.config.allowedLanguages, function(_, lang) {
+			if(lang !== languageCode) {
+				$('<li>')
+					.append(
+						$('<a>')
+							.text($.t('languages.' + lang))
+							.click(function() {
+								window.location.href = buildUrlForQuestion(lang, '')
+							})
+					)
+					.appendTo($selector);
+			}
+		});
+	}
+
 	function setupSimpleForm() {
 		var queryQuestion = $.url().param('q');
 		if(queryQuestion) {
@@ -199,6 +220,8 @@
 		speechInput.setupSpeechInput(function(result) {
 			submitQuery(result, true);
 		});
+
+		setupLanguageSwitch();
 	}
 
 	$(function() {

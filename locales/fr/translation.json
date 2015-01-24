@@ -1,4 +1,8 @@
 {
+  "languages": {
+    "en": "anglais",
+    "fr": "français"
+  },
   "navbar": {
     "projectwebsite": "Site du projet",
     "togglenavigation": "Afficher/masquer la navigation"
