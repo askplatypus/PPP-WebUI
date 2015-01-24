@@ -48,21 +48,15 @@
 		});
 
 		if(results.length === 0) {
-			return 'After seven and a half million years of calculation I have found that the answer is 42.';
+			return $.t('result.noresult');
 		}
 
 		var text = '';
-		if(results.length === 1) {
-			text = 'The answer is: ';
-		} else {
-			text = 'The answers are: ';
-		}
-
 		for(var i in results) {
 			text += this.buildSpokenMessageForResource(results[i].tree) + ' ';
 		}
 
-		return text;
+		return $.t('result.speechedresult', {'answer': text, 'count': results.length});
 	};
 
 	/**

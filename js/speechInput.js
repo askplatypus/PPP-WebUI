@@ -79,11 +79,11 @@
 		return $('<button>')
 			.attr({
 				'type': 'button',
-				'title': $.t('simpleinput.speechinput')
+				'title': $.t('simplesearch.speechinput')
 			})
 			.addClass('btn btn-default btn-lg')
 			.append(this.$icon)
-			.insertBefore($('#simplesearch-button-submit'));
+			.prependTo('#simplesearch-after-group');
 	};
 
 } (jQuery, window));
