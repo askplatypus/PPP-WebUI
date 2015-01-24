@@ -23,6 +23,14 @@
 	function getRandomQuestion() {
 		return window.pppQuestions[Math.floor(Math.random() * window.pppQuestions.length)];
 	}
+		var languageCode = $.i18n.lng();
+
+		if(!(languageCode in window.pppQuestions)) {
+			return '';
+		}
+
+		return window.pppQuestions[languageCode][Math.floor(Math.random() * window.pppQuestions[languageCode].length)];
+    }
 
 	function submitQuery(question, shouldSpeak) {
 		$questionInput.val(question);
