@@ -441,7 +441,7 @@
 				$('<a>')
 					.attr('id', 'ppp-button-internalresults')
 					.addClass('btn btn-default')
-					.text('Show internal results')
+					.text($.t('result.showinternalresults'))
 					.click(function() {
 						if(inHidePosition) {
 							$('.ppp-result-item-hidden').hide();

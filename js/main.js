@@ -184,6 +184,7 @@
 		$('.simplesearch-button-random').attr('title', $.t('simplesearch.randomquestion'));
 		$('.simplesearch-button-submit').attr('title', $.t('simplesearch.search'));
 		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
+		$('footer').html($.t('footer'));
 
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();

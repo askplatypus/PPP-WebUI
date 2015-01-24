@@ -25,5 +25,6 @@
     },
     "speechedresult": "The answer is: __answer__.",
     "speechedresult_plural": "The answers are: __answer__."
-  }
+  },
+  "footer": "<p>This query answering tool is the result of the Master's degree project of seven students.</p><p>If you are interested by some technical aspects, please have a look at the <a href=\"http://projetpp.github.io/\">project website</a>.</p>"
 }

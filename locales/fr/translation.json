@@ -25,5 +25,6 @@
     },
     "speechedresult": "La réponse est : __answer__.",
     "speechedresult_plural": "Les réponses sont : __answer__."
-  }
+  },
+  "footer": "<p>Cet outil de réponse aux questions est le résultat du projet de master de sept étudiants.</p><p>Si vous êtes intéressés par les aspects techniques, n'hésitez pas à aller faire un tour sur <a href=\"http://projetpp.github.io/\">le site du projet</a>.</p>"
 }
