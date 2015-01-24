@@ -13,17 +13,17 @@
     "question": "Question",
     "search": "Rechercher",
     "random": "Au hasard",
-    "randomquestion": "Question tiré au hasard",
+    "randomquestion": "Question tirée au hasard",
     "speechinput": "Utiliser la voix",
     "enteryourquestion": "Entrez votre question"
   },
   "result": {
     "loading": " Chargement...",
     "result": "Résultat",
-    "noresult": "Après sept million et demi d'années de calcul j'ai déterminé que la réponse est 42.",
+    "noresult": "Après sept millions et demi d'années de calcul j'ai déterminé que la réponse est 42.",
     "error": "Erreur",
     "showinternalresults": "Montrer les résultats internes",
-    "hideinternalresults": "Chacher les résultats internes",
+    "hideinternalresults": "Cacher les résultats internes",
     "leaflet": {
       "attribution": "&copy; contributeurs <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>"
     },
