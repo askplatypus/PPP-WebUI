@@ -67,22 +67,10 @@
 
 	/**
 	 * @private
+	 * @todo improve
 	 */
 	window.resultSpeaker.prototype.buildSpokenMessageForResource = function(resource) {
-		if(!('value-type' in resource)) {
-			resource['value-type'] = 'string';
-		}
-
-		switch(resource['value-type']) {
-			case 'wikibase-entity':
-				var str = resource.value;
-				if('description' in resource) {
-					str += ' (' + resource.description + ')';
-				}
-				return str;
-			default:
-				return resource.value;
-		}
+		return resource.value;
 	};
 
 } (jQuery, window));
