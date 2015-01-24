@@ -118,6 +118,8 @@
 
 								L.tileLayer('//c.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 									attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+								L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+									attribution: $.t('result.leaflet.attribution')
 								}).addTo(map);
 							} else {
 								$this.remove();
@@ -173,7 +175,7 @@
 		if(hiddenResults.length > 0) {
 			title.append(this.outputShowHiddenResultsButton());
 		}
-		title.append($('<div>').text('Result'));
+		title.append($('<div>').text($.t('result.result')));
 
 		return this.outputPanel(
 			panelType,
@@ -201,7 +203,7 @@
 			resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
-					.text('After seven and a half million years of calculation I have found that the answer is 42.')
+					.text($.t('result.noresult'))
 			);
 		} else {
 			this.displayResourceResults(displayedResults, resultsRoot);
@@ -284,7 +286,7 @@
 	window.resultBuilder.prototype.outputError = function(error) {
 		return this.outputPanel(
 			'danger',
-			$('<div>').text('Error'),
+			$('<div>').text($.t('result.error')),
 			$('<div>')
 				.addClass('panel-body')
 				.text(error)
@@ -443,11 +445,11 @@
 					.click(function() {
 						if(inHidePosition) {
 							$('.ppp-result-item-hidden').hide();
-							$('#ppp-button-internalresults').text('Show internal results');
+							$('#ppp-button-internalresults').text($.t('result.showinternalresults'));
 							inHidePosition = false;
 						} else {
 							$('.ppp-result-item-hidden').show();
-							$('#ppp-button-internalresults').text('Hide internal results');
+							$('#ppp-button-internalresults').text($.t('result.hideinternalresults'));
 							inHidePosition = true;
 						}
 					}

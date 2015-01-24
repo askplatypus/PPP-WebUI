@@ -5,12 +5,8 @@
 (function($, window) {
 	'use strict';
 
-	var url = $.url();
-	var languageCode = url.param('lang') ? simplifyLanguageCode(url.param('lang')) : 'en';
 	var api = new window.pppApi(window.config.pppCoreUrl);
 	var resultBuilder = new window.resultBuilder();
-	var resultSpeaker = new window.resultSpeaker(languageCode);
-	var speechInput = new window.speechInput(languageCode);
 	var $simpleSerarchResult = $('#simplesearch-result');
 	var $questionInput = $('#simplesearch-input-question');
 	var currentInput = '';
@@ -18,7 +14,7 @@
 
 	function buildUrlForQuestion(question) {
 		var query = {
-			'lang': languageCode,
+			'lang': $.i18n.lng(),
 			'q': question
 		};
 		return window.location.href.split('#')[0].split('?')[0]  + '?' + $.param(query);
@@ -48,7 +44,7 @@
 								$('<span>')
 									.addClass('fa fa-spinner fa-spin')
 							)
-							.append(' Loading...')
+							.append($.t('result.loading'))
 					)
 			);
 
@@ -62,7 +58,7 @@
 
 		api.sendRequest(
 			{
-				'language': languageCode,
+				'language': $.i18n.lng(),
 				'id': requestId,
 				'tree': input,
 				'measures': measures,
@@ -88,6 +84,7 @@
 				resultBuilder.onRendered();
 
 				if(shouldSpeak || config.speaking) {
+					var resultSpeaker = new window.resultSpeaker('en'); //TODO i18n
 					resultSpeaker.speakResults(results);
 				}
 			},
@@ -150,10 +147,6 @@
 		return filtered;
 	}
 
-	function simplifyLanguageCode(languageCode) {
-		return languageCode.split("-")[0];
-	}
-
 	function logResponse(id, question, responses) {
 		if(!('pppLoggerUrl' in window.config)) {
 			console.log('Logger is not configured');
@@ -182,12 +175,15 @@
 	}
 
 	function setupSimpleForm() {
-		$questionInput.attr('lang', languageCode);
-
-		var queryQuestion = url.param('q');
+		var queryQuestion = $.url().param('q');
 		if(queryQuestion) {
 			submitQuery(queryQuestion, false);
 		}
+
+		//i18n
+		$('.simplesearch-button-random').attr('title', $.t('simplesearch.randomquestion'));
+		$('.simplesearch-button-submit').attr('title', $.t('simplesearch.search'));
+		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
 
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();
@@ -198,12 +194,38 @@
 			submitQuery(getRandomQuestion(), false);
 		});
 
+		var speechInput = new window.speechInput($.i18n.lng());
 		speechInput.setupSpeechInput(function(result) {
 			submitQuery(result, true);
 		});
 	}
 
 	$(function() {
+		//Setup i18n
+		$.i18n.init({
+			detectLngQS: 'lang',
+			useCookie: false, //TODO: use cookie + language selector
+			fallbackLng: 'en',
+			functions: {
+				detectLanguage: function() {
+					var languageCode = $.i18n.detectLanguage().split("-")[0];
+
+					if($.inArray(languageCode, window.config.allowedLanguages) === -1) {
+						return 'en';
+					}
+
+					return languageCode;
+				}
+			}
+		}, function() {
+			$('html')
+				.attr('lang', $.i18n.lng())
+				.i18n();
+
+			//Create form
+			setupSimpleForm();
+		});
+
 		//Setup MathJax config
 		MathJax.Hub.Config({
 			MMLorHTML: {
@@ -213,7 +235,5 @@
 				}
 			}
 		});
-
-		setupSimpleForm();
 	});
 } (jQuery, window));

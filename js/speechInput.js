@@ -79,7 +79,7 @@
 		return $('<button>')
 			.attr({
 				'type': 'button',
-				'title': 'Speech input'
+				'title': $.t('simpleinput.speechinput')
 			})
 			.addClass('btn btn-default btn-lg')
 			.append(this.$icon)

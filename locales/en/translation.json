@@ -1,0 +1,27 @@
+{
+  "navbar": {
+    "projectwebsite": "Project website",
+    "togglenavigation": "Toggle navigation"
+  },
+  "simplesearch": {
+    "askmeanything": "Ask me anything",
+    "alphaversion": "Alpha version",
+    "question": "Question",
+    "search": "Search",
+    "random": "Random",
+    "randomquestion": "Random question",
+    "speechinput": "Speech input",
+    "enteryourquestion": "Enter your question"
+  },
+  "result": {
+    "loading": " Loading...",
+    "result": "Result",
+    "noresult": "After seven and a half million years of calculation I have found that the answer is 42.",
+    "error": "Error",
+    "showinternalresults": "Show internal results",
+    "hideinternalresults": "Hide internal results",
+    "leaflet": {
+      "attribution": "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>"
+    }
+  }
+}

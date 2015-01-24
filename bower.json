@@ -25,6 +25,8 @@
     "MathJax": "~2.5",
     "leaflet": "~0.7",
     "jsonld": "~0.4.1"
+    "jsonld": "~0.3.19",
+    "i18next": "~1.7.7"
   },
   "keywords": [
     "PPP",
