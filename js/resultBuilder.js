@@ -135,7 +135,9 @@
 
 		for(var i in results) {
 			if(results[i].tree.type === 'resource') {
-				displayedResults.push(results[i]);
+				if(results[i].tree.value !== '') {
+					displayedResults.push(results[i]);
+				}
 			} else {
 				hiddenResults.push(results[i]);
 			}
