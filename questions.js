@@ -21,6 +21,7 @@ window.pppQuestions = [
 	"Integrate[Sin[x*y], {x, 0, 1}, {y, 0, x}]",
 	"Sum[x^n/n!, {n,0,Infinity}]",
 	"Solve[Exp[x]/2+Exp[-x]/2==y,x]",
+	"dsolve(f'(x) + f(x) = 0, f(x))",
 	"What is the cappyttal of Franse?",
 	"Who are the daughters of the wife of the husband of the wife of the president of the United States?",
 	"Where was Ulysses S. Grant born?",
