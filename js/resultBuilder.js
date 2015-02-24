@@ -81,7 +81,8 @@
 
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
-						return; //TODO
+						console.log( 'Invalid JSON-LD: ' + error );
+						return;
 					}
 
 					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
@@ -443,7 +444,7 @@
 	/**
 	 * Builds a card for a JsonLd resource
 	 * @param {JsonLdResource} mainResource
-	 * @param string language
+	 * @param {string} language
 	 * @return {jQuery}
 	 */
 	window.resultBuilder.buildCardForJsonLd = function(mainResource, language) {
