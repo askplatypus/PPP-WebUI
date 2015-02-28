@@ -300,8 +300,12 @@
 	window.resultBuilder.prototype.outputTree = function(tree, language) {
 		switch(tree.type) {
 			case 'triple':
+				var list = [tree.subject, tree.predicate, tree.object];
+				if(tree.hasOwnProperty("inverse-predicate")) {
+					list = list.concat([tree["inverse-predicate"]]);
+				}
 				return this.outputSequence(
-					[tree.subject, tree.predicate, tree.object, tree["inverse-predicate"]],
+					list,
 					'(', ',', ')',
 					'label label-default ppp-node ppp-triple',
 					language
