@@ -301,8 +301,8 @@
 		switch(tree.type) {
 			case 'triple':
 				var list = [tree.subject, tree.predicate, tree.object];
-				if(tree.hasOwnProperty("inverse-predicate")) {
-					list = list.concat([tree["inverse-predicate"]]);
+				if("inverse-predicate" in tree) {
+					list.push(tree["inverse-predicate"]);
 				}
 				return this.outputSequence(
 					list,
