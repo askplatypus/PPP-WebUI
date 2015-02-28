@@ -301,7 +301,7 @@
 		switch(tree.type) {
 			case 'triple':
 				return this.outputSequence(
-					[tree.subject, tree.predicate, tree.object],
+					[tree.subject, tree.predicate, tree.object, tree["inverse-predicate"]],
 					'(', ',', ')',
 					'label label-default ppp-node ppp-triple',
 					language
