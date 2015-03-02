@@ -49,7 +49,11 @@
 			return [this.guessType()];
 		}
 
-		return this.resource['@type'];
+		var type = this.resource['@type'];
+		if(type instanceof Array) {
+			return type;
+		}
+		return [type];
 	};
 
 	/**

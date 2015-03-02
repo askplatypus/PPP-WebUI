@@ -25,26 +25,7 @@
 		},
 
 		'time': function(resource, language) {
-			var formattedDate = '';
-			var dateObject = new Date(resource.value);
-			var formattingOptions = {
-				weekday: "long",
-				year: "numeric",
-				month: "long",
-				day: "numeric"
-			};
-
-			if (resource.value.indexOf('T') === -1) {
-				formattedDate = dateObject.toLocaleDateString(language, formattingOptions);
-			} else {
-				formattedDate = dateObject.toLocaleString(language, formattingOptions);
-			}
-			if (formattedDate === 'Invalid Date') {
-				formattedDate = resource.value;
-			}
-			return $('<time>')
-				.attr('datetime', resource.value)
-				.text(formattedDate);
+			return window.resultBuilder.buildHtmlForDate(resource.value, language);
 		},
 
 		'math-latex': function(resource) {
@@ -81,13 +62,20 @@
 
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
-						console.log( 'Invalid JSON-LD: ' + error );
+						console.log('Invalid JSON-LD: ' + error);
 						return;
 					}
 
 					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
 
-					if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
+					if(mainResource.isInstanceOf('http://schema.org/DataType')) {
+						var value = mainResource.getResourcesForProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+						if(value.length === 1) {
+							$this.append(window.resultBuilder.buildHtmlForLiteral(value[0], language));
+						} else {
+							window.console.log('Invalid JSON-LD literal as root node.');
+						}
+					} else if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 						var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
 						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
 						if(latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
@@ -115,6 +103,8 @@
 							marker.addTo(map);
 							mapElements.push(marker);
 							map.fitBounds(L.featureGroup(mapElements).getBounds());
+						} else {
+							window.console.log('Invalid JSON-LD GeoCoordinates.');
 						}
 					} else { //Card case
 						$this.append(window.resultBuilder.buildCardForJsonLd(mainResource, language));
@@ -629,6 +619,73 @@
 		} else {
 			return ';'
 		}
+	};
+
+	/**
+	 * Returns as string the first resource or returns ''
+	 * @param {JsonLdResource} literalResource
+	 * @param {string} language
+	 * @return jQuery
+	 */
+	window.resultBuilder.buildHtmlForLiteral = function(literalResource, language) {
+		if(literalResource.isInstanceOf('http://schema.org/Date') || literalResource.isInstanceOf('http://schema.org/DateTime')) {
+			return window.resultBuilder.buildHtmlForDate(literalResource.getValue(), language);
+		} else if(literalResource.isInstanceOf('http://schema.org/Time')) {
+			return window.resultBuilder.buildHtmlForTime(literalResource.getValue(), language);
+		} else if(literalResource.isInstanceOf('http://schema.org/URL')) {
+			return $('<a>').attr('href', literalResource.getValue()).text(literalResource.getValue());
+		} else {
+			return $('<span>').text(literalResource.getValue());
+		}
+	};
+
+	/**
+	 * Returns an HTML <time> node for a date
+	 * @param {string} value an ISO Date or DateTime
+	 * @param {string} language
+	 * @return jQuery
+	 */
+	window.resultBuilder.buildHtmlForDate = function(value, language) {
+		var dateObject = new Date(value);
+		var formattingOptions = {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		};
+
+		var formattedDate = '';
+		if(value.indexOf('T') === -1) {
+			formattedDate = dateObject.toLocaleDateString(language, formattingOptions);
+		} else {
+			formattedDate = dateObject.toLocaleString(language, formattingOptions);
+		}
+		if(formattedDate === 'Invalid Date') {
+			formattedDate = value;
+		}
+
+		return $('<time>')
+			.attr('datetime', value)
+			.text(formattedDate);
+	};
+
+	/**
+	 * Returns an HTML <time> node for a time
+	 * @param {string} value an ISO Time
+	 * @param {string} language
+	 * @return jQuery
+	 */
+	window.resultBuilder.buildHtmlForTime = function(value, language) {
+		var dateObject = new Date('2000-01-01T' + value);
+
+		var formattedDate = dateObject.toLocaleTimeString(language);
+		if(formattedDate === 'Invalid Date') {
+			formattedDate = value;
+		}
+
+		return $('<time>')
+			.attr('datetime', value)
+			.text(formattedDate);
 	};
 
 } (jQuery, window));
