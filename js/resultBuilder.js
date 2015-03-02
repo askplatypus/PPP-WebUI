@@ -635,7 +635,11 @@
 		} else if(literalResource.isInstanceOf('http://schema.org/URL')) {
 			return $('<a>').attr('href', literalResource.getValue()).text(literalResource.getValue());
 		} else {
-			return $('<span>').text(literalResource.getValue());
+			var node = $('<span>').text(literalResource.getValue());
+			if(literalResource.hasLanguage()) {
+				node.attr('lang', literalResource.getLanguage());
+			}
+			return node;
 		}
 	};
 
@@ -666,6 +670,7 @@
 
 		return $('<time>')
 			.attr('datetime', value)
+			.attr('lang', language)
 			.text(formattedDate);
 	};
 
@@ -685,6 +690,7 @@
 
 		return $('<time>')
 			.attr('datetime', value)
+			.attr('lang', language)
 			.text(formattedDate);
 	};
 
