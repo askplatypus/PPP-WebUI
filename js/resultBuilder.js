@@ -159,6 +159,14 @@
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
 
+		for(var i in hiddenResults) {
+			resultsRoot.append(
+				$('<li>')
+					.addClass('list-group-item ppp-result-item-hidden')
+					.append(this.outputResult(hiddenResults[i]))
+			);
+		}
+
 		if(displayedResults.length === 0) {
 			resultsRoot.append(
 				$('<li>')
@@ -167,14 +175,6 @@
 			);
 		} else {
 			this.displayResourceResults(displayedResults, resultsRoot);
-		}
-
-		for(var i in hiddenResults) {
-			resultsRoot.append(
-				$('<li>')
-					.addClass('list-group-item ppp-result-item-hidden')
-					.append(this.outputResult(hiddenResults[i]))
-			);
 		}
 
 		return resultsRoot;
