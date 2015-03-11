@@ -18,7 +18,6 @@ window.pppQuestions = [
 	"sqrt(180)",
 	"N[Pi, 42]",
 	"Limit[Sum[1/i, {i,1,n}]-Log[n], n->Infinity]",
-	"Integrate[Sin[x*y], {x, 0, 1}, {y, 0, x}]",
 	"Sum[x^n/n!, {n,0,Infinity}]",
 	"Solve[Exp[x]/2+Exp[-x]/2==y,x]",
 	"dsolve(f'(x) + f(x) = 0, f(x))",
