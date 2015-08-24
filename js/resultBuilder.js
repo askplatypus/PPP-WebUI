@@ -68,14 +68,7 @@
 
 					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
 
-					if(mainResource.isInstanceOf('http://schema.org/DataType')) {
-						var value = mainResource.getResourcesForProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
-						if(value.length === 1) {
-							$this.append(window.resultBuilder.buildHtmlForLiteral(value[0], language));
-						} else {
-							window.console.log('Invalid JSON-LD literal as root node.');
-						}
-					} else if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
+					if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 						var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
 						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
 						if(latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
@@ -95,9 +88,9 @@
 
 							var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
 
-							var topicResource = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
-							if(topicResource.length > 0) {
-								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResource[0], language).html());
+							var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
+							if(topicResources.length > 0) {
+								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0], language).toHtml());
 							}
 
 							marker.addTo(map);
@@ -107,7 +100,7 @@
 							window.console.log('Invalid JSON-LD GeoCoordinates.');
 						}
 					} else { //Card case
-						$this.append(window.resultBuilder.buildCardForJsonLd(mainResource, language));
+						$this.append(window.resultBuilder.buildCardForJsonLd(mainResource, language).toHtml());
 					}
 				});
 			});
@@ -436,12 +429,63 @@
 	};
 
 	/**
+	 * A card with $title its title, $content its content, $image an image and $footer its footer
+	 */
+	window.resultBuilder.Card = function($title, $content, $image, $footer) {
+		this.$title = $title;
+		this.$content = ($content === undefined) ? null : $content.addClass('card-text');
+		this.$image = ($image === undefined) ? null : $image.addClass('card-image');
+		this.$footer = ($footer === undefined) ? null : $footer.addClass('card-context');
+	};
+
+	/**
+	 * @return {jQuery}
+	 */
+	window.resultBuilder.Card.prototype.toHtml = function() {
+		return $('<article>')
+			.append(
+				this.$image,
+				$('<h3>').append(this.$title),
+				this.$content,
+				this.$footer
+			);
+	};
+
+	/**
 	 * Builds a card for a JsonLd resource
 	 * @param {JsonLdResource} mainResource
 	 * @param {string} language
-	 * @return {jQuery}
+	 * @return {window.resultBuilder.Card}
 	 */
 	window.resultBuilder.buildCardForJsonLd = function(mainResource, language) {
+		var card;
+		if (mainResource.isInstanceOf('http://schema.org/DataType')) {
+			card = window.resultBuilder.buildBaseCardForJsonLdLiteral(mainResource, language);
+		} else {
+			card = window.resultBuilder.buildBaseCardForJsonLdResource(mainResource, language);
+		}
+
+		for(var property in window.schemaDotOrgPropertyLabels) {
+			var topicResources = mainResource.getResourcesForReverseProperty(property);
+			if(topicResources.length === 0) {
+				continue;
+			}
+			card.$footer = $('<aside>')
+				.append(
+					window.resultBuilder.buildLabelWithPopupCardForJsonLd(topicResources[0], language),
+					$('<span>').text(', ' + window.schemaDotOrgPropertyLabels[property])
+				);
+		}
+		return card;
+	};
+
+	/**
+	 * Builds a card for a JsonLd resource
+	 * @param {JsonLdResource} mainResource
+	 * @param {string} language
+	 * @return {window.resultBuilder.Card}
+	 */
+	window.resultBuilder.buildBaseCardForJsonLdResource = function(mainResource, language) {
 		//Default case
 		//Title
 		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
@@ -490,7 +534,7 @@
 		}
 
 		//Image
-		var $image = null;
+		var $image = undefined;
 		var images = mainResource.getResourcesForProperty('http://schema.org/image');
 		if(images.length > 0) {
 			var image = images[0];
@@ -529,7 +573,6 @@
 			var headlines = about.getResourcesForProperty('http://schema.org/headline');
 			if(headlines.length > 0 && headlines[0].hasValue()) {
 				$text = $('<div>')
-					.addClass('card-text')
 					.text(headlines[0].getValue());
 
 				var authors = about.getResourcesForProperty('http://schema.org/author');
@@ -558,19 +601,54 @@
 			}
 		}
 		if($text === null) {
-			$text = $('<div>')
-					.addClass('card-text')
-					.text(description)
+			$text = $('<div>').text(description)
 		}
 
-		return $('<article>')
-			.append($image)
-			.append(
-				$('<h3>')
-					.append($label)
-					.append($links)
-			)
-			.append($text);
+		return new window.resultBuilder.Card(
+			$('<span>').append($label, $links),
+			$text,
+			$image
+		);
+	};
+
+	/**
+	 * Builds a card for a JsonLd literal
+	 * @param {JsonLdResource} mainResource
+	 * @param {string} language
+	 * @return {window.resultBuilder.Card}
+	 */
+	window.resultBuilder.buildBaseCardForJsonLdLiteral = function(mainResource, language) {
+		var value = mainResource.getResourcesForProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+		if (value.length !== 1) {
+			window.console.log('Invalid JSON-LD literal as root node.');
+			return;
+		}
+
+		return new window.resultBuilder.Card(
+			window.resultBuilder.buildHtmlForLiteral(value[0], language),
+			$('<div>')
+		);
+	};
+
+	/**
+	 * Builds a label with a popup card for a JsonLd resource
+	 * @param {JsonLdResource} mainResource
+	 * @param {string} language
+	 * @return {window.resultBuilder.Card}
+	 */
+	window.resultBuilder.buildLabelWithPopupCardForJsonLd = function(mainResource, language) {
+		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
+		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource, language);
+
+		return $('<span>')
+			.text(name)
+			.popover({
+				title: popupCard.$title.html(),
+				content: $('<div>').append(popupCard.$image, popupCard.$content),
+				html: true,
+				container: 'body',
+				trigger: 'hover'
+			});
 	};
 
 	/**
