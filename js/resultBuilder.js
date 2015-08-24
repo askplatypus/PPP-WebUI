@@ -695,7 +695,7 @@
 		} else if(imageResource.hasId()){
 			return imageResource.getId();
 		} else {
-			return ';'
+			return '';
 		}
 	};
 
