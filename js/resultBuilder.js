@@ -24,10 +24,6 @@
 			return $node.text(resource.value);
 		},
 
-		'time': function(resource, language) {
-			return window.resultBuilder.buildHtmlForDate(resource.value, language);
-		},
-
 		'math-latex': function(resource) {
 			return $('<span>')
 				.attr('title', resource.value)
