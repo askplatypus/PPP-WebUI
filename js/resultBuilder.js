@@ -425,7 +425,10 @@
 	};
 
 	/**
-	 * A card with $title its title, $content its content, $image an image and $footer its footer
+	 * A card
+	 *
+	 * @class
+	 * @constructor
 	 */
 	window.resultBuilder.Card = function($title, $content, $image, $footer) {
 		this.$title = $title;
@@ -449,7 +452,7 @@
 
 	/**
 	 * Builds a card for a JsonLd resource
-	 * @param {JsonLdResource} mainResource
+	 * @param {window.JsonLdResource} mainResource
 	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
@@ -477,7 +480,7 @@
 
 	/**
 	 * Builds a card for a JsonLd resource
-	 * @param {JsonLdResource} mainResource
+	 * @param {window.JsonLdResource} mainResource
 	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
@@ -609,7 +612,7 @@
 
 	/**
 	 * Builds a card for a JsonLd literal
-	 * @param {JsonLdResource} mainResource
+	 * @param {window.JsonLdResource} mainResource
 	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
@@ -628,7 +631,7 @@
 
 	/**
 	 * Builds a label with a popup card for a JsonLd resource
-	 * @param {JsonLdResource} mainResource
+	 * @param {window.JsonLdResource} mainResource
 	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
@@ -649,7 +652,7 @@
 
 	/**
 	 * Returns as string the first resource or returns ''
-	 * @param {JsonLdResource} resource
+	 * @param {window.JsonLdResource} resource
 	 * @param {string} property
 	 * @param {string[]} languages
 	 * @return string
@@ -665,7 +668,7 @@
 
 	/**
 	 * Returns as string the first resource or returns ''
-	 * @param {JsonLdResource[]} resources
+	 * @param {window.JsonLdResource[]} resources
 	 * @return string
 	 */
 	window.resultBuilder.getAsString = function(resources) {
@@ -680,7 +683,7 @@
 
 	/**
 	 * Returns the url of the image or ''
-	 * @param {JsonLdResource} imageResource
+	 * @param {window.JsonLdResource} imageResource
 	 * @return string
 	 */
 	window.resultBuilder.getUrlForImage = function(imageResource) {
@@ -697,7 +700,7 @@
 
 	/**
 	 * Returns as string the first resource or returns ''
-	 * @param {JsonLdResource} literalResource
+	 * @param {window.JsonLdResource} literalResource
 	 * @param {string} language
 	 * @return jQuery
 	 */
