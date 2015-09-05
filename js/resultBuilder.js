@@ -639,15 +639,28 @@
 		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
 		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource, language);
 
-		return $('<span>')
-			.text(name)
-			.popover({
+		var $label = $('<span>').text(name);
+		$label.popover({
 				title: popupCard.$title.html(),
 				content: $('<div>').append(popupCard.$image, popupCard.$content),
 				html: true,
 				container: 'body',
-				trigger: 'hover'
+				trigger: 'manual'
+			})
+			.mouseenter(function() {
+				$label.popover('show');
+				$('.popover').mouseleave(function() {
+					$label.popover('hide');
+				});
+			})
+			.mouseleave(function() {
+				setTimeout(function() {
+					if($('.popover:hover').length === 0) {
+						$label.popover('hide');
+					}
+				}, 300);
 			});
+		return $label;
 	};
 
 	/**
