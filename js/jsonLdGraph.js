@@ -105,6 +105,16 @@
 	};
 
 	/**
+	 * @return {string[]}
+	 */
+	window.JsonLdResource.prototype.getReverseProperties = function() {
+		if(!('@reverse' in this.resource)) {
+			return [];
+		}
+		return Object.keys(this.resource['@reverse']);
+	};
+
+	/**
 	 * @return {JsonLdResource[]}
 	 */
 	window.JsonLdResource.prototype.getResourcesForReverseProperty = function(property) {

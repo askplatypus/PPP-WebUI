@@ -464,18 +464,36 @@
 			card = window.resultBuilder.buildBaseCardForJsonLdResource(mainResource, language);
 		}
 
-		for(var property in window.schemaDotOrgPropertyLabels) {
-			var topicResources = mainResource.getResourcesForReverseProperty(property);
-			if(topicResources.length === 0) {
-				continue;
-			}
+		mainResource.getReverseProperties().forEach(function(property) {
+			var propertyLabel = window.resultBuilder.buildLabelForProperty(property, language);
 			card.$footer = $('<aside>')
 				.append(
-					window.resultBuilder.buildLabelWithPopupCardForJsonLd(topicResources[0], language),
-					$('<span>').text(', ' + window.schemaDotOrgPropertyLabels[property])
+					window.resultBuilder.buildLabelWithPopupCardForJsonLd(
+						mainResource.getResourcesForReverseProperty(property)[0],
+						language
+					),
+					$('<span>').text(', ' + propertyLabel)
 				);
-		}
+		});
 		return card;
+	};
+
+	/**
+	 * Builds a user-friendly label for a property
+	 * @todo: i18n support
+	 *
+	 * @param {string} property
+	 * @param {string} language
+	 * @return {string}
+	 */
+	window.resultBuilder.buildLabelForProperty = function(property, language) {
+		var match = property.match(/^http:\/\/schema\.org\/(.+)$/);
+
+		if(match === null) {
+			return '';
+		}
+
+		return match[1].replace(/([A-Z])/g, ' $1').toLowerCase();
 	};
 
 	/**
