@@ -465,6 +465,10 @@
 		}
 
 		mainResource.getReverseProperties().forEach(function(property) {
+			if(property === 'http://schema.org/about') {
+				return;
+			}
+
 			var propertyLabel = window.resultBuilder.buildLabelForProperty(property, language);
 			card.$footer = $('<aside>')
 				.append(
