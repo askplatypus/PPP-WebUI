@@ -86,7 +86,7 @@
 
 							var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
 							if(topicResources.length > 0) {
-								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0], language).toHtml());
+								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0], language).toHtml().html());
 							}
 
 							marker.addTo(map);
