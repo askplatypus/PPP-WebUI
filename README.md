@@ -2,7 +2,6 @@ PPP Web UI
 ==========
 
 [![Build Status](https://travis-ci.org/ProjetPP/PPP-WebUI.svg?branch=master)](https://travis-ci.org/ProjetPP/PPP-WebUI)
-[![Dependency Status](https://www.versioneye.com/user/projects/5482b6273f594ec26d000006/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5482b6273f594ec26d000006)
 
 ##Installation
 Clone this repository in a web reachable folder.
