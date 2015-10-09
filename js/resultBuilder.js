@@ -75,7 +75,7 @@
 									minZoom: 2
 								});
 
-								L.tileLayer('//maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+								L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 									attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 								}).addTo(map);
 							} else {
