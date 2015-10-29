@@ -56,6 +56,7 @@
 				var graph = JSON.parse($this.attr('data-jsonld'));
 				var language = $this.attr('lang');
 
+				graph['@context'] = 'http://askplatyp.us/schema-context.jsonld';
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
 						console.log('Invalid JSON-LD: ' + error);
