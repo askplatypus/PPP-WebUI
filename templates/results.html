@@ -1,0 +1,32 @@
+<ul class="list-group">
+    {% for rich_response in rich_responses %}
+    <li class="list-group-item {% if rich_response.graph %}resource-jsonld{% endif %}" {% if rich_response.graph %} data-jsonld="{{ rich_response.graph }}" {% endif %} lang="{{ rich_response.language }}">
+            <article>
+                {# Main image #}
+                {% if rich_response.image %}
+                    <a href="{{ rich_response.image[0]['@id'] }}" class="card-image">
+                        <img src="{{ rich_response.image[0][SO+'contentUrl'][0]['@id'] }}" title="{{ rich_response.image[0][SO+'name'][0]['@value'] }}" alt="" />
+                    </a>
+                {% endif %}
+                <h3>
+                    <span>
+                        <span {% if rich_response.graph %}title="{{ rich_response.graph[SO+'description']['@value'] }}"{% endif %}>
+                            {{ rich_response.title }}
+                        </span>
+                        {% for action in rich_response.view_actions %}
+                            <a href="{{ action[SO+'target'][0]['@value'] }}" title="{{ action[SO+'name'][0]['@value'] }}">
+                                <img class="card-link-icon" src="{{ action[SO+'image'][0]['@id'] }}">
+                            </a>
+                        {% endfor %}
+                    </span>
+                </h3>
+                {% if rich_response.graph and '@reverse' in rich_response.graph and SO+'about' in rich_response.graph['@reverse'] %}
+                    <div class="card-text">
+                        {{ rich_response.graph['@reverse'][SO+'about'][0][SO+'headline'][0]['@value'] }}
+                        <a class="small" href="{{ rich_response.graph['@reverse'][SO+'about'][0]['@id'] }}">{{ rich_response.graph['@reverse'][SO+'about'][0][SO+'author'][0][SO+'name'][0]['@value'] }}</a>
+                    </div>
+                {% endif %}
+            </article>
+        </li>
+    {% endfor %}
+</ul>

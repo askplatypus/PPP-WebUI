@@ -1,4 +1,4 @@
-window.schemaDotOrgTypeHierachy = {
+{
 	"http://schema.org/Boolean": "http://schema.org/DataType",
 	"http://schema.org/Date": "http://schema.org/DataType",
 	"http://schema.org/DateTime": "http://schema.org/DataType",
@@ -555,4 +555,4 @@ window.schemaDotOrgTypeHierachy = {
 	"http://schema.org/Winery": "http://schema.org/FoodEstablishment",
 	"http://schema.org/WriteAction": "http://schema.org/CreateAction",
 	"http://schema.org/Zoo": "http://schema.org/CivicStructure"
-};
+}
