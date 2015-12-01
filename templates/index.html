@@ -11,20 +11,20 @@
     <meta name="description" content="Platypus goes beyond a search engine by directly answering your questions about anything in general knowledge." />
     <link rel="canonical" href="http://askplatyp.us/?lang=en&q=" />
 
-    <link rel="icon" sizes="16x16 32x32 48x48" href="flavicon.ico?v=1" />
-    <link rel="icon" sizes="192x192" href="img/icon-192.png?v=1" />
-    <link rel="apple-touch-icon" sizes="152x152" href="img/icon-152.png?v=1" />
-    <link rel="search" type="application/opensearchdescription+xml" href="opensearch_description.xml" title="Platypus" />
+    <link rel="icon" sizes="16x16 32x32 48x48" href="{{ url_for('static', filename='img/favicon.ico') }}" />
+    <link rel="icon" sizes="192x192" href="{{ url_for('static', filename='img/icon-192.png') }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='img/icon-152.png') }}" />
+    <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_description.xml') }}" title="Platypus" />
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@ProjetPP" />
     <meta name="twitter:title" content="Platypus" />
     <meta name="twitter:description" content="Platypus goes beyond a search engine by directly answering your questions about anything in general knowledge." />
 
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/font-awesome/css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/leaflet/dist/leaflet.css') }}" />
 </head>
 <body role="document" itemscope itemtype="http://schema.org/WebSite">
 <meta itemprop="url" content="http://askplatyp.us" />
@@ -38,7 +38,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-                <img alt="Platypus" id="navbar-logo" src="img/icon.svg" />
+                <img alt="Platypus" id="navbar-logo" src="{{ url_for('static', filename='img/icon.svg') }}" />
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-content-collapse">
@@ -88,21 +88,26 @@
     </footer>
 </div>
 
-<script src="config.js"></script>
-<script src="questions.js"></script>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="bower_components/purl/purl.js"></script>
-<script src="bower_components/es6-promise/promise.min.js"></script>
-<script src="bower_components/jsonld/js/jsonld.js"></script>
-<script src="js/speechInput.js"></script>
-<script src="js/schemaDotOrgTypeHierachy.js"></script>
-<script src="js/jsonLdGraph.js"></script>
-<script src="js/resultBuilder.js"></script>
-<script src="js/resultSpeaker.js"></script>
-<script src="js/api.js"></script>
-<script src="js/main.js"></script>
-<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
-<script src="bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript">
+    window.config = {
+           pppCoreUrl: '{{ config['pppCoreUrl'] }}',
+           pppLoggerUrl: '{{ config['pppLoggerUrl'] }}'
+    }
+</script>
+<script src="{{ url_for('static', filename='questions.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/purl/purl.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/es6-promise/promise.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/jsonld/js/jsonld.js') }}"></script>
+<script src="{{ url_for('static', filename='js/speechInput.js') }}"></script>
+<script src="{{ url_for('static', filename='js/schemaDotOrgTypeHierachy.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jsonLdGraph.js') }}"></script>
+<script src="{{ url_for('static', filename='js/resultBuilder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/resultSpeaker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/leaflet/dist/leaflet-src.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/MathJax/MathJax.js') }}?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

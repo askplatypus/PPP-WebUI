@@ -10,7 +10,7 @@
     "url": "git://github.com/ProjetPP/PPP-WebUI.git"
   },
   "description": "Web user interface for the PPP",
-  "main": "index.html",
+  "main": "templates/index.html",
   "ignore": [
     "**/.*",
     "build",

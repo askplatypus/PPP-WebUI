@@ -21,12 +21,12 @@ sh bootstrap_icons.sh
 ```
 This script depends on ImageMagick and librsvg
 
-Create a `config.js` file in the root folder of the repository with as content:
+Create a `config.json` file in the root folder of the repository with as content:
 ```
-window.config = {
-	pppCoreUrl: 'FULL URL OF YOUR INSTALL OF THE CORE PPP MODULE',
-	pppLoggerUrl: 'FULL URL OF YOUR INSTALL OF THE LOGGER PPP MODULE'
+{
+    "pppCoreUrl": "FULL URL OF YOUR INSTALL OF THE CORE PPP MODULE",
+    "pppLoggerUrl": "FULL URL OF YOUR INSTALL OF THE LOGGER PPP MODULE"
 }
 ```
 
-Just browse with your favorite browser to the `index.html` file.
+Now, run `python3 ppp_webui.py` and open the URL in your browser.

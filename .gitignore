@@ -1,9 +1,11 @@
+!.*
+
 *~
 *.kate-swp
 *.swp
 
-!.*
 
 .idea/
 bower_components/
 node_modules/
+static/img/
