@@ -56,7 +56,7 @@
 				var graph = JSON.parse($this.attr('data-jsonld'));
 				var language = $this.attr('lang');
 
-				graph['@context'] = window.location.protocol+''//askplatyp.us/schema-context.jsonld';
+				graph['@context'] = window.location.protocol + '//askplatyp.us/schema-context.jsonld';
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
 						console.log('Invalid JSON-LD: ' + error);
@@ -76,7 +76,7 @@
 									minZoom: 2
 								});
 
-								L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+								L.tileLayer('//tile.openstreetmap.org/{z}/{x}/{y}.png', {
 									attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 								}).addTo(map);
 							} else {
