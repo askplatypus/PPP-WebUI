@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
  */
@@ -26,7 +26,7 @@
 
 	function getRandomQuestion() {
 		return window.pppQuestions[Math.floor(Math.random() * window.pppQuestions.length)];
-    }
+	}
 
 	function submitQuery(question, shouldSpeak) {
 		$questionInput.val(question);
