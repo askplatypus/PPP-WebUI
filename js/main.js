@@ -21,8 +21,6 @@
 	}
 
 	function getRandomQuestion() {
-		return window.pppQuestions[Math.floor(Math.random() * window.pppQuestions.length)];
-	}
 		var languageCode = $.i18n.lng();
 
 		if(!(languageCode in window.pppQuestions)) {
@@ -209,8 +207,11 @@
 			submitQuery(queryQuestion, false);
 		}
 
-		//i18n
-		$('.simplesearch-button-random').attr('title', $.t('simplesearch.randomquestion'));
+		$('.simplesearch-button-random')
+			.attr('title', $.t('simplesearch.randomquestion'))
+			.click(function() {
+				submitQuery(getRandomQuestion(), false);
+			});
 		$('.simplesearch-button-submit').attr('title', $.t('simplesearch.search'));
 		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
 		$('footer').html($.t('footer'));
@@ -218,10 +219,6 @@
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();
 			doQuery($questionInput.val(), false);
-		});
-
-		$('.simplesearch-button-random').click(function() {
-			submitQuery(getRandomQuestion(), false);
 		});
 
 		var speechInput = new window.speechInput($.i18n.lng());

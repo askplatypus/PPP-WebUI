@@ -116,8 +116,6 @@
 									minZoom: 2
 								});
 
-								L.tileLayer('//c.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-									attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 								L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 									attribution: $.t('result.leaflet.attribution')
 								}).addTo(map);
@@ -323,8 +321,8 @@
 		switch(tree.type) {
 			case 'triple':
 				var list = [tree.subject, tree.predicate, tree.object];
-				if("inverse-predicate" in tree) {
-					list.push(tree["inverse-predicate"]);
+				if('inverse-predicate' in tree) {
+					list.push(tree['inverse-predicate']);
 				}
 				return this.outputSequence(
 					list,
