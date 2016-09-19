@@ -14,6 +14,44 @@
 	window.resultBuilder = function() {
 	};
 
+	window.resultBuilder.externalSites = function(language) {
+        var sites = {
+            '//www.wikidata.org': {
+                'title': 'Wikidata',
+                'icon-url': 'http://www.wikidata.org/static/favicon/wikidata.ico'
+            },
+            '//g.co/kg': {
+                'title': 'Google',
+                'icon-class': 'fa fa-google'
+            },
+            '//twitter.com/': {
+                'title': 'Twitter',
+                'icon-class': 'fa fa-twitter'
+            },
+            '//www.facebook.com/': {
+                'title': 'Facebook',
+                'icon-class': 'fa fa-facebook'
+            },
+            '//www.instagram.com/': {
+                'title': 'Instagram',
+                'icon-class': 'fa fa-instagram'
+            },
+            '//www.youtube.com/': {
+                'title': 'Youtube',
+                'icon-class': 'fa fa-youtube'
+            },
+            '//plus.google.com/': {
+                'title': 'Google Plus',
+                'icon-class': 'fa fa-google-plus'
+            }
+        };
+        sites['//' + language + '.wikipedia.org/wiki/'] = {
+            'title': 'Wikipedia',
+            'icon-class': 'fa fa-wikipedia-w'
+        };
+        return sites;
+    };
+
 	window.resultBuilder.resourceFormatters = {
 
 		'string': function(resource) {
@@ -56,7 +94,9 @@
 				var graph = JSON.parse($this.attr('data-jsonld'));
 				var language = $this.attr('lang');
 
-				graph['@context'] = window.location.protocol + '//askplatyp.us/schema-context.jsonld';
+				if(graph['@context'] == 'http://schema.org') {
+					graph['@context'] = window.location.origin + window.location.pathname + 'schema-context.jsonld';
+				}
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
 						console.log('Invalid JSON-LD: ' + error);
@@ -554,6 +594,39 @@
 				}
 			}
 		}
+		if($links.length === 0) {
+			var externalSites = window.resultBuilder.externalSites(language);
+			var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
+			sameAs.push(mainResource);
+			for (i in sameAs) {
+				var link = sameAs[i].getId();
+				for (var pattern in externalSites) {
+					if (link.includes(pattern)) {
+						var linkParams = externalSites[pattern];
+						if (linkParams['icon-class']) {
+							$links.push(
+								$('<a>')
+									.attr('href', link)
+									.attr('title', linkParams['title'])
+									.addClass('card-link-icon')
+									.addClass(linkParams['icon-class'])
+							);
+						} else {
+							$links.push(
+								$('<a>')
+									.attr('href', link)
+									.attr('title', linkParams['title'])
+									.append(
+										$('<img>')
+											.addClass('card-link-icon')
+											.attr('src', linkParams['icon-url'])
+									)
+							);
+						}
+					}
+				}
+			}
+		}
 
 		//Image
 		var $image = undefined;
@@ -589,13 +662,19 @@
 
 		//Article about the subject
 		var $text = null;
-		var abouts = mainResource.getResourcesForReverseProperty('http://schema.org/about');
-		if(abouts.length > 0) {
-			var about = abouts[0];
-			var headlines = about.getResourcesForProperty('http://schema.org/headline');
-			if(headlines.length > 0 && headlines[0].hasValue()) {
+		var detailedDescriptions = mainResource.getResourcesForProperty('http://schema.googleapis.com/detailedDescription');
+		if(detailedDescriptions.length === 0) {
+			detailedDescriptions = mainResource.getResourcesForReverseProperty('http://schema.org/about');
+		}
+		if(detailedDescriptions.length > 0) {
+			var about = detailedDescriptions[0];
+			var text = about.getResourcesForProperty('http://schema.org/articleBody');
+            if(text.length === 0) {
+                text = about.getResourcesForProperty('http://schema.org/headline');
+            }
+			if(text.length > 0 && text[0].hasValue()) {
 				$text = $('<div>')
-					.text(headlines[0].getValue());
+					.text(text[0].getValue());
 
 				var authors = about.getResourcesForProperty('http://schema.org/author');
 				if(authors.length > 0) {
@@ -618,6 +697,19 @@
 								.addClass('small')
 								.text(authorName)
 						);
+					}
+				} else if(about.hasId()) {
+					//We use the ID to find the author
+					for(pattern in externalSites) {
+						if(about.getId().includes(pattern)) {
+                            $text.append(
+                                ' ',
+                                $('<a>')
+                                    .addClass('small')
+                                    .attr('href', about.getId())
+                                    .text(externalSites[pattern].title)
+                            );
+						}
 					}
 				}
 			}
@@ -726,8 +818,10 @@
 		var contentUrls = imageResource.getResourcesForProperty('http://schema.org/contentUrl');
 
 		if((contentUrls.length > 0 && contentUrls[0].hasId())) {
-			return contentUrls[0].getId();
-		} else if(imageResource.hasId()){
+            return contentUrls[0].getId();
+        } else if((contentUrls.length > 0 && contentUrls[0].hasValue())) {
+            return contentUrls[0].getValue();
+		} else if(imageResource.hasId()) {
 			return imageResource.getId();
 		} else {
 			return '';
