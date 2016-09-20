@@ -90,7 +90,7 @@
 				resultBuilder.onRendered();
 
 				if(shouldSpeak || config.speaking) {
-					var resultSpeaker = new window.resultSpeaker('en'); //TODO i18n
+					var resultSpeaker = new window.resultSpeaker(results.language);
 					resultSpeaker.speakResults(results);
 				}
 			},
@@ -183,9 +183,15 @@
 	function setupLanguageSwitch() {
 		var languageCode = $.i18n.lng();
 
-		$('#navbar-language-switch-label').text($.t('languages.' + languageCode));
+		$('#navbar-language-switch-label').text();
 
-		var $selector = $('#navbar-language-list');
+		if(window.config.allowedLanguages.length < 2) {
+			return; //no selector
+		}
+
+		var $selector = $('<ul>')
+			.addClass('dropdown-menu')
+			.attr('role', 'menu');
 		$.each(window.config.allowedLanguages, function(_, lang) {
 			if(lang !== languageCode) {
 				$('<li>')
@@ -199,6 +205,17 @@
 					.appendTo($selector);
 			}
 		});
+		var $dropdown = $('<li>')
+			.addClass('dropdown')
+			.append($('<a>')
+				.addClass('dropdown-toggle')
+				.attr('data-toggle', 'dropdown')
+				.attr('role', 'button')
+				.attr('aria-expanded', 'false')
+				.text($.t('languages.' + languageCode))
+				.append( $('<span>').addClass('caret'))
+			).append($selector)
+			.appendTo('#navbar-content-collapse ul');
 	}
 
 	function setupSimpleForm() {
@@ -239,8 +256,11 @@
 				detectLanguage: function() {
 					var languageCode = $.i18n.detectLanguage().split("-")[0];
 
-					if($.inArray(languageCode, window.config.allowedLanguages) === -1) {
-						return 'en';
+					if(
+						$.inArray(languageCode, window.config.allowedLanguages) === -1 &&
+						$.url().param('lang') !== languageCode //We allow to force a language using URL
+					) {
+						return window.config.allowedLanguages[0];
 					}
 
 					return languageCode;
