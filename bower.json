@@ -23,7 +23,7 @@
     "js-url": "~2.3",
     "font-awesome": "~4.4",
     "MathJax": "~2.5",
-    "leaflet": "~0.7",
+    "leaflet": "~1.0",
     "jsonld": "~0.4.1",
     "i18next": "~1.7.7"
   },
