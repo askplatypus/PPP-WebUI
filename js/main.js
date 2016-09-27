@@ -205,7 +205,7 @@
 					.appendTo($selector);
 			}
 		});
-		var $dropdown = $('<li>')
+		$('<li>')
 			.addClass('dropdown')
 			.append($('<a>')
 				.addClass('dropdown-toggle')
@@ -219,7 +219,7 @@
 	}
 
 	function setupSimpleForm() {
-		var queryQuestion = $.url().param('q');
+		var queryQuestion = $.url('?q');
 		if(queryQuestion) {
 			submitQuery(queryQuestion, false);
 		}
@@ -258,7 +258,7 @@
 
 					if(
 						$.inArray(languageCode, window.config.allowedLanguages) === -1 &&
-						$.url().param('lang') !== languageCode //We allow to force a language using URL
+						$.url('?lang') !== languageCode //We allow to force a language using URL
 					) {
 						return window.config.allowedLanguages[0];
 					}

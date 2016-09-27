@@ -20,7 +20,7 @@
   "moduleType": [],
   "dependencies": {
     "bootstrap": "~3.3",
-    "purl": "~2.3",
+    "js-url": "~2.3",
     "font-awesome": "~4.4",
     "MathJax": "~2.5",
     "leaflet": "~0.7",
