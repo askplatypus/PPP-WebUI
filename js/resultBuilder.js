@@ -559,6 +559,17 @@
 
 		//Links
 		var $links = [];
+		var officialWebsites = mainResource.getResourcesForProperty('http://schema.org/url');
+		officialWebsites.forEach(function(officialWebsite) {
+			if(officialWebsite.hasId()) {
+				$links.push(
+					$('<a>')
+						.attr('href', officialWebsite.getId())
+						.attr('title', $.t('result.official-website'))
+						.addClass('card-link-icon fa fa-globe')
+				);
+			}
+		});
 		var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
 		for(var i in actions) {
 			var action = actions[i];
@@ -594,35 +605,33 @@
 				}
 			}
 		}
-		if($links.length === 0) {
-			var externalSites = window.resultBuilder.externalSites(language);
-			var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
-			sameAs.push(mainResource);
-			for (i in sameAs) {
-				var link = sameAs[i].getId();
-				for (var pattern in externalSites) {
-					if (link.includes(pattern)) {
-						var linkParams = externalSites[pattern];
-						if (linkParams['icon-class']) {
-							$links.push(
-								$('<a>')
-									.attr('href', link)
-									.attr('title', linkParams['title'])
-									.addClass('card-link-icon')
-									.addClass(linkParams['icon-class'])
-							);
-						} else {
-							$links.push(
-								$('<a>')
-									.attr('href', link)
-									.attr('title', linkParams['title'])
-									.append(
-										$('<img>')
-											.addClass('card-link-icon')
-											.attr('src', linkParams['icon-url'])
-									)
-							);
-						}
+		var externalSites = window.resultBuilder.externalSites(language);
+		var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
+		sameAs.push(mainResource);
+		for (i in sameAs) {
+			var link = sameAs[i].getId();
+			for (var pattern in externalSites) {
+				if (link.includes(pattern)) {
+					var linkParams = externalSites[pattern];
+					if (linkParams['icon-class']) {
+						$links.push(
+							$('<a>')
+								.attr('href', link)
+								.attr('title', linkParams['title'])
+								.addClass('card-link-icon')
+								.addClass(linkParams['icon-class'])
+						);
+					} else {
+						$links.push(
+							$('<a>')
+								.attr('href', link)
+								.attr('title', linkParams['title'])
+								.append(
+									$('<img>')
+										.addClass('card-link-icon')
+										.attr('src', linkParams['icon-url'])
+								)
+						);
 					}
 				}
 			}

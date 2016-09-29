@@ -27,6 +27,7 @@
     "leaflet": {
       "attribution": "&copy; contributeurs <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>"
     },
+    "official-website": "Site web officiel",
     "speechedresult": "La réponse est : __answer__.",
     "speechedresult_plural": "Les réponses sont : __answer__."
   },
