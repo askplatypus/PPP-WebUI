@@ -96,7 +96,7 @@ window.pppQuestions = {
 		"Qui est le maire de Londre ?",
 		"Où est la Sagrada Familia ?",
 		"Où est Notre-Dame de Paris ?",
-		"Ou est l'Everest ?",
+		"Où est l'Everest ?",
 		"Où est le sénat français ?",
 		"Où est le canal de Panama ?",
 		"Quelle est la localisation des Alpes ?",

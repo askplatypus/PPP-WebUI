@@ -607,13 +607,15 @@
 		}
 		var externalSites = window.resultBuilder.externalSites(language);
 		var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
-		sameAs.push(mainResource);
-		for (i in sameAs) {
+		if(mainResource.hasId()) {
+            sameAs.push(mainResource);
+        }
+		for(i in sameAs) {
 			var link = sameAs[i].getId();
-			for (var pattern in externalSites) {
-				if (link.includes(pattern)) {
+			for(var pattern in externalSites) {
+				if(link.includes(pattern)) {
 					var linkParams = externalSites[pattern];
-					if (linkParams['icon-class']) {
+					if(linkParams['icon-class']) {
 						$links.push(
 							$('<a>')
 								.attr('href', link)
