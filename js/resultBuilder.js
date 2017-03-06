@@ -24,25 +24,77 @@
                 'title': 'Google',
                 'icon-class': 'fa fa-google'
             },
-            '//twitter.com/': {
-                'title': 'Twitter',
-                'icon-class': 'fa fa-twitter'
+            '//www.imdb.com/': {
+                'title': 'IMDb',
+                'icon-class': 'fa fa-imdb'
             },
             '//www.facebook.com/': {
                 'title': 'Facebook',
                 'icon-class': 'fa fa-facebook'
             },
-            '//www.instagram.com/': {
-                'title': 'Instagram',
-                'icon-class': 'fa fa-instagram'
+            '//www.flickr.com/': {
+                'title': 'Flickr',
+                'icon-class': 'fa fa-flickr'
             },
-            '//www.youtube.com/': {
-                'title': 'Youtube',
-                'icon-class': 'fa fa-youtube'
+            '//foursquare.com/': {
+                'title': 'Foursquare',
+                'icon-class': 'fa fa-foursquare'
+            },
+            '//github.com/': {
+                'title': 'GitHub',
+                'icon-class': 'fa fa-github'
             },
             '//plus.google.com/': {
                 'title': 'Google Plus',
                 'icon-class': 'fa fa-google-plus'
+            },
+            '//www.instagram.com/': {
+                'title': 'Instagram',
+                'icon-class': 'fa fa-instagram'
+            },
+            '//www.last.fm/': {
+                'title': 'Last.fm',
+                'icon-class': 'fa fa-lastfm'
+            },
+            '//www.linkedin.com/': {
+                'title': 'SoundCloud',
+                'icon-class': 'fa fa-linkedin'
+            },
+            '//www.quora.com/': {
+                'title': 'Quora',
+                'icon-class': 'fa fa-quora'
+            },
+            '//soundcloud.com/': {
+                'title': 'SoundCloud',
+                'icon-class': 'fa fa-soundcloud'
+            },
+            '//open.spotify.com/': {
+                'title': 'Spotify',
+                'icon-class': 'fa fa-spotify'
+            },
+            '//stackoverflow.com/': {
+                'title': 'StackOverflow',
+                'icon-class': 'fa fa-stack-overflow'
+            },
+            '//store.steampowered.com/': {
+                'title': 'Steam',
+                'icon-class': 'fa fa-steam'
+            },
+            '//twitter.com/': {
+                'title': 'Twitter',
+                'icon-class': 'fa fa-twitter'
+            },
+            '//vine.co/': {
+                'title': 'Vine',
+                'icon-class': 'fa fa-vine'
+            },
+            '//www.yelp.com/': {
+                'title': 'Yelp',
+                'icon-class': 'fa fa-yelp'
+            },
+            '//www.youtube.com/': {
+                'title': 'Youtube',
+                'icon-class': 'fa fa-youtube'
             }
         };
         sites['//' + language + '.wikipedia.org/wiki/'] = {

@@ -21,7 +21,7 @@
   "dependencies": {
     "bootstrap": "~3.3",
     "js-url": "~2.3",
-    "font-awesome": "~4.6",
+    "font-awesome": "~4.7",
     "MathJax": "~2.5",
     "leaflet": "~1.0",
     "jsonld": "~0.4.1",
