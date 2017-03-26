@@ -168,7 +168,7 @@
 									minZoom: 2
 								});
 
-								L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+								L.tileLayer('https://map.askplatyp.us/osm-intl/{z}/{x}/{y}.png', {
 									attribution: $.t('result.leaflet.attribution')
 								}).addTo(map);
 							} else {
