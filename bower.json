@@ -22,10 +22,10 @@
     "bootstrap": "~3.3",
     "js-url": "~2.3",
     "font-awesome": "~4.7",
-    "MathJax": "~2.5",
+    "MathJax": "~2.7",
     "leaflet": "~1.0",
-    "jsonld": "~0.4.1",
-    "i18next": "~1.7.7"
+    "jsonld": "~0.4",
+    "i18next": "~1.11"
   },
   "keywords": [
     "PPP",
