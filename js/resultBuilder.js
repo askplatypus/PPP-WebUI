@@ -18,7 +18,7 @@
         var sites = {
             '//www.wikidata.org': {
                 'title': 'Wikidata',
-                'icon-url': 'http://www.wikidata.org/static/favicon/wikidata.ico'
+                'icon-url': '//www.wikidata.org/static/favicon/wikidata.ico'
             },
             '//g.co/kg': {
                 'title': 'Google',

@@ -1,9 +1,9 @@
-PPP Web UI
+Platypus Web UI
 ==========
 
-[![Build Status](https://travis-ci.org/ProjetPP/PPP-WebUI.svg?branch=master)](https://travis-ci.org/ProjetPP/PPP-WebUI)
+[![Build Status](https://travis-ci.org/askplatypus/platypus-ui.svg?branch=master)](https://travis-ci.org/ProjetPP/PPP-WebUI)
 
-##Installation
+## Installation
 Clone this repository in a web reachable folder.
 
 Install dependencies using bower:
