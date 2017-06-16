@@ -146,9 +146,6 @@
 				var graph = JSON.parse($this.attr('data-jsonld'));
 				var language = $this.attr('lang');
 
-				if(graph['@context'] == 'http://schema.org') {
-					graph['@context'] = window.location.origin + window.location.pathname + 'schema-context.jsonld';
-				}
 				window.jsonld.expand(graph, function(error, graph) {
 					if(error !== null) {
 						console.log('Invalid JSON-LD: ' + error);
