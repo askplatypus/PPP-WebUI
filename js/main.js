@@ -80,7 +80,6 @@
 				if(input != currentInput) {
 					return; //old result
 				}
-				logResponse(requestId, question, results);
 
 				results = removeDuplicates(explodeList(results));
 
@@ -151,27 +150,6 @@
 		}
 
 		return filtered;
-	}
-
-	function logResponse(id, question, responses) {
-		if(!('pppLoggerUrl' in window.config)) {
-			console.log('Logger is not configured');
-		}
-
-		$.ajax({
-			url: window.config.pppLoggerUrl,
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify({
-				'id': id,
-				'question': question,
-				'responses': responses
-			})
-		})
-		.fail(function(jqXHR, textStatus) {
-			console.log('Logging request failed ' + textStatus);
-		});
 	}
 
 	function buildId() {

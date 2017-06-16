@@ -25,7 +25,6 @@ Create a `config.js` file in the root folder of the repository with as content:
 ```
 window.config = {
 	pppCoreUrl: 'FULL URL OF YOUR INSTALL OF THE CORE PPP MODULE',
-	pppLoggerUrl: 'FULL URL OF YOUR INSTALL OF THE LOGGER PPP MODULE',
 	allowedLanguages: ['en']
 }
 ```
