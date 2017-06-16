@@ -35,4 +35,20 @@
 		.fail(failure);
 	};
 
+	/**
+	 * Returns the sample questions for a given language
+	 *
+	 * @param {Object} languageCode parameters parameters to pass to the API
+	 * @raturn {jQuery.Promise}
+	 */
+	window.pppApi.prototype.getSampleQuestions = function(languageCode) {
+		return $.ajax({
+			url: this.url + '/v0/samples',
+			dataType: 'json',
+			headers: {
+				'Accept-Language': languageCode
+			}
+		});
+	};
+
 } (jQuery, window));

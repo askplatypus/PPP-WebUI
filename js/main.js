@@ -10,6 +10,7 @@
 	var $simpleSerarchResult = $('#simplesearch-result');
 	var $questionInput = $('#simplesearch-input-question');
 	var currentInput = '';
+	var randomQuestionCache = {};
 
 
 	function buildUrlForQuestion(languageCode, question) {
@@ -23,11 +24,17 @@
 	function getRandomQuestion() {
 		var languageCode = $.i18n.lng();
 
-		if(!(languageCode in window.pppQuestions)) {
-			return '';
+		if(languageCode in randomQuestionCache) {
+			var questions = randomQuestionCache[languageCode];
+			return $.Deferred().resolve(
+				questions[Math.floor(Math.random() * questions.length)]
+			);
 		}
 
-		return window.pppQuestions[languageCode][Math.floor(Math.random() * window.pppQuestions[languageCode].length)];
+		return api.getSampleQuestions(languageCode).then(function (questions) {
+			randomQuestionCache[languageCode] = questions;
+			return questions[Math.floor(Math.random() * questions.length)];
+		});
     }
 
 	function submitQuery(question, shouldSpeak) {
@@ -205,7 +212,9 @@
 		$('.simplesearch-button-random')
 			.attr('title', $.t('simplesearch.randomquestion'))
 			.click(function() {
-				submitQuery(getRandomQuestion(), false);
+				getRandomQuestion().done(function (question) {
+					submitQuery(question, false);
+				});
 			});
 		$('.simplesearch-button-submit').attr('title', $.t('simplesearch.search'));
 		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
