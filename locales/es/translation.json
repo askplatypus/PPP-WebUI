@@ -1,0 +1,13 @@
+{
+  "languages": {
+    "en": "inglés",
+    "es": "español",
+    "fr": "francés"
+  },
+  "navbar": {
+    "projectwebsite": "Sitio web del proyecto"
+  },
+  "simplesearch": {
+    "enteryourquestion": "Ingrese su pregunta en español"
+  }
+}

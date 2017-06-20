@@ -1,6 +1,7 @@
 {
   "languages": {
     "en": "English",
+    "es": "Spanish",
     "fr": "French"
   },
   "navbar": {
@@ -15,7 +16,7 @@
     "random": "Random",
     "randomquestion": "Random question",
     "speechinput": "Speech input",
-    "enteryourquestion": "Enter your question"
+    "enteryourquestion": "Enter your question in English"
   },
   "result": {
     "loading": " Loading...",

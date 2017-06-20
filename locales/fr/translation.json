@@ -1,6 +1,7 @@
 {
   "languages": {
     "en": "anglais",
+    "es": "espagnol",
     "fr": "français"
   },
   "navbar": {
@@ -15,7 +16,7 @@
     "random": "Au hasard",
     "randomquestion": "Question tirée au hasard",
     "speechinput": "Utiliser la voix",
-    "enteryourquestion": "Entrez votre question"
+    "enteryourquestion": "Entrez votre question en français"
   },
   "result": {
     "loading": " Chargement...",
