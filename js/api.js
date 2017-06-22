@@ -17,22 +17,23 @@
 	};
 
 	/**
-	 * Set the pending element (and clean up any existing one).
+	 * Ask a question to the API
 	 *
-	 * @param {Object} parameters parameters to pass to the API
-	 * @param {Function} success callback called on success with as parameter an Object with the result of the request
-	 * @param {Function} failure callback called on failure
+	 * @param {string} question the question
+	 * @param {string} languageCode the question
 	 */
-	window.pppApi.prototype.sendRequest = function(parameters, success, failure) {
-		$.ajax({
-			url: this.url,
-			type: 'POST',
-			contentType: 'application/json',
+	window.pppApi.prototype.ask = function (question, languageCode) {
+		return $.ajax({
+			url: this.url + '/v0/ask',
 			dataType: 'json',
-			data: JSON.stringify(parameters)
-		})
-		.done(success)
-		.fail(failure);
+			data: {
+				q: question,
+				lang: languageCode
+			},
+			headers: {
+				'Accept-Language': languageCode
+			}
+		});
 	};
 
 	/**

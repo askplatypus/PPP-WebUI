@@ -15,18 +15,6 @@ body {
 	overflow-x: auto;
 }
 
-.ppp-node {
-	display: inline-block;
-	font-size: 95%;
-	margin-left: 0.1em;
-	margin-right: 0.1em;
-	white-space: normal;
-}
-
-.ppp-resource {
-	text-align: justify;
-}
-
 .url-link {
 	float: right;
 	margin-right: 1em;
@@ -40,10 +28,6 @@ body {
 
 .card-text {
 	text-align: justify;
-}
-
-.ppp-result-item-hidden {
-	display: none;
 }
 
 #map-container {

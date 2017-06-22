@@ -104,156 +104,41 @@
         return sites;
     };
 
-	window.resultBuilder.resourceFormatters = {
-
-		'string': function(resource) {
-			var $node = $('<span>');
-			if ('language' in resource && resource.language !== '') {
-				$node.attr('lang', resource.language);
-			}
-			return $node.text(resource.value);
-		},
-
-		'math-latex': function(resource) {
-			return $('<span>')
-				.attr('title', resource.value)
-				.append(
-					$('<script>')
-						.attr('type', 'math/tex')
-						.text(resource.latex)
-				);
-		},
-
-		'resource-jsonld': function(resource, language) {
-			return $('<span>').text(resource.value);
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.onRendered = [
-		function() { //reload MathJax
-			MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-		},
-
-		function() { //Basic JSON-LD
-			var map = null;
-			var mapElements = [];
-
-			$('.resource-jsonld').each(function() {
-				var $this = $(this);
-				var graph = JSON.parse($this.attr('data-jsonld'));
-				var language = $this.attr('lang');
-
-				window.jsonld.expand(graph, function(error, graph) {
-					if(error !== null) {
-						console.log('Invalid JSON-LD: ' + error);
-						return;
-					}
-
-					var mainResource = (new window.JsonLdGraph(graph)).getMainResource();
-
-					if(mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
-						var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
-						var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
-						if(latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
-							if(map === null) {
-								$this.css('height', '50em');
-								map = L.map($this[0], {
-									maxZoom: 14,
-									minZoom: 2
-								});
-
-								L.tileLayer('https://map.askplatyp.us/osm-intl/{z}/{x}/{y}.png', {
-									attribution: $.t('result.leaflet.attribution')
-								}).addTo(map);
-							} else {
-								$this.remove();
-							}
-
-							var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
-
-							var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
-							if(topicResources.length > 0) {
-								marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0], language).toHtml().html());
-							}
-
-							marker.addTo(map);
-							mapElements.push(marker);
-							map.fitBounds(L.featureGroup(mapElements).getBounds());
-						} else {
-							window.console.log('Invalid JSON-LD GeoCoordinates.');
-						}
-					} else { //Card case
-						$this.append(window.resultBuilder.buildCardForJsonLd(mainResource, language).toHtml());
-					}
-				});
-			});
-		}
-	];
-
 	/**
 	 * Builds a box for the results.
 	 *
-	 * @param {array} results The results.
+	 * @param {array} output The results in JSON-LD
 	 * @return {jQuery}
 	 */
-	window.resultBuilder.prototype.outputResults = function(results) {
-		var displayedResults = [];
-		var hiddenResults = [];
-
-		for(var i in results) {
-			if(results[i].tree.type === 'resource') {
-				if(results[i].tree.value !== '') {
-					displayedResults.push(results[i]);
-				}
-			} else {
-				hiddenResults.push(results[i]);
-			}
-		}
-
-		var panelType = 'success';
-		if(displayedResults.length === 0) {
-			panelType = 'warning';
-		}
+	window.resultBuilder.prototype.outputResults = function (output) {
+		var results = (new window.JsonLdGraph(output)).getMainResource().getResourcesForProperty('http://www.w3.org/ns/hydra/core#member');
+		var panelType = (results.length === 0) ? 'warning' : 'success';
 
 		var title = $('<div>');
-		if(hiddenResults.length > 0) {
-			title.append(this.outputShowHiddenResultsButton());
-		}
 		title.append($('<div>').text($.t('result.result')));
 
 		return this.outputPanel(
 			panelType,
 			title,
-			this.outputResultList(displayedResults, hiddenResults)
+			this.outputResultList(results)
 		);
 	};
 
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputResultList = function(displayedResults, hiddenResults) {
+	window.resultBuilder.prototype.outputResultList = function (results) {
 		var resultsRoot = $('<ul>')
 			.addClass('list-group');
 
-		for(var i in hiddenResults) {
-			resultsRoot.append(
-				$('<li>')
-					.addClass('list-group-item ppp-result-item-hidden')
-					.append(this.outputResult(hiddenResults[i]))
-			);
-		}
-
-		if(displayedResults.length === 0) {
+		if (results.length === 0) {
 			resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
 					.text($.t('result.noresult'))
 			);
 		} else {
-			this.displayResourceResults(displayedResults, resultsRoot);
+			this.displayResourceResults(results, resultsRoot);
 		}
 
 		return resultsRoot;
@@ -263,65 +148,52 @@
 	 * @private
 	 */
 	window.resultBuilder.prototype.displayResourceResults = function(results, $resultsRoot) {
-		var displayedResultsPerType = this.splitResourceResultsPerType(results);
-		for(var type in displayedResultsPerType) {
-			switch(type) {
-				case 'resource-jsonld':
-					this.displayJsonLdResourceResults(displayedResultsPerType[type], $resultsRoot);
-					break;
-				default:
-					this.displayOtherResourceResults(displayedResultsPerType[type], $resultsRoot);
-					break;
+		$.each(results, function (_, result) {
+			var map = null;
+			var mapElements = [];
+
+			var $container = $('<li>')
+				.addClass('list-group-item')
+				.appendTo($resultsRoot);
+
+			var mainResource = result.getResourcesForProperty('http://schema.org/result')[0];
+			if (mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
+				var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
+				var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
+				if (latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
+					if (map === null) {
+						$container.css('height', '50em');
+						map = L.map($container[0], {
+							maxZoom: 14,
+							minZoom: 2
+						});
+
+						L.tileLayer('https://map.askplatyp.us/osm-intl/{z}/{x}/{y}.png', {
+							attribution: $.t('result.leaflet.attribution')
+						}).addTo(map);
+					} else {
+						$container.remove();
+					}
+
+					var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
+
+					var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
+					if (topicResources.length > 0) {
+						marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0]).toHtml().html());
+					}
+
+					marker.addTo(map);
+					mapElements.push(marker);
+					map.fitBounds(L.featureGroup(mapElements).getBounds());
+				} else {
+					window.console.log('Invalid JSON-LD GeoCoordinates.');
+				}
+			} else { //Card case
+				$resultsRoot.append(
+					$container.append(window.resultBuilder.buildCardForJsonLd(mainResource).toHtml())
+				);
 			}
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.displayJsonLdResourceResults = function(results, $resultsRoot) {
-		for(var i in results) {
-			var resource = results[i].tree;
-			var language = results[i].language;
-
-			$resultsRoot.append(
-				$('<li>')
-					.addClass('list-group-item resource-jsonld')
-					.attr('data-jsonld', JSON.stringify(resource.graph))
-					.attr('lang', language)
-			);
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.displayOtherResourceResults = function(results, $resultsRoot) {
-		for(var i in results) {
-			$resultsRoot.append(
-				$('<li>')
-					.addClass('list-group-item')
-					.append(this.outputResource(results[i].tree, results[i].language))
-			);
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.splitResourceResultsPerType = function(results) {
-		var resultsPerType = {};
-
-		for(var i in results) {
-			var type = results[i].tree['value-type'];
-			if(type in resultsPerType) {
-				resultsPerType[type].push(results[i]);
-			} else {
-				resultsPerType[type] = [results[i]];
-			}
-		}
-
-		return resultsPerType;
+		});
 	};
 
 	/**
@@ -343,15 +215,6 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputResult = function(result) {
-		return $('<div>')
-			.attr('lang', result.language)
-			.append(this.outputTree(result.tree, result.language));
-	};
-
-	/**
-	 * @private
-	 */
 	window.resultBuilder.prototype.outputPanel = function(type, $title, $body) {
 		return $('<div>')
 			.addClass('panel panel-' + type)
@@ -364,154 +227,10 @@
 	};
 
 	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.outputTree = function(tree, language) {
-		switch(tree.type) {
-			case 'triple':
-				var list = [tree.subject, tree.predicate, tree.object];
-				if('inverse-predicate' in tree) {
-					list.push(tree['inverse-predicate']);
-				}
-				return this.outputSequence(
-					list,
-					'(', ',', ')',
-					'label label-default ppp-node ppp-triple',
-					language
-				);
-			case 'list':
-				return this.outputSequence(
-					tree.list,
-					'[', ',', ']',
-					'ppp-node ppp-list',
-					language
-				);
-			case 'union':
-				return this.outputSequence(
-					tree.list,
-					'', '∪', '',
-					'ppp-node ppp-union',
-					language
-				);
-			case 'intersection':
-				return this.outputSequence(
-					tree.list,
-					'', '∩', '',
-					'ppp-node ppp-intersection',
-					language
-				);
-			case 'sort':
-				return this.outputSequence(
-					[tree.list, tree.predicate],
-					'sort(', ',', ')',
-					'ppp-node ppp-sort'
-				);
-			case 'first':
-				return this.outputSequence(
-					[tree.list],
-					'first(', ',', ')',
-					'ppp-node ppp-first'
-				);
-			case 'last':
-				return this.outputSequence(
-					[tree.list],
-					'last(', ',', ')',
-					'ppp-node ppp-last'
-				);
-			case 'resource':
-				return $('<span>')
-					.addClass('label label-info ppp-node ppp-resource')
-					.append(this.outputResource(tree, language));
-			case 'missing':
-				return $('<span>')
-					.addClass('label label-warning ppp-node ppp-missing')
-					.text('?');
-			case 'sentence':
-				return $('<span>')
-					.addClass('label label-primary ppp-node ppp-sentence')
-					.text(tree.value);
-			default:
-				return $('<span>')
-					.addClass('label label-danger')
-					.text(JSON.stringify(tree));
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.outputResource = function(resource, language) {
-		if(!('value-type' in resource)) {
-			resource['value-type'] = 'string';
-		}
-
-		if(resource['value-type'] in window.resultBuilder.resourceFormatters) {
-			return window.resultBuilder.resourceFormatters[resource['value-type']](resource, language);
-		} else {
-			return $('<span>')
-				.text(resource.value);
-		}
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.outputSequence = function(elements, prefix, middle, suffix, style, language) {
-		var $node = $('<span>')
-			.addClass(style)
-			.append(prefix);
-		var elementsLength = elements.length;
-
-		if(elementsLength === 0) {
-			return $node.append(suffix);
-		}
-
-		$node.append(this.outputTree(elements[0], language));
-		for(var i = 1; i < elementsLength; i++) {
-			$node
-				.append(middle)
-				.append(this.outputTree(elements[i], language));
-		}
-
-		return $node.append(suffix);
-	};
-
-	/**
-	 * @private
-	 */
-	window.resultBuilder.prototype.outputShowHiddenResultsButton = function() {
-		var inHidePosition = false;
-
-		return $('<div>')
-			.addClass('url-link')
-			.append(
-				$('<a>')
-					.attr('id', 'ppp-button-internalresults')
-					.addClass('btn btn-default')
-					.text($.t('result.showinternalresults'))
-					.click(function() {
-						if(inHidePosition) {
-							$('.ppp-result-item-hidden').hide();
-							$('#ppp-button-internalresults').text($.t('result.showinternalresults'));
-							inHidePosition = false;
-						} else {
-							$('.ppp-result-item-hidden').show();
-							$('#ppp-button-internalresults').text($.t('result.hideinternalresults'));
-							inHidePosition = true;
-						}
-					}
-
-				)
-			);
-	};
-
-	/**
 	 * Event to execute when results are rendered
 	 */
 	window.resultBuilder.prototype.onRendered = function() {
-		for(var i in window.resultBuilder.onRendered) {
-			window.resultBuilder.onRendered[i]();
-		}
+		MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //We reload MathJax
 	};
 
 	/**
@@ -543,15 +262,14 @@
 	/**
 	 * Builds a card for a JsonLd resource
 	 * @param {window.JsonLdResource} mainResource
-	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
-	window.resultBuilder.buildCardForJsonLd = function(mainResource, language) {
+	window.resultBuilder.buildCardForJsonLd = function (mainResource) {
 		var card;
-		if (mainResource.isInstanceOf('http://schema.org/DataType')) {
-			card = window.resultBuilder.buildBaseCardForJsonLdLiteral(mainResource, language);
+		if (mainResource.isInstanceOf('http://www.w3.org/2000/01/rdf-schema#Literal')) {
+			card = window.resultBuilder.buildBaseCardForJsonLdLiteral(mainResource);
 		} else {
-			card = window.resultBuilder.buildBaseCardForJsonLdResource(mainResource, language);
+			card = window.resultBuilder.buildBaseCardForJsonLdResource(mainResource);
 		}
 
 		mainResource.getReverseProperties().forEach(function(property) {
@@ -559,12 +277,11 @@
 				return;
 			}
 
-			var propertyLabel = window.resultBuilder.buildLabelForProperty(property, language);
+			var propertyLabel = window.resultBuilder.buildLabelForProperty(property);
 			card.$footer = $('<aside>')
 				.append(
 					window.resultBuilder.buildLabelWithPopupCardForJsonLd(
-						mainResource.getResourcesForReverseProperty(property)[0],
-						language
+						mainResource.getResourcesForReverseProperty(property)[0]
 					),
 					$('<span>').text(', ' + propertyLabel)
 				);
@@ -577,10 +294,9 @@
 	 * @todo: i18n support
 	 *
 	 * @param {string} property
-	 * @param {string} language
 	 * @return {string}
 	 */
-	window.resultBuilder.buildLabelForProperty = function(property, language) {
+	window.resultBuilder.buildLabelForProperty = function (property) {
 		var match = property.match(/^http:\/\/schema\.org\/(.+)$/);
 
 		if(match === null) {
@@ -593,14 +309,13 @@
 	/**
 	 * Builds a card for a JsonLd resource
 	 * @param {window.JsonLdResource} mainResource
-	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
-	window.resultBuilder.buildBaseCardForJsonLdResource = function(mainResource, language) {
+	window.resultBuilder.buildBaseCardForJsonLdResource = function (mainResource) {
 		//Default case
 		//Title
-		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
-		var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description', [language, null]);
+		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name');
+		var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description');
 		var $label = $('<span>').text(name);
 		if(description !== '') {
 			$label.attr('title', description);
@@ -626,7 +341,7 @@
 				var targets = action.getResourcesForProperty('http://schema.org/target');
 				if(targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
 					var target = targets[0].getValue();
-					var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name', [language, null]);
+					var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name');
 					var actionIconUrl = '';
 					var actionIcons = action.getResourcesForProperty('http://schema.org/image');
 					if(actionIcons.length > 0) {
@@ -654,7 +369,7 @@
 				}
 			}
 		}
-		var externalSites = window.resultBuilder.externalSites(language);
+		var externalSites = window.resultBuilder.externalSites($.i18n.lng());
 		var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
 		if(mainResource.hasId()) {
             sameAs.push(mainResource);
@@ -697,8 +412,8 @@
 			//retrieve image urls
 			var imageUrl = window.resultBuilder.getUrlForImage(image);
 			if(imageUrl != '') {
-				var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name', [language, null]);
-				var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description', [language, null]);
+				var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name');
+				var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description');
 
 				if(image.hasId()) {
 					$image = $('<a>')
@@ -738,7 +453,7 @@
 
 				var authors = about.getResourcesForProperty('http://schema.org/author');
 				if(authors.length > 0) {
-					var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name', [language, null]);
+					var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name');
 					if(authorName === '') {
 						authorName = 'Source';
 					}
@@ -788,10 +503,9 @@
 	/**
 	 * Builds a card for a JsonLd literal
 	 * @param {window.JsonLdResource} mainResource
-	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
-	window.resultBuilder.buildBaseCardForJsonLdLiteral = function(mainResource, language) {
+	window.resultBuilder.buildBaseCardForJsonLdLiteral = function (mainResource) {
 		var value = mainResource.getResourcesForProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 		if (value.length !== 1) {
 			window.console.log('Invalid JSON-LD literal as root node.');
@@ -799,7 +513,7 @@
 		}
 
 		return new window.resultBuilder.Card(
-			window.resultBuilder.buildHtmlForLiteral(value[0], language),
+			window.resultBuilder.buildHtmlForLiteral(value[0]),
 			$('<div>')
 		);
 	};
@@ -807,12 +521,11 @@
 	/**
 	 * Builds a label with a popup card for a JsonLd resource
 	 * @param {window.JsonLdResource} mainResource
-	 * @param {string} language
 	 * @return {window.resultBuilder.Card}
 	 */
-	window.resultBuilder.buildLabelWithPopupCardForJsonLd = function(mainResource, language) {
-		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name', [language, null]);
-		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource, language);
+	window.resultBuilder.buildLabelWithPopupCardForJsonLd = function (mainResource) {
+		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name');
+		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource);
 
 		var $label = $('<span>').text(name);
 		$label.popover({
@@ -842,14 +555,13 @@
 	 * Returns as string the first resource or returns ''
 	 * @param {window.JsonLdResource} resource
 	 * @param {string} property
-	 * @param {string[]} languages
 	 * @return string
 	 */
-	window.resultBuilder.getPropertyAsString = function(resource, property, languages) {
+	window.resultBuilder.getPropertyAsString = function (resource, property) {
 		return window.resultBuilder.getAsString(
 			window.JsonLdResource.filterBestResourcesForLanguage(
 				resource.getResourcesForProperty(property),
-				languages
+				[$.i18n.lng(), null]
 			)
 		)
 	};
@@ -891,16 +603,27 @@
 	/**
 	 * Returns as string the first resource or returns ''
 	 * @param {window.JsonLdResource} literalResource
-	 * @param {string} language
 	 * @return jQuery
 	 */
-	window.resultBuilder.buildHtmlForLiteral = function(literalResource, language) {
-		if(literalResource.isInstanceOf('http://schema.org/Date') || literalResource.isInstanceOf('http://schema.org/DateTime')) {
-			return window.resultBuilder.buildHtmlForDate(literalResource.getValue(), language);
-		} else if(literalResource.isInstanceOf('http://schema.org/Time')) {
-			return window.resultBuilder.buildHtmlForTime(literalResource.getValue(), language);
-		} else if(literalResource.isInstanceOf('http://schema.org/URL')) {
+	window.resultBuilder.buildHtmlForLiteral = function (literalResource) {
+		if (literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#dateTime')) {
+			return window.resultBuilder.buildHtmlForDateTime(literalResource.getValue());
+		} else if (literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#date')) {
+			return window.resultBuilder.buildHtmlForDate(literalResource.getValue());
+		} else if (literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#time')) {
+			return window.resultBuilder.buildHtmlForTime(literalResource.getValue());
+		} else if (literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#anyURI')) {
 			return $('<a>').attr('href', literalResource.getValue()).text(literalResource.getValue());
+		} else if (
+			literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#decimal') ||
+			literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#float') ||
+			literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#double')
+		) {
+			return $('<span>').text(Number.parseFloat(literalResource.getValue()).toLocaleString($.i18n.lng()));
+		} else if (literalResource.isInstanceOf('http://www.w3.org/2001/XMLSchema#anyURI')) {
+			return $('<a>').attr('href', literalResource.getValue()).text(literalResource.getValue());
+		} else if (literalResource.isInstanceOf('http://askplatyp.us/vocab#LaTeX')) {
+			return $('<span>').append($('<script>').attr('type', 'math/tex').text(literalResource.getValue()));
 		} else {
 			var node = $('<span>').text(literalResource.getValue());
 			if(literalResource.hasLanguage()) {
@@ -913,10 +636,9 @@
 	/**
 	 * Returns an HTML <time> node for a date
 	 * @param {string} value an ISO Date or DateTime
-	 * @param {string} language
 	 * @return jQuery
 	 */
-	window.resultBuilder.buildHtmlForDate = function(value, language) {
+	window.resultBuilder.buildHtmlForDateTime = function (value) {
 		var dateObject = new Date(value);
 		var formattingOptions = {
 			weekday: 'long',
@@ -924,40 +646,53 @@
 			month: 'long',
 			day: 'numeric'
 		};
-
-		var formattedDate = '';
-		if(value.indexOf('T') === -1) {
-			formattedDate = dateObject.toLocaleDateString(language, formattingOptions);
-		} else {
-			formattedDate = dateObject.toLocaleString(language, formattingOptions);
+		var formattedDate = dateObject.toLocaleString($.i18n.lng(), formattingOptions);
+		if (formattedDate === 'Invalid Date') {
+			formattedDate = value;
 		}
+		return $('<time>')
+			.attr('datetime', value)
+			.attr('lang', $.i18n.lng())
+			.text(formattedDate);
+	};
+
+	/**
+	 * Returns an HTML <time> node for a date
+	 * @param {string} value an ISO Date or DateTime
+	 * @return jQuery
+	 */
+	window.resultBuilder.buildHtmlForDate = function (value) {
+		var dateObject = new Date(value.replace('Z', ''));
+		var formattingOptions = {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		};
+		var formattedDate = dateObject.toLocaleDateString($.i18n.lng(), formattingOptions);
 		if(formattedDate === 'Invalid Date') {
 			formattedDate = value;
 		}
-
 		return $('<time>')
 			.attr('datetime', value)
-			.attr('lang', language)
+			.attr('lang', $.i18n.lng())
 			.text(formattedDate);
 	};
 
 	/**
 	 * Returns an HTML <time> node for a time
 	 * @param {string} value an ISO Time
-	 * @param {string} language
 	 * @return jQuery
 	 */
-	window.resultBuilder.buildHtmlForTime = function(value, language) {
+	window.resultBuilder.buildHtmlForTime = function (value) {
 		var dateObject = new Date('2000-01-01T' + value);
-
-		var formattedDate = dateObject.toLocaleTimeString(language);
+		var formattedDate = dateObject.toLocaleTimeString($.i18n.lng());
 		if(formattedDate === 'Invalid Date') {
 			formattedDate = value;
 		}
-
 		return $('<time>')
 			.attr('datetime', value)
-			.attr('lang', language)
+			.attr('lang', $.i18n.lng())
 			.text(formattedDate);
 	};
 

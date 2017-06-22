@@ -43,8 +43,7 @@
 	}
 
 	function doQuery(question, shouldSpeak) {
-		var input = {"type": "sentence", "value": question};
-		currentInput = input;
+		currentInput = question;
 
 		$simpleSerarchResult.empty()
 			.append(
@@ -69,39 +68,31 @@
 		};
 		var requestId = buildId();
 
-		api.sendRequest(
-			{
-				'language': $.i18n.lng(),
-				'id': requestId,
-				'tree': input,
-				'measures': measures,
-				'trace': [
-					{
-						'module': 'input',
-						'tree': input,
-						'measures': measures
-					}
-				]
-			},
+		api.ask(question, $.i18n.lng()).then(
 			function(results) {
-				if(input != currentInput) {
+				if (question !== currentInput) {
 					return; //old result
 				}
 
-				results = removeDuplicates(explodeList(results));
+				window.jsonld.expand(results, function (error, graph) {
+					if (error !== null) {
+						console.log('Invalid JSON-LD: ' + error);
+						return;
+					}
 
-				$('#simplesearch-result')
-					.empty()
-					.append(resultBuilder.outputResults(results));
-				resultBuilder.onRendered();
+					$('#simplesearch-result')
+						.empty()
+						.append(resultBuilder.outputResults(graph));
+					resultBuilder.onRendered();
 
-				if(shouldSpeak || config.speaking) {
-					var resultSpeaker = new window.resultSpeaker(results.language);
-					resultSpeaker.speakResults(results);
-				}
+					/*TODO if(shouldSpeak || config.speaking) {
+					 var resultSpeaker = new window.resultSpeaker($.i18n.lng());
+					 resultSpeaker.speakResults(results);
+					 }*/
+				});
 			},
 			function(jqXHR, textStatus) {
-				if(input != currentInput) {
+				if (question !== currentInput) {
 					return; //old result
 				}
 
