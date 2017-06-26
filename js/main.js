@@ -62,12 +62,6 @@
 
 		updateEnvironmentForQuestion(question);
 
-		var measures = {
-			'relevance': 0,
-			'accuracy': 1
-		};
-		var requestId = buildId();
-
 		api.ask(question, $.i18n.lng()).then(
 			function(results) {
 				if (question !== currentInput) {
@@ -114,40 +108,6 @@
 		$('link[rel=canonical]').attr('href', url);
 
 		$('title').text(title);
-	}
-
-	function explodeList(responses) {
-		var exploded = [];
-		for(var i in responses) {
-			if(responses[i].tree.type === 'list') {
-				for(var j in responses[i].tree.list) {
-					exploded.push($.extend(
-						{},
-						responses[i],
-						{tree: responses[i].tree.list[j]}
-					));
-				}
-			} else {
-				exploded.push(responses[i]);
-			}
-		}
-		return exploded;
-	}
-
-	function removeDuplicates(responses) {
-		var filtered = [];
-		var presentHashs = {};
-
-		for(var i in responses) {
-			var hash = JSON.stringify(responses[i].tree);
-
-			if(!(hash in presentHashs)) {
-				filtered.push(responses[i]);
-				presentHashs[hash] = true;
-			}
-		}
-
-		return filtered;
 	}
 
 	function buildId() {
