@@ -108,61 +108,55 @@
 	 * Builds a box for the results.
 	 *
 	 * @param {array} output The results in JSON-LD
-	 * @return {jQuery}
+	 * @param {jQuery} $container The node to add results to
 	 */
-	window.resultBuilder.prototype.outputResults = function (output) {
+	window.resultBuilder.prototype.outputResults = function (output, $container) {
 		var results = (new window.JsonLdGraph(output)).getMainResource().getResourcesForProperty('http://www.w3.org/ns/hydra/core#member');
 		var panelType = (results.length === 0) ? 'warning' : 'success';
 
 		var title = $('<div>');
 		title.append($('<div>').text($.t('result.result')));
 
-		return this.outputPanel(
-			panelType,
-			title,
-			this.outputResultList(results)
-		);
+		var $panel = this.buildPanel(panelType, title).appendTo($container);
+		this.outputResultList(results, $panel);
 	};
 
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputResultList = function (results) {
-		var resultsRoot = $('<ul>')
-			.addClass('list-group');
+	window.resultBuilder.prototype.outputResultList = function (results, $container) {
+		var $resultsRoot = $('<ul>')
+			.addClass('list-group')
+			.appendTo($container);
 
 		if (results.length === 0) {
-			resultsRoot.append(
+			$resultsRoot.append(
 				$('<li>')
 					.addClass('list-group-item')
 					.text($.t('result.noresult'))
 			);
 		} else {
-			this.displayResourceResults(results, resultsRoot);
+			this.displayResourceResults(results, $resultsRoot);
 		}
-
-		return resultsRoot;
 	};
 
 	/**
 	 * @private
 	 */
 	window.resultBuilder.prototype.displayResourceResults = function(results, $resultsRoot) {
+		var map = null;
+		var mapElements = [];
 		$.each(results, function (_, result) {
-			var map = null;
-			var mapElements = [];
-
-			var $container = $('<li>')
-				.addClass('list-group-item')
-				.appendTo($resultsRoot);
-
 			var mainResource = result.getResourcesForProperty('http://schema.org/result')[0];
 			if (mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 				var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
 				var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
 				if (latitudes.length > 0 && latitudes[0].hasValue() && longitudes.length > 0 && longitudes[0].hasValue()) {
 					if (map === null) {
-						$container.css('height', '50em');
+						var $container = $('<li>')
+							.addClass('list-group-item')
+							.css('height', '50em')
+							.prependTo($resultsRoot);
 						map = L.map($container[0], {
 							maxZoom: 14,
 							minZoom: 2
@@ -171,17 +165,13 @@
 						L.tileLayer('https://map.askplatyp.us/osm-intl/{z}/{x}/{y}.png', {
 							attribution: $.t('result.leaflet.attribution')
 						}).addTo(map);
-					} else {
-						$container.remove();
 					}
 
 					var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
-
 					var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
 					if (topicResources.length > 0) {
 						marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0]).toHtml().html());
 					}
-
 					marker.addTo(map);
 					mapElements.push(marker);
 					map.fitBounds(L.featureGroup(mapElements).getBounds());
@@ -189,48 +179,44 @@
 					window.console.log('Invalid JSON-LD GeoCoordinates.');
 				}
 			} else { //Card case
-				$resultsRoot.append(
-					$container.append(window.resultBuilder.buildCardForJsonLd(mainResource).toHtml())
-				);
+				$('<li>').addClass('list-group-item')
+					.append(window.resultBuilder.buildCardForJsonLd(mainResource).toHtml())
+					.appendTo($resultsRoot);
 			}
 		});
+
+		//We reload MathJax
+		MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
 	};
 
 	/**
 	 * Builds a box for an error.
 	 *
 	 * @param {string} error Error message.
-	 * @return {jQuery}
+	 * @param {jQuery} $container
 	 */
-	window.resultBuilder.prototype.outputError = function(error) {
-		return this.outputPanel(
+	window.resultBuilder.prototype.outputError = function (error, $container) {
+		this.buildPanel(
 			'danger',
-			$('<div>').text($.t('result.error')),
+			$('<div>').text($.t('result.error'))
+		).append(
 			$('<div>')
 				.addClass('panel-body')
 				.text(error)
-		);
+		).appendTo($container);
 	};
 
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.outputPanel = function(type, $title, $body) {
+	window.resultBuilder.prototype.buildPanel = function (type, $title) {
 		return $('<div>')
 			.addClass('panel panel-' + type)
 			.append(
 				$('<div>')
 					.addClass('panel-heading')
 					.append($title)
-			)
-			.append($body);
-	};
-
-	/**
-	 * Event to execute when results are rendered
-	 */
-	window.resultBuilder.prototype.onRendered = function() {
-		MathJax.Hub.Queue(['Typeset', MathJax.Hub]); //We reload MathJax
+			);
 	};
 
 	/**

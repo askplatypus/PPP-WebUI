@@ -74,10 +74,7 @@
 						return;
 					}
 
-					$('#simplesearch-result')
-						.empty()
-						.append(resultBuilder.outputResults(graph));
-					resultBuilder.onRendered();
+					resultBuilder.outputResults(graph, $('#simplesearch-result').empty());
 
 					/*TODO if(shouldSpeak || config.speaking) {
 					 var resultSpeaker = new window.resultSpeaker($.i18n.lng());
@@ -89,10 +86,7 @@
 				if (question !== currentInput) {
 					return; //old result
 				}
-
-				$('#simplesearch-result')
-					.empty()
-					.append(resultBuilder.outputError(textStatus));
+				resultBuilder.outputError(textStatus, $('#simplesearch-result').empty());
 			}
 		);
 	}
