@@ -32,5 +32,5 @@
     "speechedresult": "La réponse est : __answer__.",
     "speechedresult_plural": "Les réponses sont : __answer__."
   },
-  "footer": "<p>Cet outil de réponse aux questions est sponsorisé par <a href=\"http://lexistems.com\">Lexistems SAS</a> et <a href=\"//www.ens-lyon.fr\">ENS de Lyon</a>.</p><p>Si vous êtes intéressés par les aspects techniques, n'hésitez pas à aller faire un tour sur <a href=\"http://askplatypus.github.io/\">le site du projet</a>.</p>"
+  "footer": "<p>Cet outil de réponse aux questions est sponsorisé par <a href=\"http://lexistems.com\">Lexistems SAS</a> et <a href=\"//www.ens-lyon.fr\">ENS de Lyon</a>.</p>"
 }
