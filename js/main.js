@@ -145,7 +145,13 @@
 				.text($.t('languages.' + languageCode))
 				.append( $('<span>').addClass('caret'))
 			).append($selector)
-			.appendTo('#navbar-content-collapse ul');
+			.appendTo('#navbar-content-collapse ul')
+			.attr('title', $.t('simplesearch.switchlanguage'))
+			.tooltip({
+				animation: true,
+				placement: 'bottom'
+
+			}).tooltip('show');
 	}
 
 	function setupSimpleForm() {
@@ -160,8 +166,19 @@
 				getRandomQuestion().done(function (question) {
 					submitQuery(question, false);
 				});
-			});
-		$('.simplesearch-button-submit').attr('title', $.t('simplesearch.search'));
+			})
+			.tooltip({
+				animation: true,
+				placement: 'bottom'
+
+			}).tooltip('show');
+		$('.simplesearch-button-submit')
+			.attr('title', $.t('simplesearch.search'))
+			.tooltip({
+				animation: true,
+				placement: 'bottom'
+
+			}).tooltip('show');
 		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
 		$('footer').html($.t('footer'));
 

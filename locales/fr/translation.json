@@ -16,7 +16,8 @@
     "random": "Au hasard",
     "randomquestion": "Question tirée au hasard",
     "speechinput": "Utiliser la voix",
-    "enteryourquestion": "Entrez votre question en français"
+    "enteryourquestion": "Entrez votre question en français",
+    "switchlanguage": "Changer de langue"
   },
   "result": {
     "loading": " Chargement...",

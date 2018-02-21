@@ -16,7 +16,8 @@
     "random": "Random",
     "randomquestion": "Random question",
     "speechinput": "Speech input",
-    "enteryourquestion": "Enter your question in English"
+    "enteryourquestion": "Enter your question in English",
+    "switchlanguage": "Change language"
   },
   "result": {
     "loading": " Loading...",
