@@ -311,14 +311,13 @@
 		var $links = [];
 		var officialWebsites = mainResource.getResourcesForProperty('http://schema.org/url');
 		officialWebsites.forEach(function(officialWebsite) {
-			if(officialWebsite.hasId()) {
-				$links.push(
-					$('<a>')
-						.attr('href', officialWebsite.getId())
-						.attr('title', $.t('result.official-website'))
-						.addClass('card-link-icon fa fa-globe')
-				);
-			}
+			var url = officialWebsite.hasId() ? officialWebsite.getId() : officialWebsite.getValue();
+			$links.push(
+				$('<a>')
+					.attr('href', url)
+					.attr('title', $.t('result.official-website'))
+					.addClass('card-link-icon fa fa-globe')
+			);
 		});
 		var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
 		for(var i in actions) {
@@ -361,7 +360,7 @@
             sameAs.push(mainResource);
         }
 		for(i in sameAs) {
-			var link = sameAs[i].getId();
+			var link = sameAs[i].hasId() ? sameAs[i].getId() : sameAs[i].getValue();
 			for(var pattern in externalSites) {
 				if(link.includes(pattern)) {
 					var linkParams = externalSites[pattern];
