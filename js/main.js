@@ -37,12 +37,12 @@
 		});
     }
 
-	function submitQuery(question, shouldSpeak) {
+	function submitQuery(question) {
 		$questionInput.val(question);
-		doQuery(question, shouldSpeak);
+		doQuery(question);
 	}
 
-	function doQuery(question, shouldSpeak) {
+	function doQuery(question) {
 		currentInput = question;
 
 		$simpleSerarchResult.empty()
@@ -75,11 +75,6 @@
 					}
 
 					resultBuilder.outputResults(graph, $('#simplesearch-result').empty());
-
-					/*TODO if(shouldSpeak || config.speaking) {
-					 var resultSpeaker = new window.resultSpeaker($.i18n.lng());
-					 resultSpeaker.speakResults(results);
-					 }*/
 				});
 			},
 			function(jqXHR, textStatus) {
@@ -102,12 +97,6 @@
 		$('link[rel=canonical]').attr('href', url);
 
 		$('title').text(title);
-	}
-
-	function buildId() {
-		var date = new Date();
-		var random = Math.floor(Math.random() * 100);
-		return date.getTime() +  '-' + date.getMilliseconds() + '-' + random + '-webui';
 	}
 
 	function setupLanguageSwitch() {
@@ -157,15 +146,13 @@
 	function setupSimpleForm() {
 		var queryQuestion = $.url('?q');
 		if(queryQuestion) {
-			submitQuery(queryQuestion, false);
+			submitQuery(queryQuestion);
 		}
 
 		$('.simplesearch-button-random')
 			.attr('title', $.t('simplesearch.randomquestion'))
 			.click(function() {
-				getRandomQuestion().done(function (question) {
-					submitQuery(question, false);
-				});
+				getRandomQuestion().done(submitQuery);
 			})
 			.tooltip({
 				animation: true,
@@ -184,13 +171,11 @@
 
 		$('#simplesearch-form').submit(function(event) {
 			event.preventDefault();
-			doQuery($questionInput.val(), false);
+			doQuery($questionInput.val());
 		});
 
 		var speechInput = new window.speechInput($.i18n.lng());
-		speechInput.setupSpeechInput(function(result) {
-			submitQuery(result, true);
-		});
+		speechInput.setupSpeechInput(submitQuery);
 
 		setupLanguageSwitch();
 	}
