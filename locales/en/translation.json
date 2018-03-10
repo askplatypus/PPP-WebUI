@@ -33,7 +33,8 @@
     "speechedresult": "The answer is: __answer__.",
     "speechedresult_plural": "The answers are: __answer__.",
     "explain": "Explain",
-    "normal-form": "Normal form"
+    "normal-form": "Normal form",
+    "conllu": "CoNLL-U dependency parse tree"
   },
   "footer": "<p>This query answering tool is sponsored by <a href=\"http://lexistems.com\">Lexistems SAS</a> and <a href=\"//www.ens-lyon.fr\">ENS de Lyon</a>.</p>"
 }

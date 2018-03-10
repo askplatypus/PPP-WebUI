@@ -152,6 +152,9 @@
 			if (result.getResourcesForProperty('http://askplatyp.us/vocab#term').length === 1) {
 				processingContext.term = result.getResourcesForProperty('http://askplatyp.us/vocab#term')[0].getValue();
 			}
+			if (result.getResourcesForProperty('http://askplatyp.us/vocab#conllu').length === 1) {
+				processingContext.conllu = result.getResourcesForProperty('http://askplatyp.us/vocab#conllu')[0].getValue();
+			}
 
 			if (mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 				var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
@@ -695,16 +698,28 @@
 	};
 
 	window.resultBuilder.buildProcessingContextPopupCard = function (processingContext) {
-		if (!('term' in processingContext)) {
+		var elements = [];
+		if ('term' in processingContext) {
+			elements.push(
+				$('<dt>').text($.t('result.normal-form')),
+				$('<dd>').append($('<pre>').text(processingContext.term))
+			);
+		}
+		if ('conllu' in processingContext) {
+			elements.push(
+				$('<dt>').append(
+					$('<a>')
+						.attr('href', 'http://universaldependencies.org/format.html')
+						.text($.t('result.conllu'))
+				),
+				$('<dd>').append($('<pre>').text(processingContext.conllu))
+			);
+		}
+		if (elements.length === 0) {
 			return null;
 		}
-		var $content = $('<div>').append(
-			$('<dl>').append(
-				$('<dt>').text($.t('result.normal-form')),
-				$('<dd>').append($('<code>').text(processingContext.term))
-			)
-		).hide();
-		var contentOpen = false;
+
+		var $content = $('<div>').append($('<dl>').append(elements)).hide();
 		return $('<aside>').append(
 			$('<button>')
 				.addClass('btn btn-info')
