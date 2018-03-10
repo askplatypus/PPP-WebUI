@@ -135,12 +135,7 @@
 				.append( $('<span>').addClass('caret'))
 			).append($selector)
 			.appendTo('#navbar-content-collapse ul')
-			.attr('title', $.t('simplesearch.switchlanguage'))
-			.tooltip({
-				animation: true,
-				placement: 'bottom'
-
-			}).tooltip('show');
+			.attr('title', $.t('simplesearch.switchlanguage'));
 	}
 
 	function setupSimpleForm() {
@@ -153,29 +148,37 @@
 			.attr('title', $.t('simplesearch.randomquestion'))
 			.click(function() {
 				getRandomQuestion().done(submitQuery);
-			})
-			.tooltip({
-				animation: true,
-				placement: 'bottom'
+			});
 
-			}).tooltip('show');
-		$('.simplesearch-button-submit')
-			.attr('title', $.t('simplesearch.search'))
-			.tooltip({
-				animation: true,
-				placement: 'bottom'
-
-			}).tooltip('show');
 		$('#simplesearch-input-question').attr('placeholder', $.t('simplesearch.enteryourquestion'));
 		$('footer').html($.t('footer'));
 
-		$('#simplesearch-form').submit(function(event) {
+		$('#simplesearch-form').submit(function (event) {
 			event.preventDefault();
 			doQuery($questionInput.val());
 		});
 
 		var speechInput = new window.speechInput($.i18n.lng());
 		speechInput.setupSpeechInput(submitQuery);
+
+		//Help
+		var bigSearch = $('.simplesearch-button-submit.hidden-xs');
+		if (bigSearch.is(":visible")) {
+			bigSearch.attr('title', $.t('simplesearch.search'))
+				.tooltip({
+					animation: true,
+					placement: 'bottom'
+
+				}).tooltip('show');
+		}
+		var bigRandom = $('.simplesearch-button-random.hidden-xs');
+		if (bigRandom.is(":visible")) {
+			bigRandom.tooltip({
+				animation: true,
+				placement: 'bottom'
+
+			}).tooltip('show');
+		}
 
 		setupLanguageSwitch();
 	}
