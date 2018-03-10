@@ -31,7 +31,9 @@
     },
     "official-website": "Site web officiel",
     "speechedresult": "La réponse est : __answer__.",
-    "speechedresult_plural": "Les réponses sont : __answer__."
+    "speechedresult_plural": "Les réponses sont : __answer__.",
+    "explain": "Explications",
+    "normal-form": "Forme normale"
   },
   "footer": "<p>Cet outil de réponse aux questions est sponsorisé par <a href=\"http://lexistems.com\">Lexistems SAS</a> et <a href=\"//www.ens-lyon.fr\">ENS de Lyon</a>.</p>"
 }

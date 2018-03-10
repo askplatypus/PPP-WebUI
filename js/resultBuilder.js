@@ -2,7 +2,7 @@
  * @copyright Thomas Pellissier-Tanon
  * @licence MIT
  */
-(function($, window) {
+(function ($, window) {
 	'use strict';
 
 	/**
@@ -11,98 +11,98 @@
 	 * @class
 	 * @constructor
 	 */
-	window.resultBuilder = function() {
+	window.resultBuilder = function () {
 	};
 
-	window.resultBuilder.externalSites = function(language) {
-        var sites = {
-            '//www.wikidata.org': {
-                'title': 'Wikidata',
-                'icon-url': '//www.wikidata.org/static/favicon/wikidata.ico'
-            },
-            '//g.co/kg': {
-                'title': 'Google',
-                'icon-class': 'fa fa-google'
-            },
-            '//www.imdb.com/': {
-                'title': 'IMDb',
-                'icon-class': 'fa fa-imdb'
-            },
-            '//www.facebook.com/': {
-                'title': 'Facebook',
-                'icon-class': 'fa fa-facebook'
-            },
-            '//www.flickr.com/': {
-                'title': 'Flickr',
-                'icon-class': 'fa fa-flickr'
-            },
-            '//foursquare.com/': {
-                'title': 'Foursquare',
-                'icon-class': 'fa fa-foursquare'
-            },
-            '//github.com/': {
-                'title': 'GitHub',
-                'icon-class': 'fa fa-github'
-            },
-            '//plus.google.com/': {
-                'title': 'Google Plus',
-                'icon-class': 'fa fa-google-plus'
-            },
-            '//www.instagram.com/': {
-                'title': 'Instagram',
-                'icon-class': 'fa fa-instagram'
-            },
-            '//www.last.fm/': {
-                'title': 'Last.fm',
-                'icon-class': 'fa fa-lastfm'
-            },
-            '//www.linkedin.com/': {
-                'title': 'SoundCloud',
-                'icon-class': 'fa fa-linkedin'
-            },
-            '//www.quora.com/': {
-                'title': 'Quora',
-                'icon-class': 'fa fa-quora'
-            },
-            '//soundcloud.com/': {
-                'title': 'SoundCloud',
-                'icon-class': 'fa fa-soundcloud'
-            },
-            '//open.spotify.com/': {
-                'title': 'Spotify',
-                'icon-class': 'fa fa-spotify'
-            },
-            '//stackoverflow.com/': {
-                'title': 'StackOverflow',
-                'icon-class': 'fa fa-stack-overflow'
-            },
-            '//store.steampowered.com/': {
-                'title': 'Steam',
-                'icon-class': 'fa fa-steam'
-            },
-            '//twitter.com/': {
-                'title': 'Twitter',
-                'icon-class': 'fa fa-twitter'
-            },
-            '//vine.co/': {
-                'title': 'Vine',
-                'icon-class': 'fa fa-vine'
-            },
-            '//www.yelp.com/': {
-                'title': 'Yelp',
-                'icon-class': 'fa fa-yelp'
-            },
-            '//www.youtube.com/': {
-                'title': 'Youtube',
-                'icon-class': 'fa fa-youtube'
-            }
-        };
-        sites['//' + language + '.wikipedia.org/wiki/'] = {
-            'title': 'Wikipedia',
-            'icon-class': 'fa fa-wikipedia-w'
-        };
-        return sites;
-    };
+	window.resultBuilder.externalSites = function (language) {
+		var sites = {
+			'//www.wikidata.org': {
+				'title': 'Wikidata',
+				'icon-url': '//www.wikidata.org/static/favicon/wikidata.ico'
+			},
+			'//g.co/kg': {
+				'title': 'Google',
+				'icon-class': 'fa fa-google'
+			},
+			'//www.imdb.com/': {
+				'title': 'IMDb',
+				'icon-class': 'fa fa-imdb'
+			},
+			'//www.facebook.com/': {
+				'title': 'Facebook',
+				'icon-class': 'fa fa-facebook'
+			},
+			'//www.flickr.com/': {
+				'title': 'Flickr',
+				'icon-class': 'fa fa-flickr'
+			},
+			'//foursquare.com/': {
+				'title': 'Foursquare',
+				'icon-class': 'fa fa-foursquare'
+			},
+			'//github.com/': {
+				'title': 'GitHub',
+				'icon-class': 'fa fa-github'
+			},
+			'//plus.google.com/': {
+				'title': 'Google Plus',
+				'icon-class': 'fa fa-google-plus'
+			},
+			'//www.instagram.com/': {
+				'title': 'Instagram',
+				'icon-class': 'fa fa-instagram'
+			},
+			'//www.last.fm/': {
+				'title': 'Last.fm',
+				'icon-class': 'fa fa-lastfm'
+			},
+			'//www.linkedin.com/': {
+				'title': 'SoundCloud',
+				'icon-class': 'fa fa-linkedin'
+			},
+			'//www.quora.com/': {
+				'title': 'Quora',
+				'icon-class': 'fa fa-quora'
+			},
+			'//soundcloud.com/': {
+				'title': 'SoundCloud',
+				'icon-class': 'fa fa-soundcloud'
+			},
+			'//open.spotify.com/': {
+				'title': 'Spotify',
+				'icon-class': 'fa fa-spotify'
+			},
+			'//stackoverflow.com/': {
+				'title': 'StackOverflow',
+				'icon-class': 'fa fa-stack-overflow'
+			},
+			'//store.steampowered.com/': {
+				'title': 'Steam',
+				'icon-class': 'fa fa-steam'
+			},
+			'//twitter.com/': {
+				'title': 'Twitter',
+				'icon-class': 'fa fa-twitter'
+			},
+			'//vine.co/': {
+				'title': 'Vine',
+				'icon-class': 'fa fa-vine'
+			},
+			'//www.yelp.com/': {
+				'title': 'Yelp',
+				'icon-class': 'fa fa-yelp'
+			},
+			'//www.youtube.com/': {
+				'title': 'Youtube',
+				'icon-class': 'fa fa-youtube'
+			}
+		};
+		sites['//' + language + '.wikipedia.org/wiki/'] = {
+			'title': 'Wikipedia',
+			'icon-class': 'fa fa-wikipedia-w'
+		};
+		return sites;
+	};
 
 	/**
 	 * Builds a box for the results.
@@ -143,11 +143,16 @@
 	/**
 	 * @private
 	 */
-	window.resultBuilder.prototype.displayResourceResults = function(results, $resultsRoot) {
+	window.resultBuilder.prototype.displayResourceResults = function (results, $resultsRoot) {
 		var map = null;
 		var mapElements = [];
 		$.each(results, function (_, result) {
 			var mainResource = result.getResourcesForProperty('http://schema.org/result')[0];
+			var processingContext = {};
+			if (result.getResourcesForProperty('http://askplatyp.us/vocab#term').length === 1) {
+				processingContext.term = result.getResourcesForProperty('http://askplatyp.us/vocab#term')[0].getValue();
+			}
+
 			if (mainResource.isInstanceOf('http://schema.org/GeoCoordinates')) {
 				var latitudes = mainResource.getResourcesForProperty('http://schema.org/latitude');
 				var longitudes = mainResource.getResourcesForProperty('http://schema.org/longitude');
@@ -170,7 +175,7 @@
 					var marker = L.marker(L.latLng(latitudes[0].getValue(), longitudes[0].getValue()));
 					var topicResources = mainResource.getResourcesForReverseProperty('http://schema.org/geo');
 					if (topicResources.length > 0) {
-						marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0]).toHtml().html());
+						marker.bindPopup(window.resultBuilder.buildCardForJsonLd(topicResources[0], {}).toHtml().html());
 					}
 					marker.addTo(map);
 					mapElements.push(marker);
@@ -180,7 +185,7 @@
 				}
 			} else { //Card case
 				$('<li>').addClass('list-group-item')
-					.append(window.resultBuilder.buildCardForJsonLd(mainResource).toHtml())
+					.append(window.resultBuilder.buildCardForJsonLd(mainResource, processingContext).toHtml())
 					.appendTo($resultsRoot);
 			}
 		});
@@ -225,7 +230,7 @@
 	 * @class
 	 * @constructor
 	 */
-	window.resultBuilder.Card = function($title, $content, $image, $footer) {
+	window.resultBuilder.Card = function ($title, $content, $image, $footer) {
 		this.$title = $title;
 		this.$content = ($content === undefined) ? null : $content.addClass('card-text');
 		this.$image = ($image === undefined) ? null : $image.addClass('card-image');
@@ -235,7 +240,7 @@
 	/**
 	 * @return {jQuery}
 	 */
-	window.resultBuilder.Card.prototype.toHtml = function() {
+	window.resultBuilder.Card.prototype.toHtml = function () {
 		return $('<article>')
 			.append(
 				this.$image,
@@ -248,9 +253,10 @@
 	/**
 	 * Builds a card for a JsonLd resource
 	 * @param {window.JsonLdResource} mainResource
+	 * @param {String[]} processingContext
 	 * @return {window.resultBuilder.Card}
 	 */
-	window.resultBuilder.buildCardForJsonLd = function (mainResource) {
+	window.resultBuilder.buildCardForJsonLd = function (mainResource, processingContext) {
 		var card;
 		if (mainResource.isInstanceOf('http://www.w3.org/2000/01/rdf-schema#Literal')) {
 			card = window.resultBuilder.buildBaseCardForJsonLdLiteral(mainResource);
@@ -258,8 +264,8 @@
 			card = window.resultBuilder.buildBaseCardForJsonLdResource(mainResource);
 		}
 
-		mainResource.getReverseProperties().forEach(function(property) {
-			if(property === 'http://schema.org/about') {
+		mainResource.getReverseProperties().forEach(function (property) {
+			if (property === 'http://schema.org/about') {
 				return;
 			}
 
@@ -272,6 +278,13 @@
 					$('<span>').text(', ' + propertyLabel)
 				);
 		});
+
+		if (card.$footer === null) {
+			card.$footer = window.resultBuilder.buildProcessingContextPopupCard(processingContext);
+		} else {
+			card.$footer.append(window.resultBuilder.buildProcessingContextPopupCard(processingContext));
+		}
+
 		return card;
 	};
 
@@ -285,7 +298,7 @@
 	window.resultBuilder.buildLabelForProperty = function (property) {
 		var match = property.match(/^http:\/\/schema\.org\/(.+)$/);
 
-		if(match === null) {
+		if (match === null) {
 			return '';
 		}
 
@@ -303,14 +316,14 @@
 		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name');
 		var description = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/description');
 		var $label = $('<span>').text(name);
-		if(description !== '') {
+		if (description !== '') {
 			$label.attr('title', description);
 		}
 
 		//Links
 		var $links = [];
 		var officialWebsites = mainResource.getResourcesForProperty('http://schema.org/url');
-		officialWebsites.forEach(function(officialWebsite) {
+		officialWebsites.forEach(function (officialWebsite) {
 			var url = officialWebsite.hasId() ? officialWebsite.getId() : officialWebsite.getValue();
 			$links.push(
 				$('<a>')
@@ -320,20 +333,20 @@
 			);
 		});
 		var actions = mainResource.getResourcesForProperty('http://schema.org/potentialAction');
-		for(var i in actions) {
+		for (var i in actions) {
 			var action = actions[i];
-			if(action.isInstanceOf('http://schema.org/ViewAction')) {
+			if (action.isInstanceOf('http://schema.org/ViewAction')) {
 				var targets = action.getResourcesForProperty('http://schema.org/target');
-				if(targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
+				if (targets.length > 0 && targets[0].hasValue()) { //TODO: manage EntryPoint structures
 					var target = targets[0].getValue();
 					var actionName = window.resultBuilder.getPropertyAsString(action, 'http://schema.org/name');
 					var actionIconUrl = '';
 					var actionIcons = action.getResourcesForProperty('http://schema.org/image');
-					if(actionIcons.length > 0) {
+					if (actionIcons.length > 0) {
 						actionIconUrl = window.resultBuilder.getUrlForImage(actionIcons[0]);
 					}
 
-					if(actionIconUrl === '') {
+					if (actionIconUrl === '') {
 						$links.push(
 							$('<a>')
 								.attr('href', target)
@@ -348,7 +361,7 @@
 									$('<img>')
 										.addClass('card-link-icon')
 										.attr('src', actionIconUrl)
-							)
+								)
 						);
 					}
 				}
@@ -356,15 +369,15 @@
 		}
 		var externalSites = window.resultBuilder.externalSites($.i18n.lng());
 		var sameAs = mainResource.getResourcesForProperty('http://schema.org/sameAs');
-		if(mainResource.hasId()) {
-            sameAs.push(mainResource);
-        }
-		for(i in sameAs) {
+		if (mainResource.hasId()) {
+			sameAs.push(mainResource);
+		}
+		for (i in sameAs) {
 			var link = sameAs[i].hasId() ? sameAs[i].getId() : sameAs[i].getValue();
-			for(var pattern in externalSites) {
-				if(link.includes(pattern)) {
+			for (var pattern in externalSites) {
+				if (link.includes(pattern)) {
 					var linkParams = externalSites[pattern];
-					if(linkParams['icon-class']) {
+					if (linkParams['icon-class']) {
 						$links.push(
 							$('<a>')
 								.attr('href', link)
@@ -391,16 +404,16 @@
 		//Image
 		var $image = undefined;
 		var images = mainResource.getResourcesForProperty('http://schema.org/image');
-		if(images.length > 0) {
+		if (images.length > 0) {
 			var image = images[0];
 
 			//retrieve image urls
 			var imageUrl = window.resultBuilder.getUrlForImage(image);
-			if(imageUrl != '') {
+			if (imageUrl != '') {
 				var imageName = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/name');
 				var imageDescription = window.resultBuilder.getPropertyAsString(image, 'http://schema.org/description');
 
-				if(image.hasId()) {
+				if (image.hasId()) {
 					$image = $('<a>')
 						.attr('href', image.getId());
 				} else {
@@ -416,35 +429,35 @@
 								'title': imageName,
 								'alt': imageDescription
 							})
-				);
+					);
 			}
 		}
 
 		//Article about the subject
 		var $text = null;
 		var detailedDescriptions = mainResource.getResourcesForProperty('http://schema.googleapis.com/detailedDescription');
-		if(detailedDescriptions.length === 0) {
+		if (detailedDescriptions.length === 0) {
 			detailedDescriptions = mainResource.getResourcesForReverseProperty('http://schema.org/about');
 		}
-		if(detailedDescriptions.length > 0) {
+		if (detailedDescriptions.length > 0) {
 			var about = detailedDescriptions[0];
 			var text = about.getResourcesForProperty('http://schema.org/articleBody');
-            if(text.length === 0) {
-                text = about.getResourcesForProperty('http://schema.org/headline');
-            }
-			if(text.length > 0 && text[0].hasValue()) {
+			if (text.length === 0) {
+				text = about.getResourcesForProperty('http://schema.org/headline');
+			}
+			if (text.length > 0 && text[0].hasValue()) {
 				$text = $('<div>')
 					.text(text[0].getValue());
 
 				var authors = about.getResourcesForProperty('http://schema.org/author');
-				if(authors.length > 0) {
+				if (authors.length > 0) {
 					var authorName = window.resultBuilder.getPropertyAsString(authors[0], 'http://schema.org/name');
-					if(authorName === '') {
+					if (authorName === '') {
 						authorName = 'Source';
 					}
 
 					$text.append(' ');
-					if(about.hasId()) {
+					if (about.hasId()) {
 						$text.append(
 							$('<a>')
 								.addClass('small')
@@ -458,23 +471,23 @@
 								.text(authorName)
 						);
 					}
-				} else if(about.hasId()) {
+				} else if (about.hasId()) {
 					//We use the ID to find the author
-					for(pattern in externalSites) {
-						if(about.getId().includes(pattern)) {
-                            $text.append(
-                                ' ',
-                                $('<a>')
-                                    .addClass('small')
-                                    .attr('href', about.getId())
-                                    .text(externalSites[pattern].title)
-                            );
+					for (pattern in externalSites) {
+						if (about.getId().includes(pattern)) {
+							$text.append(
+								' ',
+								$('<a>')
+									.addClass('small')
+									.attr('href', about.getId())
+									.text(externalSites[pattern].title)
+							);
 						}
 					}
 				}
 			}
 		}
-		if($text === null) {
+		if ($text === null) {
 			$text = $('<div>').text(description)
 		}
 
@@ -510,25 +523,25 @@
 	 */
 	window.resultBuilder.buildLabelWithPopupCardForJsonLd = function (mainResource) {
 		var name = window.resultBuilder.getPropertyAsString(mainResource, 'http://schema.org/name');
-		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource);
+		var popupCard = window.resultBuilder.buildCardForJsonLd(mainResource, {});
 
 		var $label = $('<span>').text(name);
 		$label.popover({
-				title: popupCard.$title.html(),
-				content: $('<div>').append(popupCard.$image, popupCard.$content),
-				html: true,
-				container: 'body',
-				trigger: 'manual'
-			})
-			.mouseenter(function() {
+			title: popupCard.$title.html(),
+			content: $('<div>').append(popupCard.$image, popupCard.$content),
+			html: true,
+			container: 'body',
+			trigger: 'manual'
+		})
+			.mouseenter(function () {
 				$label.popover('show');
-				$('.popover').mouseleave(function() {
+				$('.popover').mouseleave(function () {
 					$label.popover('hide');
 				});
 			})
-			.mouseleave(function() {
-				setTimeout(function() {
-					if($('.popover:hover').length === 0) {
+			.mouseleave(function () {
+				setTimeout(function () {
+					if ($('.popover:hover').length === 0) {
 						$label.popover('hide');
 					}
 				}, 300);
@@ -556,9 +569,9 @@
 	 * @param {window.JsonLdResource[]} resources
 	 * @return string
 	 */
-	window.resultBuilder.getAsString = function(resources) {
-		for(var i in resources) {
-			if(resources[i].hasValue()) {
+	window.resultBuilder.getAsString = function (resources) {
+		for (var i in resources) {
+			if (resources[i].hasValue()) {
 				return resources[i].getValue();
 			}
 		}
@@ -571,14 +584,14 @@
 	 * @param {window.JsonLdResource} imageResource
 	 * @return string
 	 */
-	window.resultBuilder.getUrlForImage = function(imageResource) {
+	window.resultBuilder.getUrlForImage = function (imageResource) {
 		var contentUrls = imageResource.getResourcesForProperty('http://schema.org/contentUrl');
 
-		if((contentUrls.length > 0 && contentUrls[0].hasId())) {
-            return contentUrls[0].getId();
-        } else if((contentUrls.length > 0 && contentUrls[0].hasValue())) {
-            return contentUrls[0].getValue();
-		} else if(imageResource.hasId()) {
+		if ((contentUrls.length > 0 && contentUrls[0].hasId())) {
+			return contentUrls[0].getId();
+		} else if ((contentUrls.length > 0 && contentUrls[0].hasValue())) {
+			return contentUrls[0].getValue();
+		} else if (imageResource.hasId()) {
 			return imageResource.getId();
 		} else {
 			return '';
@@ -611,7 +624,7 @@
 			return $('<span>').append($('<script>').attr('type', 'math/tex').text(literalResource.getValue()));
 		} else {
 			var node = $('<span>').text(literalResource.getValue());
-			if(literalResource.hasLanguage()) {
+			if (literalResource.hasLanguage()) {
 				node.attr('lang', literalResource.getLanguage());
 			}
 			return node;
@@ -655,7 +668,7 @@
 			day: 'numeric'
 		};
 		var formattedDate = dateObject.toLocaleDateString($.i18n.lng(), formattingOptions);
-		if(formattedDate === 'Invalid Date') {
+		if (formattedDate === 'Invalid Date') {
 			formattedDate = value;
 		}
 		return $('<time>')
@@ -672,7 +685,7 @@
 	window.resultBuilder.buildHtmlForTime = function (value) {
 		var dateObject = new Date('2000-01-01T' + value);
 		var formattedDate = dateObject.toLocaleTimeString($.i18n.lng());
-		if(formattedDate === 'Invalid Date') {
+		if (formattedDate === 'Invalid Date') {
 			formattedDate = value;
 		}
 		return $('<time>')
@@ -681,4 +694,27 @@
 			.text(formattedDate);
 	};
 
-} (jQuery, window));
+	window.resultBuilder.buildProcessingContextPopupCard = function (processingContext) {
+		if (!('term' in processingContext)) {
+			return null;
+		}
+		var $content = $('<div>').append(
+			$('<dl>').append(
+				$('<dt>').text($.t('result.normal-form')),
+				$('<dd>').append($('<code>').text(processingContext.term))
+			)
+		).hide();
+		var contentOpen = false;
+		return $('<aside>').append(
+			$('<button>')
+				.addClass('btn btn-info')
+				.text($.t('result.explain'))
+				.css({float: 'right'})
+				.click(function () {
+					$content.toggle();
+				}),
+			$content
+		);
+	};
+
+}(jQuery, window));
