@@ -705,14 +705,35 @@
 				$('<dd>').append($('<pre>').text(processingContext.term))
 			);
 		}
+
+		var conllu = undefined;
+		var conlluKey = undefined;
 		if ('conllu' in processingContext) {
+			conllu = [];
+			conlluKey = Math.round(Math.random() * 100000000000);
+			$.each(processingContext.conllu.split('\n'), function (i, line) {
+				var parts = line.split('\t');
+				conllu.push({
+					text: {
+						content: parts[1]
+						//"beginOffset": 4
+					},
+					partOfSpeech: {
+						tag: parts[3]
+					},
+					dependencyEdge: {
+						headTokenIndex: (parts[7] === 'root') ? i : parts[6] - 1,
+						label: (parts[7] === 'root') ? 'ROOT' : parts[7]
+					},
+					lemma: parts[2]
+				});
+			});
 			elements.push(
-				$('<dt>').append(
-					$('<a>')
-						.attr('href', 'http://universaldependencies.org/format.html')
-						.text($.t('result.conllu'))
+				$('<dt>').append($('<a>')
+					.attr('href', 'http://universaldependencies.org/format.html')
+					.text($.t('result.conllu'))
 				),
-				$('<dd>').append($('<pre>').text(processingContext.conllu))
+				$('<dd>').attr('id', 'conllu-' + conlluKey).attr('title', processingContext.conllu)
 			);
 		}
 		if (elements.length === 0) {
@@ -727,6 +748,14 @@
 				.css({float: 'right'})
 				.click(function () {
 					$content.toggle();
+
+					if (conllu !== undefined) {
+						(new displaCy('', {
+							container: '#conllu-' + conlluKey,
+							format: 'google',
+							distance: 150
+						})).render(conllu);
+					}
 				}),
 			$content
 		);
