@@ -1,7 +1,8 @@
 {
   "languages": {
+    "de": "German (in development)",
     "en": "English",
-    "es": "Spanish",
+    "es": "Spanish (in development)",
     "fr": "French"
   },
   "navbar": {

@@ -1,0 +1,14 @@
+{
+  "languages": {
+    "de": "Deutsch (in Entwicklung)",
+    "en": "Englisch",
+    "es": "Spanisch (in Entwicklung)",
+    "fr": "Französisch"
+  },
+  "navbar": {
+    "projectwebsite": "Projektwebsite"
+  },
+  "simplesearch": {
+    "enteryourquestion": "Geben Sie Ihre Frage auf Deutsch ein"
+  }
+}
